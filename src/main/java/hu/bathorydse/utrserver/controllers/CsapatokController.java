@@ -1,12 +1,10 @@
 package hu.bathorydse.utrserver.controllers;
 
-import hu.bathorydse.utrserver.core.ControllerUtils;
 import hu.bathorydse.utrserver.models.Csapat;
 import hu.bathorydse.utrserver.models.CsapatNotFoundException;
 import hu.bathorydse.utrserver.models.Uszo;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.CsapatRepository;
-import java.util.Date;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -141,10 +139,10 @@ public class CsapatokController {
     public ResponseEntity<?> createNewUszo(
         @PathVariable String id,
         @RequestParam String nev,
-        @RequestParam String szuletesiDatum,
+        @RequestParam String szuletesiEv,
         @RequestParam @Size(min = 1, max = 1) String nem
     ) {
-        Date date = ControllerUtils.createDate(szuletesiDatum);
+        short ev = Short.parseShort(szuletesiEv);
 
         Csapat csapat;
         try {
@@ -157,7 +155,7 @@ public class CsapatokController {
             );
         }
 
-        csapat.getUszok().add(new Uszo(nev, date, csapat.getId(), nem));
+        csapat.getUszok().add(new Uszo(nev, ev, csapat.getId(), nem));
         csapatRepository.save(csapat);
 
         return ResponseEntity.ok(

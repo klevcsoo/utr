@@ -1,6 +1,5 @@
 package hu.bathorydse.utrserver.models;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,8 +21,8 @@ public class Uszo {
 
     private String nev;
 
-    @Column(name = "szuletesi_datum")
-    private Date szuletesiDatum;
+    @Column(name = "szuletesi_ev")
+    private Short szuletesiDatum;
 
     @Column(name = "csapat_id")
     private Long csapatId;
@@ -32,7 +31,7 @@ public class Uszo {
     @Size(min = 1, max = 1)
     private String nem;
 
-    public Uszo(String nev, Date szuletesiDatum, Long csapatId, String nem) {
+    public Uszo(String nev, Short szuletesiDatum, Long csapatId, String nem) {
         this.nev = nev;
         this.szuletesiDatum = szuletesiDatum;
         this.csapatId = csapatId;

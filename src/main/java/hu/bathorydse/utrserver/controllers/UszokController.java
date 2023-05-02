@@ -1,7 +1,6 @@
 package hu.bathorydse.utrserver.controllers;
 
 
-import hu.bathorydse.utrserver.core.ControllerUtils;
 import hu.bathorydse.utrserver.models.Uszo;
 import hu.bathorydse.utrserver.models.UszoNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
@@ -49,7 +48,7 @@ public class UszokController {
     public ResponseEntity<?> editUszo(
         @PathVariable String id,
         @RequestParam(required = false) String nev,
-        @RequestParam(required = false) String szuletesiDatum,
+        @RequestParam(required = false) String szuletesiEv,
         @RequestParam(required = false) Long csapat,
         @RequestParam(required = false) @Size(min = 1, max = 1) String nem
     ) {
@@ -68,8 +67,8 @@ public class UszokController {
             uszo.setNev(nev);
         }
 
-        if (szuletesiDatum != null) {
-            uszo.setSzuletesiDatum(ControllerUtils.createDate(szuletesiDatum));
+        if (szuletesiEv != null) {
+            uszo.setSzuletesiDatum(Short.parseShort(szuletesiEv));
         }
 
         if (csapat != null) {
