@@ -166,7 +166,7 @@ public class UszoversenyekController {
         }
 
         uszoverseny.getVersenyszamok().add(new Versenyszam(
-            uszoverseny, hossz, uszasnemId, emberiNemId, valto
+            uszoverseny.getId(), hossz, uszasnemId, emberiNemId, valto
         ));
 
         uszoversenyRepository.save(uszoverseny);

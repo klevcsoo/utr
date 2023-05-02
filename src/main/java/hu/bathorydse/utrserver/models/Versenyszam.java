@@ -1,14 +1,9 @@
 package hu.bathorydse.utrserver.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,15 +15,12 @@ import lombok.NoArgsConstructor;
 public class Versenyszam implements Serializable {
 
     private static final long serialVersionUID = 408486709107104955L;
-    
+
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "verseny_id")
-    @JsonIgnore
-    private Uszoverseny uszoverseny;
+    private Long verseny_id;
 
     private Integer hossz;
 
@@ -38,10 +30,9 @@ public class Versenyszam implements Serializable {
 
     private Integer valto;
 
-    public Versenyszam(Uszoverseny uszoverseny, Integer hossz,
-        Integer uszasnem_id,
+    public Versenyszam(Long verseny_id, Integer hossz, Integer uszasnem_id,
         String emberi_nem_id, Integer valto) {
-        this.uszoverseny = uszoverseny;
+        this.verseny_id = verseny_id;
         this.hossz = hossz;
         this.uszasnem_id = uszasnem_id;
         this.emberi_nem_id = emberi_nem_id;
