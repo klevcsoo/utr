@@ -1,5 +1,6 @@
 package hu.bathorydse.utrserver.controllers;
 
+import hu.bathorydse.utrserver.models.Futam;
 import hu.bathorydse.utrserver.models.Versenyszam;
 import hu.bathorydse.utrserver.models.VersenyszamNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -105,6 +107,45 @@ public class VersenyszamokController {
 
         return ResponseEntity.ok(
             new MessageResponse("Versenyszám törölve.")
+        );
+    }
+
+    @GetMapping("/{id}/futamok/")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllFutamok(@PathVariable String id) {
+        Versenyszam versenyszam;
+        try {
+            versenyszam = retrieveVersenyszam(id);
+        } catch (VersenyszamNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum.")
+            );
+        }
+
+        return ResponseEntity.ok(versenyszam.getFutamok());
+    }
+
+    @PutMapping("/{id}/futamok/")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> createFutam(@PathVariable String id) {
+        Versenyszam versenyszam;
+        try {
+            versenyszam = retrieveVersenyszam(id);
+        } catch (VersenyszamNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum.")
+            );
+        }
+
+        versenyszam.getFutamok().add(new Futam(versenyszam.getId()));
+        versenyszamRepository.save(versenyszam);
+
+        return ResponseEntity.ok(
+            new MessageResponse("Futam létrehozva.")
         );
     }
 
