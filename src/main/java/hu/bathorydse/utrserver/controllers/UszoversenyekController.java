@@ -14,8 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class UszoversenyekController {
         return ResponseEntity.ok(uszoversenyRepository.findAll());
     }
 
-    @PostMapping("/")
+    @PutMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewVerseny(
         @Valid @RequestBody NewUszoversenyRequest request
@@ -72,7 +73,7 @@ public class UszoversenyekController {
         return ResponseEntity.ok(uszoverseny);
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editVerseny(
         @PathVariable String id,
@@ -137,7 +138,7 @@ public class UszoversenyekController {
         return ResponseEntity.ok(uszoverseny.getVersenyszamok());
     }
 
-    @PostMapping("/{id}/versenyszamok/")
+    @PutMapping("/{id}/versenyszamok/")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewVersenyszam(
         @PathVariable String id,
