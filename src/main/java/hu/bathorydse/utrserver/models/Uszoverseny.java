@@ -1,5 +1,7 @@
 package hu.bathorydse.utrserver.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -19,7 +21,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "uszoversenyek")
 @Data
 @NoArgsConstructor
-public class Uszoverseny {
+public class Uszoverseny implements Serializable {
+
+    private static final long serialVersionUID = 7963534554160364961L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

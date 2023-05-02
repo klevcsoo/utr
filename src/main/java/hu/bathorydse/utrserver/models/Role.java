@@ -1,5 +1,6 @@
 package hu.bathorydse.utrserver.models;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,8 +16,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "roles")
 @Data
 @NoArgsConstructor
-public class Role {
+public class Role implements Serializable {
 
+    private static final long serialVersionUID = 7227441009017620806L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

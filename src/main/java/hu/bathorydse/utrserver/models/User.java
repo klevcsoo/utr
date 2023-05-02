@@ -1,5 +1,6 @@
 package hu.bathorydse.utrserver.models;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -21,8 +22,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-public class User {
+public class User implements Serializable {
 
+    private static final long serialVersionUID = -6555251784394553383L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

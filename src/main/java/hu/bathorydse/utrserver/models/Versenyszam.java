@@ -1,6 +1,7 @@
 package hu.bathorydse.utrserver.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,8 +17,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "versenyszamok")
 @Data
 @NoArgsConstructor
-public class Versenyszam {
+public class Versenyszam implements Serializable {
 
+    private static final long serialVersionUID = 408486709107104955L;
+    
     @Id
     @GeneratedValue
     private Long id;
