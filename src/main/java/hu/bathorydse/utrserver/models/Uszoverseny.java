@@ -36,7 +36,8 @@ public class Uszoverseny implements Serializable {
 
     private Date datum;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "verseny_id")
     private List<Versenyszam> versenyszamok;
 
