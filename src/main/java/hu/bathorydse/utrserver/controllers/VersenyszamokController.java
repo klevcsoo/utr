@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,21 +30,15 @@ public class VersenyszamokController {
     public ResponseEntity<?> getVersenyszam(
         @PathVariable String id
     ) {
-        long longId;
+        Versenyszam versenyszam;
         try {
-            longId = Long.parseLong(id);
+            versenyszam = retrieveVersenyszam(id);
+        } catch (VersenyszamNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(
                 new MessageResponse("Hibás azonosító formátum.")
             );
-        }
-
-        Versenyszam versenyszam;
-        try {
-            versenyszam = versenyszamRepository.findById(longId)
-                .orElseThrow(() -> new VersenyszamNotFoundException(longId));
-        } catch (VersenyszamNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(versenyszam);
@@ -58,21 +53,15 @@ public class VersenyszamokController {
         @RequestParam(required = false) @Size(min = 1, max = 1) String emberiNem,
         @RequestParam(required = false) Integer valto
     ) {
-        long longId;
+        Versenyszam versenyszam;
         try {
-            longId = Long.parseLong(id);
+            versenyszam = retrieveVersenyszam(id);
+        } catch (VersenyszamNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(
                 new MessageResponse("Hibás azonosító formátum.")
             );
-        }
-
-        Versenyszam versenyszam;
-        try {
-            versenyszam = versenyszamRepository.findById(longId)
-                .orElseThrow(() -> new VersenyszamNotFoundException(longId));
-        } catch (VersenyszamNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
 
         if (hossz != null) {
@@ -96,5 +85,33 @@ public class VersenyszamokController {
         return ResponseEntity.ok(
             new MessageResponse("Módosítások mentve.")
         );
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteVersenyszam(@PathVariable String id) {
+        Versenyszam versenyszam;
+        try {
+            versenyszam = retrieveVersenyszam(id);
+        } catch (VersenyszamNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum.")
+            );
+        }
+
+        versenyszamRepository.delete(versenyszam);
+
+        return ResponseEntity.ok(
+            new MessageResponse("Versenyszám törölve.")
+        );
+    }
+
+    private Versenyszam retrieveVersenyszam(String idString)
+        throws VersenyszamNotFoundException, NumberFormatException {
+        long id = Long.parseLong(idString);
+        return versenyszamRepository.findById(id)
+            .orElseThrow(() -> new VersenyszamNotFoundException(id));
     }
 }
