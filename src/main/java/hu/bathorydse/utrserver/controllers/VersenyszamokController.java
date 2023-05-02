@@ -69,11 +69,11 @@ public class VersenyszamokController {
         }
 
         if (uszasnem != null) {
-            versenyszam.setUszasnem_id(uszasnem);
+            versenyszam.setUszasnemId(uszasnem);
         }
 
         if (emberiNem != null) {
-            versenyszam.setEmberi_nem_id(emberiNem);
+            versenyszam.setEmberiNemId(emberiNem);
         }
 
         if (valto != null) {
