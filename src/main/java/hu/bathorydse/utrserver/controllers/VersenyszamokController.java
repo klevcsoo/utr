@@ -52,7 +52,7 @@ public class VersenyszamokController {
         @PathVariable String id,
         @RequestParam(required = false) Integer hossz,
         @RequestParam(required = false) Integer uszasnem,
-        @RequestParam(required = false) @Size(min = 1, max = 1) String emberiNem,
+        @RequestParam(required = false) @Size(min = 1, max = 1) String nem,
         @RequestParam(required = false) Integer valto
     ) {
         Versenyszam versenyszam;
@@ -74,8 +74,8 @@ public class VersenyszamokController {
             versenyszam.setUszasnemId(uszasnem);
         }
 
-        if (emberiNem != null) {
-            versenyszam.setEmberiNemId(emberiNem);
+        if (nem != null) {
+            versenyszam.setNem(nem);
         }
 
         if (valto != null) {

@@ -1,9 +1,13 @@
 package hu.bathorydse.utrserver.controllers;
 
+import hu.bathorydse.utrserver.core.ControllerUtils;
 import hu.bathorydse.utrserver.models.Csapat;
 import hu.bathorydse.utrserver.models.CsapatNotFoundException;
+import hu.bathorydse.utrserver.models.Uszo;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.CsapatRepository;
+import java.util.Date;
+import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -112,6 +116,52 @@ public class CsapatokController {
 
         return ResponseEntity.ok(
             new MessageResponse("Csapat törölve.")
+        );
+    }
+
+    @GetMapping("/{id}/uszok/")
+    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
+    public ResponseEntity<?> getAllUszok(@PathVariable String id) {
+        Csapat csapat;
+        try {
+            csapat = retrieveCsapat(id);
+        } catch (CsapatNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum")
+            );
+        }
+
+        return ResponseEntity.ok(csapat.getUszok());
+    }
+
+    @PutMapping("/{id}/uszok/")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> createNewUszo(
+        @PathVariable String id,
+        @RequestParam String nev,
+        @RequestParam String szuletesiDatum,
+        @RequestParam @Size(min = 1, max = 1) String nem
+    ) {
+        Date date = ControllerUtils.createDate(szuletesiDatum);
+
+        Csapat csapat;
+        try {
+            csapat = retrieveCsapat(id);
+        } catch (CsapatNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum")
+            );
+        }
+
+        csapat.getUszok().add(new Uszo(nev, date, csapat.getId(), nem));
+        csapatRepository.save(csapat);
+
+        return ResponseEntity.ok(
+            new MessageResponse("Úszó hozzáadva.")
         );
     }
 

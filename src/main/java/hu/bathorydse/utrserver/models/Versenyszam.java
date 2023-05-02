@@ -34,8 +34,8 @@ public class Versenyszam implements Serializable {
     @Column(name = "uszasnem_id")
     private Integer uszasnemId;
 
-    @Column(name = "emberi_nem_id")
-    private String emberiNemId;
+    @Column(name = "nem")
+    private String nem;
 
     private Integer valto;
 
@@ -45,11 +45,11 @@ public class Versenyszam implements Serializable {
     private List<Futam> futamok;
 
     public Versenyszam(Long verseny_id, Integer hossz, Integer uszasnemId,
-        String emberiNemId, Integer valto) {
+        String nem, Integer valto) {
         this.verseny_id = verseny_id;
         this.hossz = hossz;
         this.uszasnemId = uszasnemId;
-        this.emberiNemId = emberiNemId;
+        this.nem = nem;
         this.valto = valto;
     }
 }
