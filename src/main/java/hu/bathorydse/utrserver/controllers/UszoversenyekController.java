@@ -2,8 +2,10 @@ package hu.bathorydse.utrserver.controllers;
 
 import hu.bathorydse.utrserver.models.Uszoverseny;
 import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
+import hu.bathorydse.utrserver.models.Versenyszam;
 import hu.bathorydse.utrserver.payload.request.EditUszoversenyRequest;
 import hu.bathorydse.utrserver.payload.request.NewUszoversenyRequest;
+import hu.bathorydse.utrserver.payload.request.NewVersenyszamRequest;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.UszoversenyRepository;
 import javax.validation.Valid;
@@ -70,7 +72,7 @@ public class UszoversenyekController {
         return ResponseEntity.ok(uszoverseny);
     }
 
-    @PostMapping("/{id}/edit")
+    @PostMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editVerseny(
         @PathVariable String id,
@@ -109,5 +111,65 @@ public class UszoversenyekController {
         uszoversenyRepository.save(uszoverseny);
 
         return ResponseEntity.ok(new MessageResponse("Módosítások mentve."));
+    }
+
+    @GetMapping("/{id}/versenyszamok/")
+    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
+    public ResponseEntity<?> getAllVersenyszamok(@PathVariable String id) {
+        long longId;
+        try {
+            longId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum.")
+            );
+        }
+
+        Uszoverseny uszoverseny;
+        try {
+            uszoverseny = uszoversenyRepository.findById(longId)
+                .orElseThrow(
+                    () -> new UszoversenyNotFoundException(longId));
+        } catch (UszoversenyNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(uszoverseny.getVersenyszamok());
+    }
+
+    @PostMapping("/{id}/versenyszamok/")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> createNewVersenyszam(
+        @PathVariable String id,
+        @Valid @RequestBody NewVersenyszamRequest request
+    ) {
+        long longId;
+        try {
+            longId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum.")
+            );
+        }
+
+        Uszoverseny uszoverseny;
+        try {
+            uszoverseny = uszoversenyRepository.findById(longId)
+                .orElseThrow(
+                    () -> new UszoversenyNotFoundException(longId));
+        } catch (UszoversenyNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+
+        uszoverseny.getVersenyszamok().add(new Versenyszam(
+            uszoverseny, request.getHossz(), request.getUszasnemId(),
+            request.getEmberiNemId(), request.getValto()
+        ));
+
+        uszoversenyRepository.save(uszoverseny);
+
+        return ResponseEntity.ok(
+            new MessageResponse("Versenyszám hozzáadva")
+        );
     }
 }
