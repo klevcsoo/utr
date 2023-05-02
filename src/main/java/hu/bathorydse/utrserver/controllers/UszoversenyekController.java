@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,22 +55,15 @@ public class UszoversenyekController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
     public ResponseEntity<?> getVerseny(@PathVariable String id) {
-        Long longId;
+        Uszoverseny uszoverseny;
         try {
-            longId = Long.valueOf(id);
+            uszoverseny = retrieveUszoverseny(id);
+        } catch (UszoversenyNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(
                 new MessageResponse("Hibás azonosító formátum.")
             );
-        }
-
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = uszoversenyRepository.findById(longId)
-                .orElseThrow(
-                    () -> new UszoversenyNotFoundException(longId));
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(uszoverseny);
@@ -85,22 +79,15 @@ public class UszoversenyekController {
     ) {
         Date date = ControllerUtils.createDate(datum);
 
-        Long longId;
+        Uszoverseny uszoverseny;
         try {
-            longId = Long.valueOf(id);
+            uszoverseny = retrieveUszoverseny(id);
+        } catch (UszoversenyNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(
                 new MessageResponse("Hibás azonosító formátum.")
             );
-        }
-
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = uszoversenyRepository.findById(longId)
-                .orElseThrow(
-                    () -> new UszoversenyNotFoundException(longId));
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
 
         if (nev != null) {
@@ -120,25 +107,39 @@ public class UszoversenyekController {
         return ResponseEntity.ok(new MessageResponse("Módosítások mentve."));
     }
 
-    @GetMapping("/{id}/versenyszamok/")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
-    public ResponseEntity<?> getAllVersenyszamok(@PathVariable String id) {
-        long longId;
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteVerseny(@PathVariable String id) {
+        Uszoverseny uszoverseny;
         try {
-            longId = Long.parseLong(id);
+            uszoverseny = retrieveUszoverseny(id);
+        } catch (UszoversenyNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(
                 new MessageResponse("Hibás azonosító formátum.")
             );
         }
 
+        uszoversenyRepository.delete(uszoverseny);
+
+        return ResponseEntity.ok(
+            new MessageResponse("Úszóverseny törölve.")
+        );
+    }
+
+    @GetMapping("/{id}/versenyszamok/")
+    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
+    public ResponseEntity<?> getAllVersenyszamok(@PathVariable String id) {
         Uszoverseny uszoverseny;
         try {
-            uszoverseny = uszoversenyRepository.findById(longId)
-                .orElseThrow(
-                    () -> new UszoversenyNotFoundException(longId));
+            uszoverseny = retrieveUszoverseny(id);
         } catch (UszoversenyNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Hibás azonosító formátum.")
+            );
         }
 
         return ResponseEntity.ok(uszoverseny.getVersenyszamok());
@@ -153,22 +154,15 @@ public class UszoversenyekController {
         @RequestParam @Size(min = 1, max = 1) String emberiNemId,
         @RequestParam(required = false) Integer valto
     ) {
-        long longId;
+        Uszoverseny uszoverseny;
         try {
-            longId = Long.parseLong(id);
+            uszoverseny = retrieveUszoverseny(id);
+        } catch (UszoversenyNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(
                 new MessageResponse("Hibás azonosító formátum.")
             );
-        }
-
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = uszoversenyRepository.findById(longId)
-                .orElseThrow(
-                    () -> new UszoversenyNotFoundException(longId));
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
 
         uszoverseny.getVersenyszamok().add(new Versenyszam(
@@ -180,5 +174,11 @@ public class UszoversenyekController {
         return ResponseEntity.ok(
             new MessageResponse("Versenyszám hozzáadva")
         );
+    }
+
+    private Uszoverseny retrieveUszoverseny(String idString) {
+        long id = Long.parseLong(idString);
+        return uszoversenyRepository.findById(id)
+            .orElseThrow(() -> new UszoversenyNotFoundException(id));
     }
 }
