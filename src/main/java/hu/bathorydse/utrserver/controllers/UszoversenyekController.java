@@ -1,14 +1,13 @@
 package hu.bathorydse.utrserver.controllers;
 
+import hu.bathorydse.utrserver.core.ControllerUtils;
 import hu.bathorydse.utrserver.models.Uszoverseny;
 import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
 import hu.bathorydse.utrserver.models.Versenyszam;
-import hu.bathorydse.utrserver.payload.request.EditUszoversenyRequest;
-import hu.bathorydse.utrserver.payload.request.NewUszoversenyRequest;
-import hu.bathorydse.utrserver.payload.request.NewVersenyszamRequest;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.UszoversenyRepository;
-import javax.validation.Valid;
+import java.util.Date;
+import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -38,15 +37,18 @@ public class UszoversenyekController {
     @PutMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewVerseny(
-        @Valid @RequestBody NewUszoversenyRequest request
+        @RequestParam() String nev,
+        @RequestParam(required = false) String helyszin,
+        @RequestParam(required = false) String datum
     ) {
-        Uszoverseny uszoverseny = new Uszoverseny(request.getNev(),
-            request.getHelyszin(), request.getDatum());
+        Date date = ControllerUtils.createDate(datum);
 
+        Uszoverseny uszoverseny = new Uszoverseny(nev, helyszin, date);
         uszoversenyRepository.save(uszoverseny);
 
         return ResponseEntity.ok(
-            new MessageResponse("Úszóverseny létrehozva."));
+            new MessageResponse("Úszóverseny létrehozva.")
+        );
     }
 
     @GetMapping("/{id}")
@@ -77,8 +79,12 @@ public class UszoversenyekController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editVerseny(
         @PathVariable String id,
-        @Valid @RequestBody EditUszoversenyRequest request
+        @RequestParam(required = false) String nev,
+        @RequestParam(required = false) String helyszin,
+        @RequestParam(required = false) String datum
     ) {
+        Date date = ControllerUtils.createDate(datum);
+
         Long longId;
         try {
             longId = Long.valueOf(id);
@@ -97,16 +103,16 @@ public class UszoversenyekController {
             return ResponseEntity.notFound().build();
         }
 
-        if (request.getNev() != null) {
-            uszoverseny.setNev(request.getNev());
+        if (nev != null) {
+            uszoverseny.setNev(nev);
         }
 
-        if (request.getHelyszin() != null) {
-            uszoverseny.setHelyszin(request.getHelyszin());
+        if (helyszin != null) {
+            uszoverseny.setHelyszin(helyszin);
         }
 
-        if (request.getDatum() != null) {
-            uszoverseny.setDatum(request.getDatum());
+        if (datum != null) {
+            uszoverseny.setDatum(date);
         }
 
         uszoversenyRepository.save(uszoverseny);
@@ -142,7 +148,10 @@ public class UszoversenyekController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewVersenyszam(
         @PathVariable String id,
-        @Valid @RequestBody NewVersenyszamRequest request
+        @RequestParam Integer hossz,
+        @RequestParam Integer uszasnemId,
+        @RequestParam @Size(min = 1, max = 1) String emberiNemId,
+        @RequestParam(required = false) Integer valto
     ) {
         long longId;
         try {
@@ -163,8 +172,7 @@ public class UszoversenyekController {
         }
 
         uszoverseny.getVersenyszamok().add(new Versenyszam(
-            uszoverseny, request.getHossz(), request.getUszasnemId(),
-            request.getEmberiNemId(), request.getValto()
+            uszoverseny, hossz, uszasnemId, emberiNemId, valto
         ));
 
         uszoversenyRepository.save(uszoverseny);

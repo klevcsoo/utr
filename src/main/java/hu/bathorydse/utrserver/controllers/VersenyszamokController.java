@@ -2,10 +2,9 @@ package hu.bathorydse.utrserver.controllers;
 
 import hu.bathorydse.utrserver.models.Versenyszam;
 import hu.bathorydse.utrserver.models.VersenyszamNotFoundException;
-import hu.bathorydse.utrserver.payload.request.EditVersenyszamRequest;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.VersenyszamRepository;
-import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -54,7 +53,10 @@ public class VersenyszamokController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editVersenyszam(
         @PathVariable String id,
-        @Valid @RequestBody EditVersenyszamRequest request
+        @RequestParam(required = false) Integer hossz,
+        @RequestParam(required = false) Integer uszasnem,
+        @RequestParam(required = false) @Size(min = 1, max = 1) String emberiNem,
+        @RequestParam(required = false) Integer valto
     ) {
         long longId;
         try {
@@ -73,20 +75,20 @@ public class VersenyszamokController {
             return ResponseEntity.notFound().build();
         }
 
-        if (request.getHossz() != null) {
-            versenyszam.setHossz(request.getHossz());
+        if (hossz != null) {
+            versenyszam.setHossz(hossz);
         }
 
-        if (request.getUszasnemId() != null) {
-            versenyszam.setUszasnem_id(request.getUszasnemId());
+        if (uszasnem != null) {
+            versenyszam.setUszasnem_id(uszasnem);
         }
 
-        if (request.getEmberiNemId() != null) {
-            versenyszam.setEmberi_nem_id(request.getEmberiNemId());
+        if (emberiNem != null) {
+            versenyszam.setEmberi_nem_id(emberiNem);
         }
 
-        if (request.getValto() != null) {
-            versenyszam.setValto(request.getValto());
+        if (valto != null) {
+            versenyszam.setValto(valto);
         }
 
         versenyszamRepository.save(versenyszam);
