@@ -1,12 +1,14 @@
 package hu.bathorydse.utrserver.models;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
@@ -26,8 +28,10 @@ public class Futam {
     private Long versenyszamId;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "futam_id")
-    private List<Rajt> rajtlista;
+    @JoinTable(name = "rajtlista",
+        joinColumns = @JoinColumn(name = "futam_id"),
+        inverseJoinColumns = @JoinColumn(name = "nevezes_id"))
+    private Set<Nevezes> rajtlista = new HashSet<>();
 
     public Futam(Long versenyszamId) {
         this.versenyszamId = versenyszamId;

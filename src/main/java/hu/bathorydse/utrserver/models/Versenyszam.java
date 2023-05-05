@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
@@ -43,6 +44,11 @@ public class Versenyszam implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "versenyszam_id")
     private List<Futam> futamok;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinTable(name = "nevezesek", joinColumns = @JoinColumn(name = "versenyszam_id"))
+    private List<Nevezes> nevezesek;
 
     public Versenyszam(Long verseny_id, Integer hossz, Integer uszasnemId,
         String nem, Integer valto) {
