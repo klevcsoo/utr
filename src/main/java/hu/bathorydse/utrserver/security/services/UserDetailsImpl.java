@@ -1,7 +1,7 @@
 package hu.bathorydse.utrserver.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import hu.bathorydse.utrserver.models.User;
+import hu.bathorydse.utrserver.models.auth.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -80,12 +80,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }

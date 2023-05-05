@@ -1,4 +1,4 @@
-package hu.bathorydse.utrserver.models;
+package hu.bathorydse.utrserver.models.auth;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 7227441009017620806L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

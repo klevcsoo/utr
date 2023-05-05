@@ -1,4 +1,4 @@
-package hu.bathorydse.utrserver.models;
+package hu.bathorydse.utrserver.models.auth;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class User implements Serializable {
 
     private static final long serialVersionUID = -6555251784394553383L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

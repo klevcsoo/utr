@@ -1,8 +1,8 @@
 package hu.bathorydse.utrserver.controllers;
 
-import hu.bathorydse.utrserver.models.ERole;
-import hu.bathorydse.utrserver.models.Role;
-import hu.bathorydse.utrserver.models.User;
+import hu.bathorydse.utrserver.models.auth.ERole;
+import hu.bathorydse.utrserver.models.auth.Role;
+import hu.bathorydse.utrserver.models.auth.User;
 import hu.bathorydse.utrserver.payload.request.LoginRequest;
 import hu.bathorydse.utrserver.payload.request.NewUserRequest;
 import hu.bathorydse.utrserver.payload.response.JwtResponse;
@@ -15,9 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

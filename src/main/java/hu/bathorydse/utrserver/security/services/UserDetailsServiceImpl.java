@@ -1,6 +1,6 @@
 package hu.bathorydse.utrserver.security.services;
 
-import hu.bathorydse.utrserver.models.User;
+import hu.bathorydse.utrserver.models.auth.User;
 import hu.bathorydse.utrserver.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

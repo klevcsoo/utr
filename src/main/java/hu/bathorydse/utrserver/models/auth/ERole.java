@@ -1,4 +1,4 @@
-package hu.bathorydse.utrserver.models;
+package hu.bathorydse.utrserver.models.auth;
 
 public enum ERole {
     ROLE_ADMIN,
