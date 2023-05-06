@@ -1,6 +1,5 @@
 package hu.bathorydse.utrserver.controllers;
 
-import hu.bathorydse.utrserver.models.Futam;
 import hu.bathorydse.utrserver.models.Versenyszam;
 import hu.bathorydse.utrserver.models.VersenyszamNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
@@ -22,48 +21,59 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/versenyszamok")
+@PreAuthorize("hasRole('ADMIN')")
 public class VersenyszamokController {
 
     @Autowired
     private VersenyszamRepository versenyszamRepository;
 
+    @GetMapping("/")
+    public ResponseEntity<?> getAllVersenyszamok(@RequestParam Long versenyId) {
+        return ResponseEntity.ok(
+            versenyszamRepository.findAllByVersenyId(versenyId));
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<?> createVersenyszam(@RequestParam Long versenyId,
+        @RequestParam Integer hossz, @RequestParam Integer uszasnemId,
+        @RequestParam @Size(min = 1, max = 1) String emberiNemId,
+        @RequestParam(required = false) Integer valto) {
+        Versenyszam versenyszam = new Versenyszam(versenyId, hossz, uszasnemId,
+            emberiNemId, valto);
+        versenyszamRepository.save(versenyszam);
+
+        return ResponseEntity.ok(new MessageResponse("Versenyszám hozzáadva."));
+    }
+
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
-    public ResponseEntity<?> getVersenyszam(
-        @PathVariable String id
-    ) {
+    public ResponseEntity<?> getVersenyszam(@PathVariable String id) {
         Versenyszam versenyszam;
         try {
             versenyszam = retrieveVersenyszam(id);
         } catch (VersenyszamNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         return ResponseEntity.ok(versenyszam);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> editVersenyszam(
-        @PathVariable String id,
+    public ResponseEntity<?> editVersenyszam(@PathVariable String id,
         @RequestParam(required = false) Integer hossz,
         @RequestParam(required = false) Integer uszasnem,
         @RequestParam(required = false) @Size(min = 1, max = 1) String nem,
-        @RequestParam(required = false) Integer valto
-    ) {
+        @RequestParam(required = false) Integer valto) {
         Versenyszam versenyszam;
         try {
             versenyszam = retrieveVersenyszam(id);
         } catch (VersenyszamNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         if (hossz != null) {
@@ -84,13 +94,10 @@ public class VersenyszamokController {
 
         versenyszamRepository.save(versenyszam);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Módosítások mentve.")
-        );
+        return ResponseEntity.ok(new MessageResponse("Módosítások mentve."));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteVersenyszam(@PathVariable String id) {
         Versenyszam versenyszam;
         try {
@@ -98,55 +105,13 @@ public class VersenyszamokController {
         } catch (VersenyszamNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         versenyszamRepository.delete(versenyszam);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Versenyszám törölve.")
-        );
-    }
-
-    @GetMapping("/{id}/futamok/")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getAllFutamok(@PathVariable String id) {
-        Versenyszam versenyszam;
-        try {
-            versenyszam = retrieveVersenyszam(id);
-        } catch (VersenyszamNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
-        }
-
-        return ResponseEntity.ok(versenyszam.getFutamok());
-    }
-
-    @PutMapping("/{id}/futamok/")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createFutam(@PathVariable String id) {
-        Versenyszam versenyszam;
-        try {
-            versenyszam = retrieveVersenyszam(id);
-        } catch (VersenyszamNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
-        }
-
-        versenyszam.getFutamok().add(new Futam(versenyszam.getId()));
-        versenyszamRepository.save(versenyszam);
-
-        return ResponseEntity.ok(
-            new MessageResponse("Futam létrehozva.")
-        );
+        return ResponseEntity.ok(new MessageResponse("Versenyszám törölve."));
     }
 
     private Versenyszam retrieveVersenyszam(String idString)

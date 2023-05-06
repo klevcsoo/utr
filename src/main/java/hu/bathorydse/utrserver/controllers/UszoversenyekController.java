@@ -3,11 +3,9 @@ package hu.bathorydse.utrserver.controllers;
 import hu.bathorydse.utrserver.core.ControllerUtils;
 import hu.bathorydse.utrserver.models.Uszoverseny;
 import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
-import hu.bathorydse.utrserver.models.Versenyszam;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.UszoversenyRepository;
 import java.util.Date;
-import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,36 +22,31 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/uszoversenyek")
+@PreAuthorize("hasRole('ADMIN')")
 public class UszoversenyekController {
 
     @Autowired
     private UszoversenyRepository uszoversenyRepository;
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllVersenyek() {
         return ResponseEntity.ok(uszoversenyRepository.findAll());
     }
 
     @PutMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createNewVerseny(
-        @RequestParam() String nev,
+    public ResponseEntity<?> createNewVerseny(@RequestParam() String nev,
         @RequestParam(required = false) String helyszin,
-        @RequestParam(required = false) String datum
-    ) {
+        @RequestParam(required = false) String datum) {
         Date date = ControllerUtils.createDate(datum);
 
         Uszoverseny uszoverseny = new Uszoverseny(nev, helyszin, date);
         uszoversenyRepository.save(uszoverseny);
 
         return ResponseEntity.ok(
-            new MessageResponse("Úszóverseny létrehozva.")
-        );
+            new MessageResponse("Úszóverseny létrehozva."));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
     public ResponseEntity<?> getVerseny(@PathVariable String id) {
         Uszoverseny uszoverseny;
         try {
@@ -61,22 +54,18 @@ public class UszoversenyekController {
         } catch (UszoversenyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         return ResponseEntity.ok(uszoverseny);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> editVerseny(
-        @PathVariable String id,
+    public ResponseEntity<?> editVerseny(@PathVariable String id,
         @RequestParam(required = false) String nev,
         @RequestParam(required = false) String helyszin,
-        @RequestParam(required = false) String datum
-    ) {
+        @RequestParam(required = false) String datum) {
         Date date = ControllerUtils.createDate(datum);
 
         Uszoverseny uszoverseny;
@@ -85,9 +74,8 @@ public class UszoversenyekController {
         } catch (UszoversenyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         if (nev != null) {
@@ -108,7 +96,6 @@ public class UszoversenyekController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteVerseny(@PathVariable String id) {
         Uszoverseny uszoverseny;
         try {
@@ -116,64 +103,13 @@ public class UszoversenyekController {
         } catch (UszoversenyNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         uszoversenyRepository.delete(uszoverseny);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Úszóverseny törölve.")
-        );
-    }
-
-    @GetMapping("/{id}/versenyszamok/")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
-    public ResponseEntity<?> getAllVersenyszamok(@PathVariable String id) {
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = retrieveUszoverseny(id);
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
-        }
-
-        return ResponseEntity.ok(uszoverseny.getVersenyszamok());
-    }
-
-    @PutMapping("/{id}/versenyszamok/")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createNewVersenyszam(
-        @PathVariable String id,
-        @RequestParam Integer hossz,
-        @RequestParam Integer uszasnemId,
-        @RequestParam @Size(min = 1, max = 1) String emberiNemId,
-        @RequestParam(required = false) Integer valto
-    ) {
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = retrieveUszoverseny(id);
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
-        }
-
-        uszoverseny.getVersenyszamok().add(new Versenyszam(
-            uszoverseny.getId(), hossz, uszasnemId, emberiNemId, valto
-        ));
-
-        uszoversenyRepository.save(uszoverseny);
-
-        return ResponseEntity.ok(
-            new MessageResponse("Versenyszám hozzáadva")
-        );
+        return ResponseEntity.ok(new MessageResponse("Úszóverseny törölve."));
     }
 
     private Uszoverseny retrieveUszoverseny(String idString) {

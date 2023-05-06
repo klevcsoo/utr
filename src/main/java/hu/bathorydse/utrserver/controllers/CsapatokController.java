@@ -2,10 +2,8 @@ package hu.bathorydse.utrserver.controllers;
 
 import hu.bathorydse.utrserver.models.Csapat;
 import hu.bathorydse.utrserver.models.CsapatNotFoundException;
-import hu.bathorydse.utrserver.models.Uszo;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.CsapatRepository;
-import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,32 +20,26 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/csapatok")
+@PreAuthorize("hasRole('ADMIN')")
 public class CsapatokController {
 
     @Autowired
     private CsapatRepository csapatRepository;
 
     @GetMapping("/")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
     public ResponseEntity<?> getAllCsapatok() {
         return ResponseEntity.ok(csapatRepository.findAll());
     }
 
     @PutMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createCsapat(
-        @RequestParam String nev,
-        @RequestParam(required = false) String varos
-    ) {
+    public ResponseEntity<?> createCsapat(@RequestParam String nev,
+        @RequestParam(required = false) String varos) {
         Csapat csapat = new Csapat(nev, varos);
         csapatRepository.save(csapat);
-        return ResponseEntity.ok(
-            new MessageResponse("Csapat létrehozva")
-        );
+        return ResponseEntity.ok(new MessageResponse("Csapat létrehozva"));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
     public ResponseEntity<?> getCsapat(@PathVariable String id) {
         Csapat csapat;
         try {
@@ -55,30 +47,25 @@ public class CsapatokController {
         } catch (CsapatNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum"));
         }
 
         return ResponseEntity.ok(csapat);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> editCsapat(
-        @PathVariable String id,
+    public ResponseEntity<?> editCsapat(@PathVariable String id,
         @RequestParam(required = false) String nev,
-        @RequestParam(required = false) String varos
-    ) {
+        @RequestParam(required = false) String varos) {
         Csapat csapat;
         try {
             csapat = retrieveCsapat(id);
         } catch (CsapatNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum"));
         }
 
         if (nev != null) {
@@ -91,13 +78,10 @@ public class CsapatokController {
 
         csapatRepository.save(csapat);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Módosítások mentve")
-        );
+        return ResponseEntity.ok(new MessageResponse("Módosítások mentve"));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteCsapat(@PathVariable String id) {
         Csapat csapat;
         try {
@@ -105,62 +89,13 @@ public class CsapatokController {
         } catch (CsapatNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum"));
         }
 
         csapatRepository.delete(csapat);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Csapat törölve.")
-        );
-    }
-
-    @GetMapping("/{id}/uszok/")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
-    public ResponseEntity<?> getAllUszok(@PathVariable String id) {
-        Csapat csapat;
-        try {
-            csapat = retrieveCsapat(id);
-        } catch (CsapatNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum")
-            );
-        }
-
-        return ResponseEntity.ok(csapat.getUszok());
-    }
-
-    @PutMapping("/{id}/uszok/")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createNewUszo(
-        @PathVariable String id,
-        @RequestParam String nev,
-        @RequestParam String szuletesiEv,
-        @RequestParam @Size(min = 1, max = 1) String nem
-    ) {
-        short ev = Short.parseShort(szuletesiEv);
-
-        Csapat csapat;
-        try {
-            csapat = retrieveCsapat(id);
-        } catch (CsapatNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum")
-            );
-        }
-
-        csapat.getUszok().add(new Uszo(nev, ev, csapat.getId(), nem));
-        csapatRepository.save(csapat);
-
-        return ResponseEntity.ok(
-            new MessageResponse("Úszó hozzáadva.")
-        );
+        return ResponseEntity.ok(new MessageResponse("Csapat törölve."));
     }
 
     private Csapat retrieveCsapat(String idString)

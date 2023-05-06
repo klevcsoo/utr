@@ -2,11 +2,8 @@ package hu.bathorydse.utrserver.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,13 +18,11 @@ public class Nevezes {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "uszo_id")
-    private Uszo uszo;
+    @Column(name = "uszo_id")
+    private Long uszoId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "versenyszam_id")
-    private Versenyszam versenyszam;
+    @Column(name = "versenyszam_id")
+    private Long versenyszamId;
 
     @Column(name = "nevezesi_ido")
     private String nevezesiIdo;
@@ -38,13 +33,14 @@ public class Nevezes {
     @Column(name = "megjelent")
     private Boolean megjelent;
 
-    public Nevezes(Uszo uszo, Versenyszam versenyszam, String nevezesiIdo) {
-        this.uszo = uszo;
-        this.versenyszam = versenyszam;
+    public Nevezes(Long uszoId, Long versenyszamId, String nevezesiIdo) {
+        this.uszoId = uszoId;
+        this.versenyszamId = versenyszamId;
         this.nevezesiIdo = nevezesiIdo;
     }
 
-    public Nevezes(Uszo uszo, Versenyszam versenyszam) {
-        this(uszo, versenyszam, null);
+    public Nevezes(Long uszoId, Long versenyszamId) {
+        this.uszoId = uszoId;
+        this.versenyszamId = versenyszamId;
     }
 }

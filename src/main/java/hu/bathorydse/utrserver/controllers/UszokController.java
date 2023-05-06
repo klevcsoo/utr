@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,13 +22,28 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/uszok")
+@PreAuthorize("hasRole('ADMIN')")
 public class UszokController {
 
     @Autowired
     UszoRepository uszoRepository;
 
+    @GetMapping("/")
+    public ResponseEntity<?> getAllUszokI(@RequestParam Long csapatId) {
+        return ResponseEntity.ok(uszoRepository.findAllByCsapatId(csapatId));
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<?> createUszo(@RequestParam Long csapatId,
+        @RequestParam String nev, @RequestParam Short szuletesiEv,
+        @RequestParam @Size(min = 1, max = 1) String nem) {
+        Uszo uszo = new Uszo(nev, szuletesiEv, csapatId, nem);
+        uszoRepository.save(uszo);
+
+        return ResponseEntity.ok(new MessageResponse("Úszó hozzáadva."));
+    }
+
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
     public ResponseEntity<?> getUszo(@PathVariable String id) {
         Uszo uszo;
         try {
@@ -35,32 +51,27 @@ public class UszokController {
         } catch (UszoNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         return ResponseEntity.ok(uszo);
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> editUszo(
-        @PathVariable String id,
+    public ResponseEntity<?> editUszo(@PathVariable String id,
         @RequestParam(required = false) String nev,
         @RequestParam(required = false) String szuletesiEv,
         @RequestParam(required = false) Long csapat,
-        @RequestParam(required = false) @Size(min = 1, max = 1) String nem
-    ) {
+        @RequestParam(required = false) @Size(min = 1, max = 1) String nem) {
         Uszo uszo;
         try {
             uszo = retrieveUszo(id);
         } catch (UszoNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         if (nev != null) {
@@ -81,13 +92,10 @@ public class UszokController {
 
         uszoRepository.save(uszo);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Módosítások mentve.")
-        );
+        return ResponseEntity.ok(new MessageResponse("Módosítások mentve."));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUszo(@PathVariable String id) {
         Uszo uszo;
         try {
@@ -95,16 +103,13 @@ public class UszokController {
         } catch (UszoNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(
-                new MessageResponse("Hibás azonosító formátum.")
-            );
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Hibás azonosító formátum."));
         }
 
         uszoRepository.delete(uszo);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Úszó törölve.")
-        );
+        return ResponseEntity.ok(new MessageResponse("Úszó törölve."));
     }
 
     private Uszo retrieveUszo(String idString)
