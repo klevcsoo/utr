@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,5 +46,14 @@ public class NyitottController {
         uszoversenyRepository.save(uszoverseny);
 
         return ResponseEntity.ok(new MessageResponse("Úszóverseny lezárva."));
+    }
+
+    @GetMapping("/reszletek")
+    @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
+    public ResponseEntity<?> nyitottVersenyReszletek() {
+        Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
+            .orElseThrow(NoNyitottUszoversenyException::new);
+
+        return ResponseEntity.ok(uszoverseny);
     }
 }
