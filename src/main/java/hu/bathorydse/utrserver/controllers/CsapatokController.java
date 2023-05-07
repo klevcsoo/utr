@@ -40,33 +40,19 @@ public class CsapatokController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCsapat(@PathVariable String id) {
-        Csapat csapat;
-        try {
-            csapat = retrieveCsapat(id);
-        } catch (CsapatNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum"));
-        }
+    public ResponseEntity<?> getCsapat(@PathVariable Long id) {
+        Csapat csapat = csapatRepository.findById(id)
+            .orElseThrow(() -> new CsapatNotFoundException(id));
 
         return ResponseEntity.ok(csapat);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editCsapat(@PathVariable String id,
+    public ResponseEntity<?> editCsapat(@PathVariable Long id,
         @RequestParam(required = false) String nev,
         @RequestParam(required = false) String varos) {
-        Csapat csapat;
-        try {
-            csapat = retrieveCsapat(id);
-        } catch (CsapatNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum"));
-        }
+        Csapat csapat = csapatRepository.findById(id)
+            .orElseThrow(() -> new CsapatNotFoundException(id));
 
         if (nev != null) {
             csapat.setNev(nev);
@@ -82,26 +68,12 @@ public class CsapatokController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCsapat(@PathVariable String id) {
-        Csapat csapat;
-        try {
-            csapat = retrieveCsapat(id);
-        } catch (CsapatNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum"));
-        }
+    public ResponseEntity<?> deleteCsapat(@PathVariable Long id) {
+        Csapat csapat = csapatRepository.findById(id)
+            .orElseThrow(() -> new CsapatNotFoundException(id));
 
         csapatRepository.delete(csapat);
 
         return ResponseEntity.ok(new MessageResponse("Csapat törölve."));
-    }
-
-    private Csapat retrieveCsapat(String idString)
-        throws NumberFormatException, CsapatNotFoundException {
-        long id = Long.parseLong(idString);
-        return csapatRepository.findById(id)
-            .orElseThrow(() -> new CsapatNotFoundException(id));
     }
 }

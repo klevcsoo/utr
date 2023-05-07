@@ -44,35 +44,21 @@ public class UszokController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUszo(@PathVariable String id) {
-        Uszo uszo;
-        try {
-            uszo = retrieveUszo(id);
-        } catch (UszoNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> getUszo(@PathVariable Long id) {
+        Uszo uszo = uszoRepository.findById(id)
+            .orElseThrow(() -> new UszoNotFoundException(id));
 
         return ResponseEntity.ok(uszo);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editUszo(@PathVariable String id,
+    public ResponseEntity<?> editUszo(@PathVariable Long id,
         @RequestParam(required = false) String nev,
         @RequestParam(required = false) String szuletesiEv,
         @RequestParam(required = false) Long csapat,
         @RequestParam(required = false) @Size(min = 1, max = 1) String nem) {
-        Uszo uszo;
-        try {
-            uszo = retrieveUszo(id);
-        } catch (UszoNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+        Uszo uszo = uszoRepository.findById(id)
+            .orElseThrow(() -> new UszoNotFoundException(id));
 
         if (nev != null) {
             uszo.setNev(nev);
@@ -96,26 +82,12 @@ public class UszokController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUszo(@PathVariable String id) {
-        Uszo uszo;
-        try {
-            uszo = retrieveUszo(id);
-        } catch (UszoNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> deleteUszo(@PathVariable Long id) {
+        Uszo uszo = uszoRepository.findById(id)
+            .orElseThrow(() -> new UszoNotFoundException(id));
 
         uszoRepository.delete(uszo);
 
         return ResponseEntity.ok(new MessageResponse("Úszó törölve."));
-    }
-
-    private Uszo retrieveUszo(String idString)
-        throws UszoNotFoundException, NumberFormatException {
-        long id = Long.parseLong(idString);
-        return uszoRepository.findById(id)
-            .orElseThrow(() -> new UszoNotFoundException(id));
     }
 }

@@ -56,34 +56,20 @@ public class NevezesekController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getNevezes(@PathVariable String id) {
-        Nevezes nevezes;
-        try {
-            nevezes = retrieveNevezes(id);
-        } catch (NevezesNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> getNevezes(@PathVariable Long id) {
+        Nevezes nevezes = nevezesRepository.findById(id)
+            .orElseThrow(() -> new NevezesNotFoundException(id));
 
         return ResponseEntity.ok(nevezes);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editNevezes(@PathVariable String id,
+    public ResponseEntity<?> editNevezes(@PathVariable Long id,
         @RequestParam(required = false) Long versenyszamId,
         @RequestParam(required = false) Long uszoId,
         @RequestParam(required = false) String nevezesiIdo) {
-        Nevezes nevezes;
-        try {
-            nevezes = retrieveNevezes(id);
-        } catch (NevezesNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+        Nevezes nevezes = nevezesRepository.findById(id)
+            .orElseThrow(() -> new NevezesNotFoundException(id));
 
         if (versenyszamId != null) {
             nevezes.setVersenyszamId(versenyszamId);
@@ -110,25 +96,11 @@ public class NevezesekController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteNevezes(@PathVariable String id) {
-        Nevezes nevezes;
-        try {
-            nevezes = retrieveNevezes(id);
-        } catch (NevezesNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> deleteNevezes(@PathVariable Long id) {
+        Nevezes nevezes = nevezesRepository.findById(id)
+            .orElseThrow(() -> new NevezesNotFoundException(id));
 
         nevezesRepository.delete(nevezes);
         return ResponseEntity.ok(new MessageResponse("Nevezés törölve."));
-    }
-
-    private Nevezes retrieveNevezes(String idString)
-        throws NumberFormatException, NevezesNotFoundException {
-        long id = Long.parseLong(idString);
-        return nevezesRepository.findById(id)
-            .orElseThrow(() -> new NevezesNotFoundException(id));
     }
 }

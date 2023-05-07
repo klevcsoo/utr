@@ -1,8 +1,8 @@
 package hu.bathorydse.utrserver.controllers;
 
 import hu.bathorydse.utrserver.core.ControllerUtils;
+import hu.bathorydse.utrserver.models.UszoNotFoundException;
 import hu.bathorydse.utrserver.models.Uszoverseny;
-import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.UszoversenyRepository;
 import java.util.Date;
@@ -47,36 +47,22 @@ public class UszoversenyekController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getVerseny(@PathVariable String id) {
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = retrieveUszoverseny(id);
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> getVerseny(@PathVariable Long id) {
+        Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
+            .orElseThrow(() -> new UszoNotFoundException(id));
 
         return ResponseEntity.ok(uszoverseny);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editVerseny(@PathVariable String id,
+    public ResponseEntity<?> editVerseny(@PathVariable Long id,
         @RequestParam(required = false) String nev,
         @RequestParam(required = false) String helyszin,
         @RequestParam(required = false) String datum) {
         Date date = ControllerUtils.createDate(datum);
 
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = retrieveUszoverseny(id);
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+        Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
+            .orElseThrow(() -> new UszoNotFoundException(id));
 
         if (nev != null) {
             uszoverseny.setNev(nev);
@@ -96,25 +82,12 @@ public class UszoversenyekController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteVerseny(@PathVariable String id) {
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = retrieveUszoverseny(id);
-        } catch (UszoversenyNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> deleteVerseny(@PathVariable Long id) {
+        Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
+            .orElseThrow(() -> new UszoNotFoundException(id));
 
         uszoversenyRepository.delete(uszoverseny);
 
         return ResponseEntity.ok(new MessageResponse("Úszóverseny törölve."));
-    }
-
-    private Uszoverseny retrieveUszoverseny(String idString) {
-        long id = Long.parseLong(idString);
-        return uszoversenyRepository.findById(id)
-            .orElseThrow(() -> new UszoversenyNotFoundException(id));
     }
 }

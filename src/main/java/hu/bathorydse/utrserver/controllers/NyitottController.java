@@ -1,7 +1,6 @@
 package hu.bathorydse.utrserver.controllers;
 
 import hu.bathorydse.utrserver.models.NoNyitottUszoversenyException;
-import hu.bathorydse.utrserver.models.UszoNotFoundException;
 import hu.bathorydse.utrserver.models.Uszoverseny;
 import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
@@ -27,30 +26,20 @@ public class NyitottController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> uszoversenyMegnyitasa(
         @RequestParam Long versenyId) {
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = uszoversenyRepository.findById(versenyId)
-                .orElseThrow(() -> new UszoversenyNotFoundException(versenyId));
-        } catch (UszoNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Uszoverseny uszoverseny = uszoversenyRepository.findById(versenyId)
+            .orElseThrow(() -> new UszoversenyNotFoundException(versenyId));
 
         uszoverseny.setNyitott(true);
         uszoversenyRepository.save(uszoverseny);
 
-        return ResponseEntity.ok(new MessageResponse("Úszóverseny megnyitva"));
+        return ResponseEntity.ok(new MessageResponse("Úszóverseny megnyitva."));
     }
 
     @PostMapping("/lezaras")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> uszoversenyLezarasa() {
-        Uszoverseny uszoverseny;
-        try {
-            uszoverseny = uszoversenyRepository.findByNyitott(true)
-                .orElseThrow(NoNyitottUszoversenyException::new);
-        } catch (NoNyitottUszoversenyException e) {
-            return ResponseEntity.noContent().build();
-        }
+        Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
+            .orElseThrow(NoNyitottUszoversenyException::new);
 
         uszoverseny.setNyitott(false);
         uszoversenyRepository.save(uszoverseny);

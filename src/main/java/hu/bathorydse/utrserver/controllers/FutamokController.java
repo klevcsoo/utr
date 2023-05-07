@@ -39,24 +39,10 @@ public class FutamokController {
     }
 
     @GetMapping("/{futamId}/rajtlista")
-    public ResponseEntity<?> getRajtlista(@PathVariable String futamId) {
-        Futam futam;
-        try {
-            futam = retrieveFutam(futamId);
-        } catch (FutamNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> getRajtlista(@PathVariable Long futamId) {
+        Futam futam = futamRepository.findById(futamId)
+            .orElseThrow(() -> new FutamNotFoundException(futamId));
 
         return ResponseEntity.ok(futam.getRajtlista());
-    }
-
-    private Futam retrieveFutam(String idString)
-        throws FutamNotFoundException, NumberFormatException {
-        long id = Long.parseLong(idString);
-        return futamRepository.findById(id)
-            .orElseThrow(() -> new FutamNotFoundException(id));
     }
 }

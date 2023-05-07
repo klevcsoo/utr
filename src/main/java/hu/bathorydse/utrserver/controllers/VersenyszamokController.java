@@ -46,35 +46,21 @@ public class VersenyszamokController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getVersenyszam(@PathVariable String id) {
-        Versenyszam versenyszam;
-        try {
-            versenyszam = retrieveVersenyszam(id);
-        } catch (VersenyszamNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> getVersenyszam(@PathVariable Long id) {
+        Versenyszam versenyszam = versenyszamRepository.findById(id)
+            .orElseThrow(() -> new VersenyszamNotFoundException(id));
 
         return ResponseEntity.ok(versenyszam);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editVersenyszam(@PathVariable String id,
+    public ResponseEntity<?> editVersenyszam(@PathVariable Long id,
         @RequestParam(required = false) Integer hossz,
         @RequestParam(required = false) Integer uszasnem,
         @RequestParam(required = false) @Size(min = 1, max = 1) String nem,
         @RequestParam(required = false) Integer valto) {
-        Versenyszam versenyszam;
-        try {
-            versenyszam = retrieveVersenyszam(id);
-        } catch (VersenyszamNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+        Versenyszam versenyszam = versenyszamRepository.findById(id)
+            .orElseThrow(() -> new VersenyszamNotFoundException(id));
 
         if (hossz != null) {
             versenyszam.setHossz(hossz);
@@ -98,26 +84,12 @@ public class VersenyszamokController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteVersenyszam(@PathVariable String id) {
-        Versenyszam versenyszam;
-        try {
-            versenyszam = retrieveVersenyszam(id);
-        } catch (VersenyszamNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                .body(new MessageResponse("Hibás azonosító formátum."));
-        }
+    public ResponseEntity<?> deleteVersenyszam(@PathVariable Long id) {
+        Versenyszam versenyszam = versenyszamRepository.findById(id)
+            .orElseThrow(() -> new VersenyszamNotFoundException(id));
 
         versenyszamRepository.delete(versenyszam);
 
         return ResponseEntity.ok(new MessageResponse("Versenyszám törölve."));
-    }
-
-    private Versenyszam retrieveVersenyszam(String idString)
-        throws VersenyszamNotFoundException, NumberFormatException {
-        long id = Long.parseLong(idString);
-        return versenyszamRepository.findById(id)
-            .orElseThrow(() -> new VersenyszamNotFoundException(id));
     }
 }
