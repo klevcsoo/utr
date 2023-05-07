@@ -30,9 +30,12 @@ public class Uszoverseny implements Serializable {
 
     private Date datum;
 
+    private Boolean nyitott;
+
     public Uszoverseny(String nev, String helyszin, Date datum) {
         this.nev = nev;
         this.helyszin = helyszin;
         this.datum = datum;
+        this.nyitott = false;
     }
 }
