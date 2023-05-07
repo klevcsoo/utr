@@ -25,22 +25,18 @@ public class Nevezes {
     private Long versenyszamId;
 
     @Column(name = "nevezesi_ido")
-    private String nevezesiIdo;
+    private Integer nevezesiIdo;
 
     @Column(name = "idoeredmeny")
-    private String idoeredmeny;
+    private Integer idoeredmeny;
 
     @Column(name = "megjelent")
     private Boolean megjelent;
 
-    public Nevezes(Long uszoId, Long versenyszamId, String nevezesiIdo) {
+    public Nevezes(Long uszoId, Long versenyszamId, Integer nevezesiIdo) {
         this.uszoId = uszoId;
         this.versenyszamId = versenyszamId;
         this.nevezesiIdo = nevezesiIdo;
-    }
-
-    public Nevezes(Long uszoId, Long versenyszamId) {
-        this.uszoId = uszoId;
-        this.versenyszamId = versenyszamId;
+        this.megjelent = true;
     }
 }
