@@ -13,5 +13,7 @@ public interface NevezesRepository extends JpaRepository<Nevezes, Long> {
     List<Nevezes> findAllByVersenyszamId(@NonNull Long id);
 
     @NonNull
-    List<Nevezes> findAllByUszoId(@NonNull Long id);
+    List<Nevezes> findAllByVersenyszamIdAndUszoId(
+        @NonNull Long versenyszamId,
+        @NonNull Long uszoId);
 }

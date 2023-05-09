@@ -31,7 +31,7 @@ public class Futam {
     @JoinTable(name = "rajtlista",
         joinColumns = @JoinColumn(name = "futam_id"),
         inverseJoinColumns = @JoinColumn(name = "nevezes_id"))
-    private Set<Nevezes> rajtlista = new HashSet<>();
+    private Set<NevezesDetailed> rajtlista = new HashSet<>();
 
     public Futam(Long versenyszamId) {
         this.versenyszamId = versenyszamId;
