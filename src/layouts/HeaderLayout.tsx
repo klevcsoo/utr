@@ -4,7 +4,7 @@ import {useCallback, useEffect, useState} from "react";
 
 export function HeaderLayout() {
     return (
-        <div className="h-16 px-8 absolute inset-0 z-40 bg-white shadow-xl
+        <div className="h-16 px-8 mb-8 sticky inset-0 z-40 bg-white shadow-xl
         flex flex-row gap-8 justify-between items-center">
             <div className="flex flex-row gap-8 items-center">
                 <h1 className="text-4xl"><b>UTR</b></h1>
