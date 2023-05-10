@@ -1,4 +1,4 @@
-export function BasicButton(props: {
+export function PrimaryButton(props: {
     text: string
     onClick(): void
     disabled?: boolean
