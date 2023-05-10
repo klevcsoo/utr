@@ -1,44 +1,38 @@
-import React, {Fragment, ReactNode, useCallback, useContext} from 'react';
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import AuthProvider from "./components/AuthProvider";
+import React from 'react';
+import {Outlet, Route, Routes} from "react-router-dom";
 import {LoginPage} from "./pages/LoginPage";
-import {AuthContext} from "./api/auth";
-import {UserRole} from "./types/UserRole";
+import {CsapatokOverviewPage} from "./pages/CsapatokOverviewPage";
+import {UnprotectedView} from "./components/UnprotectedView";
+import {HeaderLayout} from "./layouts/HeaderLayout";
+import {NavbarLayout} from "./layouts/NavbarLayout";
+import {ProtectedView} from "./components/ProtectedView";
+import {LandingPage} from "./pages/LandingPage";
 
 function App() {
     return (
-        <BrowserRouter basename={"/client"}>
-            <AuthProvider>
-                <ContentRoot/>
-            </AuthProvider>
-        </BrowserRouter>
-    );
-}
-
-function ContentRoot() {
-    const {user} = useContext(AuthContext);
-
-    const ifUser = useCallback((node: ReactNode, role?: UserRole): ReactNode => {
-        return !!user && (!!role ? user.roles.includes(role) : true) ? node :
-            <Navigate to="/login"/> as ReactNode;
-    }, [user]);
-
-    const ifNotUser = useCallback((node: ReactNode): ReactNode => {
-        if (!user) {
-            return node;
-        } else {
-            return <Navigate to="/"/> as ReactNode;
-        }
-    }, [user]);
-
-    return (
-        <Fragment>
-            <div>hello</div>
-            <Routes>
-                <Route path="/" element={ifUser(<div>logged in</div>)}/>
-                <Route path="/login" element={ifNotUser(<LoginPage/>)}/>
-            </Routes>
-        </Fragment>
+        <Routes>
+            <Route path="/" element={
+                <ProtectedView>
+                    <HeaderLayout/>
+                    <LandingPage/>
+                    <Outlet/>
+                </ProtectedView>
+            }>
+                <Route path="overview" element={
+                    <ProtectedView role="admin">
+                        <NavbarLayout/>
+                        <Outlet/>
+                    </ProtectedView>
+                }>
+                    <Route path="csapatok" element={<CsapatokOverviewPage/>}/>
+                </Route>
+            </Route>
+            <Route path="/login" element={
+                <UnprotectedView>
+                    <LoginPage/>
+                </UnprotectedView>
+            }/>
+        </Routes>
     );
 }
 

@@ -41,5 +41,5 @@ export async function login(role: UserRole, password: string): Promise<UserDetai
 }
 
 export async function logout() {
-    throw new Error("Not Implemented.");
+    sessionStorage.removeItem("auth_data");
 }

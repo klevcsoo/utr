@@ -1,4 +1,4 @@
-import {ReactNode, useCallback, useState} from "react";
+import {ReactNode, useCallback, useEffect, useState} from "react";
 import {UserDetails} from "../types/UserDetails";
 import {AuthContext, login} from "../api/auth";
 import {UserRole} from "../types/UserRole";
@@ -16,13 +16,22 @@ function AuthProvider(props: {
 
             return login(username as UserRole, password).then(user => {
                 setUser(user);
+                sessionStorage.setItem("auth_data", JSON.stringify(user));
                 return user;
             });
         }, []
     );
 
     const doLogout = useCallback(() => {
-        throw new Error("Not Implemented.");
+        setUser(undefined);
+        sessionStorage.removeItem("auth_data");
+    }, []);
+
+    useEffect(() => {
+        const data = sessionStorage.getItem("auth_data");
+        if (!!data) {
+            setUser(JSON.parse(data));
+        }
     }, []);
 
     return (
