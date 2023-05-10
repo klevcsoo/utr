@@ -1,4 +1,4 @@
-export function LandingPage() {
+export function OpenVersenyPage() {
     return (
         <div>landing</div>
     );
