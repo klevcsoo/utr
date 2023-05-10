@@ -1,6 +1,6 @@
 import {useCallback, useContext, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
-import {BasicButton} from "../components/inputs/BasicButton";
+import {PrimaryButton} from "../components/inputs/PrimaryButton";
 import {AuthContext} from "../api/auth";
 
 export function LoginPage() {
@@ -21,7 +21,7 @@ export function LoginPage() {
             <div className="flex flex-col gap-4 items-center">
                 <TextInput value={username} onValue={setUsername}/>
                 <TextInput value={password} onValue={setPassword}/>
-                <BasicButton text="Bejelentkezés" onClick={doLogin} disabled={!canLogin}/>
+                <PrimaryButton text="Bejelentkezés" onClick={doLogin} disabled={!canLogin}/>
             </div>
         </div>
     );
