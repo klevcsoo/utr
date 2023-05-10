@@ -5,18 +5,26 @@ import {getOpenUszoverseny, getOpenVersenyszamok} from "../api/nyitottVerseny";
 import {useAuthUser} from "./useAuthUser";
 
 export function useNyitottVerseny():
-    (Uszoverseny & { versenyszamok: Versenyszam[] }) | undefined {
+    [(Uszoverseny & { versenyszamok: Versenyszam[] }) | undefined, boolean] {
     const {user} = useAuthUser();
 
     const [uszoverseny, setUszoverseny] = useState<Uszoverseny>();
     const [versenyszamok, setVersenyszamok] = useState<Versenyszam[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!!user) {
-            getOpenUszoverseny(user).then(setUszoverseny);
-            getOpenVersenyszamok(user).then(setVersenyszamok);
+            getOpenUszoverseny(user).then(setUszoverseny).catch(reason => {
+                console.error(reason);
+            }).finally(() => setLoading(false));
+            getOpenVersenyszamok(user).then(setVersenyszamok).catch(reason => {
+                console.error(reason);
+            }).finally(() => setLoading(false));
         }
     }, [user]);
 
-    return !uszoverseny ? undefined : {...uszoverseny, versenyszamok: versenyszamok};
+    return [
+        !uszoverseny ? undefined : {...uszoverseny, versenyszamok: versenyszamok},
+        loading
+    ];
 }

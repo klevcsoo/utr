@@ -6,7 +6,7 @@ import {UnprotectedView} from "./components/UnprotectedView";
 import {HeaderLayout} from "./layouts/HeaderLayout";
 import {NavbarLayout} from "./layouts/NavbarLayout";
 import {ProtectedView} from "./components/ProtectedView";
-import {OpenVersenyPage} from "./pages/OpenVersenyPage";
+import {NyitottVersenyPage} from "./pages/NyitottVersenyPage";
 
 function App() {
     return (
@@ -14,10 +14,10 @@ function App() {
             <Route path="/" element={
                 <ProtectedView>
                     <HeaderLayout/>
-                    <OpenVersenyPage/>
                     <Outlet/>
                 </ProtectedView>
             }>
+                <Route index element={<NyitottVersenyPage/>}/>
                 <Route path="overview" element={
                     <ProtectedView role="admin">
                         <NavbarLayout/>

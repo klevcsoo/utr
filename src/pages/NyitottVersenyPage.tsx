@@ -3,12 +3,17 @@ import {useAuthUser} from "../hooks/useAuthUser";
 import {Link} from "react-router-dom";
 import {PrimaryButton} from "../components/inputs/PrimaryButton";
 import {SecondaryButton} from "../components/inputs/SecondaryButton";
+import {LoadingSpinner} from "../components/LoadingSpinner";
 
-export function OpenVersenyPage() {
-    const uszoverseny = useNyitottVerseny();
+export function NyitottVersenyPage() {
+    const [uszoverseny, uszoversenyLoading] = useNyitottVerseny();
     const {user} = useAuthUser();
 
-    return !uszoverseny ? (
+    return uszoversenyLoading ? (
+        <div className="w-screen h-screen grid place-content-center">
+            <LoadingSpinner scale={50}/>
+        </div>
+    ) : !uszoverseny ? (
         <div className="w-screen h-screen grid place-items-center place-content-center
         gap-4">
             <p>Úgy látszik, nincs megnyitott úszóverseny.</p>
@@ -41,8 +46,8 @@ export function OpenVersenyPage() {
                     </Link>
                 </div>
             ) : null}
-            {uszoverseny.versenyszamok.map(value => (
-                <div>{JSON.stringify(value)}</div>
+            {uszoverseny.versenyszamok.map((value, index) => (
+                <div key={index}>{JSON.stringify(value)}</div>
             ))}
         </div>
     );
