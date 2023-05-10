@@ -5,7 +5,9 @@ export function BasicButton(props: {
 }) {
     return (
         <button type="button" disabled={props.disabled} onClick={props.onClick}
-                className="disabled:opacity-50">
+                className="max-w-sm px-4 py-1
+                rounded-md bg-blue-400 text-white text-lg
+                hover:bg-blue-600 transition-all">
             {props.text}
         </button>
     );
