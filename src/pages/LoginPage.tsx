@@ -19,8 +19,10 @@ export function LoginPage() {
     return (
         <div className="w-screen h-screen grid place-content-center">
             <div className="flex flex-col gap-4 items-center">
-                <TextInput value={username} onValue={setUsername}/>
-                <TextInput value={password} onValue={setPassword}/>
+                <TextInput value={username} onValue={setUsername}
+                           placeholder="Felhasználónév"/>
+                <TextInput value={password} onValue={setPassword}
+                           placeholder="Jelszó"/>
                 <PrimaryButton text="Bejelentkezés" onClick={doLogin} disabled={!canLogin}/>
             </div>
         </div>
