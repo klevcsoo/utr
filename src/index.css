@@ -4,7 +4,7 @@
 
 @layer base {
     * {
-        @apply text-neutral-800;
+        @apply text-slate-800;
     }
 }
 
