@@ -22,9 +22,12 @@ function AuthProvider(props: {
         }, []
     );
 
-    const doLogout = useCallback(() => {
-        setUser(undefined);
-        sessionStorage.removeItem("auth_data");
+    const doLogout = useCallback((): Promise<void> => {
+        return new Promise(resolve => {
+            setUser(undefined);
+            sessionStorage.removeItem("auth_data");
+            resolve();
+        });
     }, []);
 
     useEffect(() => {

@@ -15,7 +15,7 @@ let userDetails: UserDetails;
 export const AuthContext = createContext<{
     user: UserDetails | undefined
     login(username: string, password: string): Promise<UserDetails>
-    logout(): void
+    logout(): Promise<void>
 }>({user: undefined, login: login, logout: logout});
 
 export async function login(role: UserRole, password: string): Promise<UserDetails> {
