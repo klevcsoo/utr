@@ -33,8 +33,9 @@ export function NavbarLayout() {
             <div className="flex flex-col items-start gap-2 w-full">
                 <NavbarNavButton icon="support" text="Támogatás" to="/support"/>
                 <div className="w-full border-t-2 border-slate-300 my-2"></div>
-                <div className="w-full flex flex-row gap-4 items-center justify-between">
-                    <h3>{user?.displayName}</h3>
+                <div className="w-full flex flex-row gap-4
+                items-center justify-between">
+                    <h3 className="pl-2">{user?.displayName}</h3>
                     <button type="button" className="grid place-content-center
                     text-red-500 hover:bg-red-200 p-2 rounded-md" onClick={doLogout}>
                         <span className="material-symbols-rounded text-inherit">
