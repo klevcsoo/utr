@@ -19,11 +19,16 @@ export function NavbarLayout() {
         flex flex-col items-start gap-4 p-4 justify-between">
             <div className="flex flex-col items-start gap-2 w-full">
                 <AppLogo className="m-4"/>
-                <NavbarNavButton icon="event" text="Versenyek" to="/overview/versenyek"/>
-                <NavbarNavButton icon="groups" text="Csapatok" to="/overview/csapatok"/>
-                <NavbarNavButton icon="group" text="Úszók" to="/overview/uszok"/>
-                <NavbarNavButton icon="print" text="Nyomtatás" to="/overview/nyomtatas"/>
-                <NavbarNavButton icon="settings" text="Beállítások" to="/overview/settings"/>
+                <NavbarNavButton icon="event" text="Versenyek"
+                                 to="/overview/versenyek"/>
+                <NavbarNavButton icon="groups" text="Csapatok"
+                                 to="/overview/csapatok"/>
+                <NavbarNavButton icon="group" text="Úszók"
+                                 to="/overview/uszok"/>
+                <NavbarNavButton icon="print" text="Nyomtatás"
+                                 to="/overview/nyomtatas"/>
+                <NavbarNavButton icon="settings" text="Beállítások"
+                                 to="/overview/settings"/>
             </div>
             <div className="flex flex-col items-start gap-2 w-full">
                 <NavbarNavButton icon="support" text="Támogatás" to="/support"/>
