@@ -1,7 +1,6 @@
 import {ReactNode, useMemo} from "react";
 
 export function DataTable<T extends object>(props: {
-    caption: string
     dataList: T[]
     loadAllInOnePage?: boolean
     propertyNameOverride?: { [key in keyof T]?: string }
@@ -11,7 +10,7 @@ export function DataTable<T extends object>(props: {
     const propDisplayNames = useMemo<{ [key in keyof T]?: string }>(() => {
         const out: { [key in keyof T]?: string } = {};
 
-        for (const p of Object.keys(props.dataList[0])) {
+        for (const p of Object.keys(props.dataList[0] ?? {})) {
             out[p as keyof T] = p;
         }
 
@@ -25,7 +24,7 @@ export function DataTable<T extends object>(props: {
     }, [props.propertyNameOverride, props.dataList]);
 
     const columnNames = useMemo<string[]>(() => {
-        const out = Object.keys(props.dataList[0]).filter(key => {
+        const out = Object.keys(props.dataList[0] ?? {}).filter(key => {
             return !props.excludedProperties?.includes(key as keyof T);
         }).map(key => {
             return String(propDisplayNames[key as keyof T]);
