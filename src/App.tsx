@@ -6,6 +6,7 @@ import {UnprotectedView} from "./components/UnprotectedView";
 import {ProtectedView} from "./components/ProtectedView";
 import {NyitottVersenyPage} from "./pages/NyitottVersenyPage";
 import {AdminLayout} from "./layouts/AdminLayout";
+import {CsapatDetailsPage} from "./pages/CsapatDetailsPage";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     </ProtectedView>
                 }>
                     <Route path="csapatok" element={<CsapatokOverviewPage/>}/>
+                    <Route path="csapatok/:id/*" element={<CsapatDetailsPage/>}/>
                 </Route>
             </Route>
             <Route path="/login" element={

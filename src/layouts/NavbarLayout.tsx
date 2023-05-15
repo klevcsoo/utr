@@ -23,8 +23,6 @@ export function NavbarLayout() {
                                  to="/overview/versenyek"/>
                 <NavbarNavButton icon="groups" text="Csapatok"
                                  to="/overview/csapatok"/>
-                <NavbarNavButton icon="group" text="Úszók"
-                                 to="/overview/uszok"/>
                 <NavbarNavButton icon="print" text="Nyomtatás"
                                  to="/overview/nyomtatas"/>
                 <NavbarNavButton icon="settings" text="Beállítások"
