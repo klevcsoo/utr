@@ -2,6 +2,7 @@ import {NavLink} from "react-router-dom";
 import {AppLogo} from "../components/icons/AppLogo";
 import {useAuthUser} from "../hooks/useAuthUser";
 import {useCallback} from "react";
+import {RawMaterialIcon} from "../components/icons/RawMaterialIcon";
 
 export function NavbarLayout() {
     const {user, logout} = useAuthUser();
@@ -36,9 +37,7 @@ export function NavbarLayout() {
                     <h3 className="pl-2">{user?.displayName}</h3>
                     <button type="button" className="grid place-content-center
                     text-red-500 hover:bg-red-200 p-2 rounded-md" onClick={doLogout}>
-                        <span className="material-symbols-rounded text-inherit">
-                            logout
-                        </span>
+                        <RawMaterialIcon name="logout"/>
                     </button>
                 </div>
             </div>
@@ -58,9 +57,7 @@ function NavbarNavButton(props: {
             ${isActive ? "bg-white" :
             "bg-transparent hover:bg-slate-100"}
         `}>
-            <span className="material-symbols-rounded text-inherit">
-                {props.icon}
-            </span>
+            <RawMaterialIcon name={props.icon}/>
             {props.text}
         </NavLink>
     );
