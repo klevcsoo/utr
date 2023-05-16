@@ -2,6 +2,7 @@ import {useCallback, useContext, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
 import {PrimaryButton} from "../components/inputs/PrimaryButton";
 import {AuthContext} from "../api/auth";
+import {AppLogo} from "../components/AppLogo";
 
 export function LoginPage() {
     const [username, setUsername] = useState("");
@@ -19,11 +20,13 @@ export function LoginPage() {
     return (
         <div className="w-screen h-screen grid place-content-center">
             <div className="flex flex-col gap-4 items-center">
+                <AppLogo/>
                 <TextInput value={username} onValue={setUsername}
                            placeholder="Felhasználónév"/>
                 <TextInput value={password} onValue={setPassword}
                            placeholder="Jelszó"/>
-                <PrimaryButton text="Bejelentkezés" onClick={doLogin} disabled={!canLogin}/>
+                <PrimaryButton text="Bejelentkezés" onClick={doLogin}
+                               disabled={!canLogin}/>
             </div>
         </div>
     );
