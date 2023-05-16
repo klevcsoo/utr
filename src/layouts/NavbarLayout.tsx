@@ -1,5 +1,5 @@
 import {NavLink} from "react-router-dom";
-import {AppLogo} from "../components/AppLogo";
+import {AppLogo} from "../components/icons/AppLogo";
 import {useAuthUser} from "../hooks/useAuthUser";
 import {useCallback} from "react";
 

@@ -1,4 +1,4 @@
-import {ReactComponent as Logo} from "../assets/utr_logo.svg";
+import {ReactComponent as Logo} from "../../assets/utr_logo.svg";
 
 export function AppLogo(props: {
     scale?: number

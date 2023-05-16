@@ -2,7 +2,7 @@ import {useCallback, useContext, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
 import {PrimaryButton} from "../components/inputs/PrimaryButton";
 import {AuthContext} from "../api/auth";
-import {AppLogo} from "../components/AppLogo";
+import {AppLogo} from "../components/icons/AppLogo";
 
 export function LoginPage() {
     const [username, setUsername] = useState("");
