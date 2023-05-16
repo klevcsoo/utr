@@ -1,13 +1,13 @@
 export function RawMaterialIcon(props: {
-	name: string
-	className?: string
+    name: string
+    className?: string
 }) {
-	return (
-		<span className={
-			"material-symbols-rounded text-inherit " +
-			props.className ?? ""
-		}>
+    return (
+        <span className={
+            "material-symbols-rounded text-inherit select-none " +
+            props.className ?? ""
+        }>
 			{props.name}
 		</span>
-	);
+    );
 }
