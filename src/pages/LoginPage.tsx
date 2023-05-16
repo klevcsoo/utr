@@ -10,8 +10,9 @@ export function LoginPage() {
     const {login} = useContext(AuthContext);
 
     const canLogin = useMemo(() => {
-        return ["admin", "allitobiro", "idorogzito", "speaker"].includes(username);
-    }, [username]);
+        const usernames = ["admin", "allitobiro", "idorogzito", "speaker"];
+        return usernames.includes(username) && !!password;
+    }, [username, password]);
 
     const doLogin = useCallback(() => {
         login(username, password).then(u => console.log(u));
@@ -24,7 +25,7 @@ export function LoginPage() {
                 <TextInput value={username} onValue={setUsername}
                            placeholder="Felhasználónév"/>
                 <TextInput value={password} onValue={setPassword}
-                           placeholder="Jelszó"/>
+                           placeholder="Jelszó" password/>
                 <PrimaryButton text="Bejelentkezés" onClick={doLogin}
                                disabled={!canLogin}/>
             </div>
