@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {Csapat} from "../types/Csapat";
-import {getAllCsapatokList} from "../api/csapatok";
-import {useAuthUser} from "./useAuthUser";
+import {Csapat} from "../../types/Csapat";
+import {getAllCsapatokList} from "../../api/csapatok";
+import {useAuthUser} from "../auth/useAuthUser";
 
 export function useCsapatokList(): [Csapat[], boolean] {
     const {user} = useAuthUser();

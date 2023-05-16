@@ -1,10 +1,10 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
-import {useCsapatDetails} from "../hooks/useCsapatDetails";
+import {useCsapatDetails} from "../hooks/csapatok/useCsapatDetails";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {PrimaryButton} from "../components/inputs/PrimaryButton";
 import {WarningButton} from "../components/inputs/WarningButton";
-import {useUszokList} from "../hooks/useUszokList";
+import {useUszokList} from "../hooks/uszok/useUszokList";
 import {DataTable} from "../components/tables/DataTable";
 import {FullPageModal} from "../components/modals/FullPageModal";
 import {TextInput} from "../components/inputs/TextInput";
@@ -16,7 +16,7 @@ import {NumberInput} from "../components/inputs/NumberInput";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../components/inputs/IconButton";
 import {BorderCard} from "../components/containers/BorderCard";
-import {useUszoDetails} from "../hooks/useUszoDetails";
+import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 
 export function CsapatDetailsPage() {
     const {id} = useParams();

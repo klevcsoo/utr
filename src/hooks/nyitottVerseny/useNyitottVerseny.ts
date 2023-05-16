@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import {Versenyszam} from "../types/Versenyszam";
-import {Uszoverseny} from "../types/Uszoverseny";
-import {getOpenUszoverseny, getOpenVersenyszamok} from "../api/nyitottVerseny";
-import {useAuthUser} from "./useAuthUser";
+import {Versenyszam} from "../../types/Versenyszam";
+import {Uszoverseny} from "../../types/Uszoverseny";
+import {getOpenUszoverseny, getOpenVersenyszamok} from "../../api/nyitottVerseny";
+import {useAuthUser} from "../auth/useAuthUser";
 
 export function useNyitottVerseny():
     [(Uszoverseny & { versenyszamok: Versenyszam[] }) | undefined, boolean] {

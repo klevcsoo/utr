@@ -1,7 +1,7 @@
-import {Uszo} from "../types/Uszo";
+import {Uszo} from "../../types/Uszo";
 import {useEffect, useState} from "react";
-import {useAuthUser} from "./useAuthUser";
-import {getAllUszokInCsapat} from "../api/uszok";
+import {useAuthUser} from "../auth/useAuthUser";
+import {getAllUszokInCsapat} from "../../api/uszok";
 
 export function useUszokList(csapatId: number | undefined): [Uszo[], boolean] {
     const {user} = useAuthUser();

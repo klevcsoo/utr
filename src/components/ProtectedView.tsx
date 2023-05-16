@@ -1,5 +1,5 @@
 import {Fragment, ReactNode} from "react";
-import {useAuthUser} from "../hooks/useAuthUser";
+import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {UserRole} from "../types/UserRole";
 import {Navigate} from "react-router-dom";
 

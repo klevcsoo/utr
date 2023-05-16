@@ -1,4 +1,4 @@
-import {useAuthUser} from "../hooks/useAuthUser";
+import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {Fragment, ReactNode} from "react";
 import {Navigate} from "react-router-dom";
 

@@ -1,4 +1,4 @@
-import {useCsapatokList} from "../hooks/useCsapatokList";
+import {useCsapatokList} from "../hooks/csapatok/useCsapatokList";
 import {DataTable} from "../components/tables/DataTable";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Link, useSearchParams} from "react-router-dom";
@@ -8,7 +8,7 @@ import {FullPageModal} from "../components/modals/FullPageModal";
 import {TitleIcon} from "../components/icons/TitleIcon";
 import {SecondaryButton} from "../components/inputs/SecondaryButton";
 import {TextInput} from "../components/inputs/TextInput";
-import {useAuthUser} from "../hooks/useAuthUser";
+import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {createCsapat} from "../api/csapatok";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../components/inputs/IconButton";

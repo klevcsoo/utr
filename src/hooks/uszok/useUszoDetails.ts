@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {Uszo} from "../types/Uszo";
-import {useAuthUser} from "./useAuthUser";
-import {getUszo} from "../api/uszok";
+import {Uszo} from "../../types/Uszo";
+import {useAuthUser} from "../auth/useAuthUser";
+import {getUszo} from "../../api/uszok";
 
 export function useUszoDetails(id: number): [Uszo | undefined, boolean] {
     const {user} = useAuthUser();

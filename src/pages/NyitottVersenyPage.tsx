@@ -1,5 +1,5 @@
-import {useNyitottVerseny} from "../hooks/useNyitottVerseny";
-import {useAuthUser} from "../hooks/useAuthUser";
+import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
+import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {Link, NavLink} from "react-router-dom";
 import {PrimaryButton} from "../components/inputs/PrimaryButton";
 import {SecondaryButton} from "../components/inputs/SecondaryButton";

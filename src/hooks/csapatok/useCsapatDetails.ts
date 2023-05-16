@@ -1,7 +1,7 @@
-import {Csapat} from "../types/Csapat";
+import {Csapat} from "../../types/Csapat";
 import {useCallback, useEffect, useState} from "react";
-import {useAuthUser} from "./useAuthUser";
-import {deleteCsapat, editCsapat, getCsapat} from "../api/csapatok";
+import {useAuthUser} from "../auth/useAuthUser";
+import {deleteCsapat, editCsapat, getCsapat} from "../../api/csapatok";
 
 export function useCsapatDetails(id: number | undefined): [{
     details: Csapat
