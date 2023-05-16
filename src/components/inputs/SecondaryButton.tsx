@@ -7,7 +7,7 @@ export function SecondaryButton(props: {
         <button type="button" disabled={props.disabled} onClick={props.onClick}
                 className="max-w-xs w-full px-4 py-1
                 rounded-md bg-white text-inherit
-                hover:bg-sky-100 hover:text-sky-500 transition-all">
+                hover:bg-blue-100 hover:text-blue-500 transition-all">
             {props.text}
         </button>
     );
