@@ -15,17 +15,21 @@ export function LoginPage() {
     }, [username, password]);
 
     const doLogin = useCallback(() => {
-        login(username, password).then(u => console.log(u));
-    }, [username, password, login]);
+        if (canLogin) {
+            login(username, password).then(u => console.log(u));
+        }
+    }, [canLogin, login, username, password]);
 
     return (
         <div className="w-screen h-screen grid place-content-center">
             <div className="flex flex-col gap-4 items-center">
                 <AppLogo/>
                 <TextInput value={username} onValue={setUsername}
-                           placeholder="Felhasználónév"/>
+                           placeholder="Felhasználónév"
+                           onSubmit={doLogin}/>
                 <TextInput value={password} onValue={setPassword}
-                           placeholder="Jelszó" password/>
+                           placeholder="Jelszó" password
+                           onSubmit={doLogin}/>
                 <PrimaryButton text="Bejelentkezés" onClick={doLogin}
                                disabled={!canLogin}/>
             </div>
