@@ -1,6 +1,6 @@
 export function PrimaryButton(props: {
     text: string
-    onClick(): void
+    onClick?(): void
     disabled?: boolean
 }) {
     return (

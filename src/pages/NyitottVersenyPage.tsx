@@ -20,19 +20,16 @@ export function NyitottVersenyPage() {
             <p>Úgy látszik, nincs megnyitott úszóverseny.</p>
             {user?.roles.includes("admin") ? (
                 <Link to="/overview/versenyek">
-                    <PrimaryButton text="Tovább a versenyekhez" onClick={() => {
-                    }}/>
+                    <PrimaryButton text="Tovább a versenyekhez"/>
                 </Link>
             ) : (
-                <PrimaryButton text="Nézzük meg újra!" onClick={() => {
-                    window.location.reload();
-                }}/>
+                <PrimaryButton text="Nézzük meg újra!"/>
             )}
         </div>
     ) : (
         <Fragment>
             <div className="p-4 flex flex-col gap-2">
-                <h1 className="text-5xl font-bold">{uszoverseny.nev}</h1>
+                <h1>{uszoverseny.nev}</h1>
                 <div className="flex flex-row gap-2 items-center px-2 text-lg">
                     <p>{uszoverseny.helyszin}</p>
                     <p>·</p>
@@ -40,11 +37,9 @@ export function NyitottVersenyPage() {
                 </div>
                 {user?.roles.includes("admin") ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
-                        <PrimaryButton text="Megnyitás" onClick={() => {
-                        }}/>
+                        <PrimaryButton text="Megnyitás"/>
                         <Link to={`/overview/versenyek/${uszoverseny.id}`}>
-                            <SecondaryButton text="Szerkesztés" onClick={() => {
-                            }}/>
+                            <SecondaryButton text="Szerkesztés"/>
                         </Link>
                     </div>
                 ) : null}
@@ -54,8 +49,7 @@ export function NyitottVersenyPage() {
             </div>
             {user?.roles.includes("admin") ? (
                 <NavLink to="/overview/csapatok" className="bottom-4 right-4 fixed">
-                    <PrimaryButton text="Admin felület" onClick={() => {
-                    }}/>
+                    <PrimaryButton text="Admin felület"/>
                 </NavLink>
             ) : null}
         </Fragment>

@@ -23,6 +23,9 @@ function App() {
                     </ProtectedView>
                 }>
                     <Route path="csapatok" element={<CsapatokOverviewPage/>}/>
+                    <Route path="csapatok/new" element={(
+                        <CsapatokOverviewPage newPopup/>
+                    )}/>
                     <Route path="csapatok/:id/*" element={<CsapatDetailsPage/>}/>
                 </Route>
             </Route>
