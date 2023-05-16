@@ -16,3 +16,14 @@ export async function getAllUszokInCsapat(
         }
     ).then(res => res.json()) as Uszo[];
 }
+
+export async function getUszo(user: UserDetails, id: number): Promise<Uszo> {
+    return await fetch(
+        `${serverURL}/api/uszok/${id}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${user.jwtToken}`
+            }
+        }
+    ).then(res => res.json()) as Uszo;
+}

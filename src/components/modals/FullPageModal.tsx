@@ -1,6 +1,6 @@
 import {ReactNode} from "react";
 
-export function FullPagePopup(props: {
+export function FullPageModal(props: {
     children: ReactNode
     className?: string
     onClickOutside?(): void

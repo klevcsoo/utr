@@ -1,10 +1,10 @@
 import {useCsapatokList} from "../hooks/useCsapatokList";
 import {DataTable} from "../components/tables/DataTable";
 import {LoadingSpinner} from "../components/LoadingSpinner";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import {PrimaryButton} from "../components/inputs/PrimaryButton";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {FullPagePopup} from "../components/popups/FullPagePopup";
+import {FullPageModal} from "../components/modals/FullPageModal";
 import {TitleIcon} from "../components/icons/TitleIcon";
 import {SecondaryButton} from "../components/inputs/SecondaryButton";
 import {TextInput} from "../components/inputs/TextInput";
@@ -13,10 +13,9 @@ import {createCsapat} from "../api/csapatok";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../components/inputs/IconButton";
 
-export function CsapatokOverviewPage(props: {
-    newPopup?: boolean
-}) {
+export function CsapatokOverviewPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     useSetAdminLayoutTitle("Csapatok");
 
@@ -32,22 +31,22 @@ export function CsapatokOverviewPage(props: {
                     varos: "város",
                     id: "azonosító"
                 }} excludedProperties={["id"]} actionColumn={entry => (
-                    <Link to={`/overview/csapatok/${entry.id}`}>
+                    <Link to={String(entry.id)}>
                         <IconButton iconName="edit"/>
                     </Link>
                 )}/>
-                <Link to="new">
-                    <SecondaryButton text="Csapat hozzáadása"/>
-                </Link>
+                <SecondaryButton text="Csapat hozzáadása" onClick={() => {
+                    setSearchParams({modal: "newCsapat"});
+                }}/>
             </div>
-            {!props.newPopup ? null : <NewCsapatPopup/>}
+            {searchParams.get("modal") === "newCsapat" ? <NewCsapatPopup/> : null}
         </Fragment>
     );
 }
 
 function NewCsapatPopup() {
     const {user} = useAuthUser();
-    const navigate = useNavigate();
+    const [, setSearchParams] = useSearchParams();
 
     const [nev, setNev] = useState("");
     const [varos, setVaros] = useState("");
@@ -60,13 +59,16 @@ function NewCsapatPopup() {
         if (!!user && !!nev && !!varos) {
             createCsapat(user, {nev: nev, varos: varos}).then(({message}) => {
                 console.log(message);
-                navigate("/overview/csapatok");
+                setSearchParams(prevState => {
+                    prevState.delete("modal");
+                    return prevState;
+                });
             }).catch(console.error);
         }
-    }, [nev, varos, user, navigate]);
+    }, [user, nev, varos, setSearchParams]);
 
     return (
-        <FullPagePopup className="flex flex-col">
+        <FullPageModal className="flex flex-col">
             <div className="flex flex-row items-center justify-start gap-6 p-6
                     min-w-max max-w-sm">
                 <TitleIcon name="groups"/>
@@ -78,12 +80,15 @@ function NewCsapatPopup() {
                 <TextInput value={varos} onValue={setVaros} placeholder="Város"/>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <Link to="/overview/csapatok" className="w-full">
-                    <SecondaryButton text="Inkább nem"/>
-                </Link>
+                <SecondaryButton text="Inkább nem" onClick={() => {
+                    setSearchParams(prevState => {
+                        prevState.delete("modal");
+                        return prevState;
+                    });
+                }}/>
                 <PrimaryButton text="Mehet!" onClick={doCreate}
                                disabled={!canCreate}/>
             </div>
-        </FullPagePopup>
+        </FullPageModal>
     );
 }
