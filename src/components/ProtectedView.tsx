@@ -7,7 +7,7 @@ export function ProtectedView(props: {
     children: ReactNode
     role?: UserRole
 }) {
-    const {user} = useAuthUser();
+    const user = useAuthUser();
 
     return !user ? <Navigate to="/login"/> :
         !!props.role && !user.roles.includes(props.role) ? <div>unauthorized</div>

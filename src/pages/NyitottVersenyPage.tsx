@@ -8,7 +8,7 @@ import {Fragment} from "react";
 
 export function NyitottVersenyPage() {
     const [uszoverseny, uszoversenyLoading] = useNyitottVerseny();
-    const {user} = useAuthUser();
+    const user = useAuthUser();
 
     return uszoversenyLoading ? (
         <div className="w-screen h-screen grid place-content-center">

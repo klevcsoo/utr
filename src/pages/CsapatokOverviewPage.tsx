@@ -45,7 +45,7 @@ export function CsapatokOverviewPage() {
 }
 
 function NewCsapatPopup() {
-    const {user} = useAuthUser();
+    const user = useAuthUser();
     const [, setSearchParams] = useSearchParams();
 
     const [nev, setNev] = useState("");

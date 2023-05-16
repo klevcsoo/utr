@@ -6,7 +6,7 @@ import {useAuthUser} from "../auth/useAuthUser";
 
 export function useNyitottVerseny():
     [(Uszoverseny & { versenyszamok: Versenyszam[] }) | undefined, boolean] {
-    const {user} = useAuthUser();
+    const user = useAuthUser();
 
     const [uszoverseny, setUszoverseny] = useState<Uszoverseny>();
     const [versenyszamok, setVersenyszamok] = useState<Versenyszam[]>([]);

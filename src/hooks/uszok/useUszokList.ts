@@ -4,7 +4,7 @@ import {useAuthUser} from "../auth/useAuthUser";
 import {getAllUszokInCsapat} from "../../api/uszok";
 
 export function useUszokList(csapatId: number | undefined): [Uszo[], boolean] {
-    const {user} = useAuthUser();
+    const user = useAuthUser();
     const [list, setList] = useState<Uszo[]>([]);
     const [loading, setLoading] = useState(false);
 

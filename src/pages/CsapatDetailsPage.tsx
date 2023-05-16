@@ -17,17 +17,18 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../components/inputs/IconButton";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
+import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";
+import {useEditCsapat} from "../hooks/csapatok/useEditCsapat";
 
 export function CsapatDetailsPage() {
     const {id} = useParams();
-    const idNumber = useMemo<number | undefined>(() => {
-        return !id ? undefined : parseInt(id);
-    }, [id]);
+    const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [csapat, csapatLoading] = useCsapatDetails(idNumber);
     const [uszok, uszokLoading] = useUszokList(idNumber);
+    const deleteCsapat = useDeleteCsapat();
 
     const doOpenEditCsapatModal = useCallback(() => {
         setSearchParams(prevState => {
@@ -53,11 +54,11 @@ export function CsapatDetailsPage() {
 
     const doDelete = useCallback(() => {
         if (!!csapat) {
-            csapat.delete();
+            deleteCsapat(csapat.id).then(console.log);
         }
-    }, [csapat]);
+    }, [csapat, deleteCsapat]);
 
-    useSetAdminLayoutTitle(!csapat ? "Betöltés..." : csapat.details.nev);
+    useSetAdminLayoutTitle(!csapat ? "Betöltés..." : csapat.nev);
 
     return csapatLoading ? (
         <div className="h-full grid place-content-center">
@@ -79,7 +80,7 @@ export function CsapatDetailsPage() {
                     <h3 className="ml-2">Általános információ:</h3>
                     <BorderCard className="grid grid-cols-2">
                         <p>Város: </p>
-                        <p><b>{csapat.details.varos}</b></p>
+                        <p><b>{csapat.varos}</b></p>
                         <p>Úszók száma:</p>
                         <p><b>{uszok.length}</b></p>
                     </BorderCard>
@@ -131,9 +132,10 @@ function CsapatModal(props: {
     csapat: ReturnType<typeof useCsapatDetails>[0]
 }) {
     const [, setSearchParams] = useSearchParams();
+    const editCsapat = useEditCsapat();
 
-    const [nev, setNev] = useState(props.csapat?.details.nev ?? "");
-    const [varos, setVaros] = useState(props.csapat?.details.varos ?? "");
+    const [nev, setNev] = useState(props.csapat?.nev ?? "");
+    const [varos, setVaros] = useState(props.csapat?.varos ?? "");
 
     const doCloseModal = useCallback(() => {
         setSearchParams(prevState => {
@@ -144,15 +146,17 @@ function CsapatModal(props: {
 
     const doEdit = useCallback(() => {
         if (!!props.csapat) {
-            props.csapat.edit({nev: nev, varos: varos});
+            editCsapat(props.csapat.id, {
+                nev: nev, varos: varos
+            }).then(console.log);
             doCloseModal();
         }
-    }, [props.csapat, nev, varos, doCloseModal]);
+    }, [props.csapat, editCsapat, nev, varos, doCloseModal]);
 
     useEffect(() => {
         if (!!props.csapat) {
-            setNev(props.csapat.details.nev);
-            setVaros(props.csapat.details.varos);
+            setNev(props.csapat.nev);
+            setVaros(props.csapat.varos);
         }
     }, [props.csapat]);
 

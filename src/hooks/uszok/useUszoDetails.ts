@@ -4,7 +4,7 @@ import {useAuthUser} from "../auth/useAuthUser";
 import {getUszo} from "../../api/uszok";
 
 export function useUszoDetails(id: number): [Uszo | undefined, boolean] {
-    const {user} = useAuthUser();
+    const user = useAuthUser();
     const [uszo, setUszo] = useState<Uszo>();
     const [loading, setLoading] = useState(true);
 

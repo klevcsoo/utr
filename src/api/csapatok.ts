@@ -41,12 +41,12 @@ export async function createCsapat(
 }
 
 export async function editCsapat(
-    user: UserDetails, data: Partial<Omit<Csapat, "id">>
+    user: UserDetails, id: number, data: Partial<Omit<Csapat, "id">>
 ): Promise<MessageResponse> {
     const params = new URLSearchParams(data);
 
     return await fetch(
-        `${serverURL}/api/csapatok/?${params}`, {
+        `${serverURL}/api/csapatok/${id}?${params}`, {
             method: "PATCH",
             headers: {
                 "Authorization": `Bearer ${user.jwtToken}`

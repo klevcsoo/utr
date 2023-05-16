@@ -3,9 +3,11 @@ import {AppLogo} from "../components/icons/AppLogo";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {useCallback} from "react";
 import {RawMaterialIcon} from "../components/icons/RawMaterialIcon";
+import {useAuthLogout} from "../hooks/auth/useAuthLogout";
 
 export function NavbarLayout() {
-    const {user, logout} = useAuthUser();
+    const user = useAuthUser();
+    const logout = useAuthLogout();
 
     const doLogout = useCallback(() => {
         if (window.confirm("Biztos ki szeretnél jelentkezni?")) {

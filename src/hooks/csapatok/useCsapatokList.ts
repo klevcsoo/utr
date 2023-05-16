@@ -4,7 +4,7 @@ import {getAllCsapatokList} from "../../api/csapatok";
 import {useAuthUser} from "../auth/useAuthUser";
 
 export function useCsapatokList(): [Csapat[], boolean] {
-    const {user} = useAuthUser();
+    const user = useAuthUser();
     const [list, setList] = useState<Csapat[]>([]);
     const [loading, setLoading] = useState(true);
 
