@@ -29,7 +29,7 @@ public class UszokController {
     UszoRepository uszoRepository;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllUszokI(@RequestParam Long csapatId) {
+    public ResponseEntity<?> getAllUszok(@RequestParam Long csapatId) {
         return ResponseEntity.ok(uszoRepository.findAllByCsapatId(csapatId));
     }
 
