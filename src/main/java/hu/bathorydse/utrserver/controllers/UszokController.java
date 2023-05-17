@@ -65,7 +65,7 @@ public class UszokController {
         }
 
         if (szuletesiEv != null) {
-            uszo.setSzuletesiDatum(Short.parseShort(szuletesiEv));
+            uszo.setSzuletesiEv(Short.parseShort(szuletesiEv));
         }
 
         if (csapat != null) {

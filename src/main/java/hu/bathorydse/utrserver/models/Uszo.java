@@ -22,7 +22,7 @@ public class Uszo {
     private String nev;
 
     @Column(name = "szuletesi_ev")
-    private Short szuletesiDatum;
+    private Short szuletesiEv;
 
     @Column(name = "csapat_id")
     private Long csapatId;
@@ -31,9 +31,9 @@ public class Uszo {
     @Size(min = 1, max = 1)
     private String nem;
 
-    public Uszo(String nev, Short szuletesiDatum, Long csapatId, String nem) {
+    public Uszo(String nev, Short szuletesiEv, Long csapatId, String nem) {
         this.nev = nev;
-        this.szuletesiDatum = szuletesiDatum;
+        this.szuletesiEv = szuletesiEv;
         this.csapatId = csapatId;
         this.nem = nem;
     }
