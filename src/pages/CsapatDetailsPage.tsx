@@ -19,6 +19,11 @@ import {BorderCard} from "../components/containers/BorderCard";
 import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";
 import {useEditCsapat} from "../hooks/csapatok/useEditCsapat";
+import {IconWarningButton} from "../components/inputs/IconWarningButton";
+import {Csapat} from "../types/Csapat";
+import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
+import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
+import {useAuthUser} from "../hooks/auth/useAuthUser";
 
 export function CsapatDetailsPage() {
     const {id} = useParams();
@@ -27,27 +32,11 @@ export function CsapatDetailsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [csapat, csapatLoading] = useCsapatDetails(idNumber);
-    const [uszok, uszokLoading] = useUszokList(idNumber);
     const deleteCsapat = useDeleteCsapat();
 
     const doOpenEditCsapatModal = useCallback(() => {
         setSearchParams(prevState => {
             prevState.set("modal", "csapat");
-            return prevState;
-        });
-    }, [setSearchParams]);
-
-    const doOpenEditUszoModal = useCallback((id: number) => {
-        setSearchParams(prevState => {
-            prevState.set("modal", "uszo");
-            prevState.set("uszoId", String(id));
-            return prevState;
-        });
-    }, [setSearchParams]);
-
-    const doOpenNewUszoModal = useCallback(() => {
-        setSearchParams(prevState => {
-            prevState.set("modal", "uszo");
             return prevState;
         });
     }, [setSearchParams]);
@@ -61,7 +50,7 @@ export function CsapatDetailsPage() {
     useSetAdminLayoutTitle(!csapat ? "Betöltés..." : csapat.nev);
 
     return csapatLoading ? (
-        <div className="h-full grid place-content-center">
+        <div className="w-full h-full grid place-content-center">
             <LoadingSpinner/>
         </div>
     ) : !csapat ? (
@@ -81,8 +70,6 @@ export function CsapatDetailsPage() {
                     <BorderCard className="grid grid-cols-2">
                         <p>Város: </p>
                         <p><b>{csapat.varos}</b></p>
-                        <p>Úszók száma:</p>
-                        <p><b>{uszok.length}</b></p>
                     </BorderCard>
                     <div className="flex flex-row gap-2">
                         <PrimaryButton text="Csapat adatainak szerkesztése"
@@ -92,31 +79,7 @@ export function CsapatDetailsPage() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <h3 className="ml-2 col-span-2">Úszók:</h3>
-                    {uszokLoading ? (
-                        <div className="grid place-content-center">
-                            <LoadingSpinner/>
-                        </div>
-                    ) : !uszok || !uszok.length ? (
-                        <BorderCard>
-                            <p>
-                                Jelenleg egy úszó sincs felvéve a csapatba.
-                                Adjunk hozzá egyet?
-                            </p>
-                        </BorderCard>
-                    ) : (
-                        <DataTable dataList={uszok} propertyNameOverride={{
-                            nev: "név",
-                            szuletesiDatum: "születési év"
-                        }} excludedProperties={["id", "csapatId"]}
-                                   actionColumn={({id}) => (
-                                       <IconButton iconName="edit"
-                                                   onClick={() => {
-                                                       doOpenEditUszoModal(id);
-                                                   }}/>
-                                   )}/>
-                    )}
-                    <SecondaryButton text="Úszó hozzáadása"
-                                     onClick={doOpenNewUszoModal}/>
+                    <UszokList csapat={csapat}/>
                 </div>
             </div>
             {searchParams.get("modal") === "csapat" ? (
@@ -128,8 +91,71 @@ export function CsapatDetailsPage() {
     );
 }
 
+function UszokList(props: {
+    csapat?: Csapat
+}) {
+    const [uszok, uszokLoading] = useUszokList(props.csapat?.id);
+    const deleteUszo = useDeleteUszo();
+    const [, setSearchParams] = useSearchParams();
+
+    const doOpenEditUszoModal = useCallback((id: number) => {
+        setSearchParams(prevState => {
+            prevState.set("modal", "uszo");
+            prevState.set("uszoId", String(id));
+            return prevState;
+        });
+    }, [setSearchParams]);
+
+    const doOpenNewUszoModal = useCallback(() => {
+        setSearchParams(prevState => {
+            prevState.set("modal", "uszo");
+            return prevState;
+        });
+    }, [setSearchParams]);
+
+    const doDeleteUszo = useCallback((id: number) => {
+        deleteUszo(id).then(console.log).catch(console.error);
+    }, [deleteUszo]);
+
+    return (
+        <Fragment>
+            {uszokLoading ? (
+                <div className="grid place-content-center">
+                    <LoadingSpinner/>
+                </div>
+            ) : !uszok || !uszok.length ? (
+                <BorderCard>
+                    <p>
+                        Jelenleg egy úszó sincs felvéve a csapatba.
+                        Adjunk hozzá egyet?
+                    </p>
+                </BorderCard>
+            ) : (
+                <DataTable dataList={uszok} propertyNameOverride={{
+                    nev: "név",
+                    szuletesiEv: "születési év"
+                }} excludedProperties={["id", "csapatId"]}
+                           actionColumn={({id}) => (
+                               <Fragment>
+                                   <IconButton iconName="edit"
+                                               onClick={() => {
+                                                   doOpenEditUszoModal(id);
+                                               }}/>
+                                   <IconWarningButton iconName="delete"
+                                                      onClick={() => {
+                                                          doDeleteUszo(id);
+                                                      }}/>
+                               </Fragment>
+                           )}/>
+            )}
+            <SecondaryButton text="Úszó hozzáadása"
+                             onClick={doOpenNewUszoModal}/>
+        </Fragment>
+    );
+}
+
 function CsapatModal(props: {
-    csapat: ReturnType<typeof useCsapatDetails>[0]
+    csapat?: Csapat
 }) {
     const [, setSearchParams] = useSearchParams();
     const editCsapat = useEditCsapat();
@@ -183,28 +209,49 @@ function CsapatModal(props: {
 }
 
 function UszoModal(props: {
-    csapat: ReturnType<typeof useCsapatDetails>[0]
+    csapat?: Csapat
 }) {
+    const user = useAuthUser();
     const [searchParams, setSearchParams] = useSearchParams();
     const [uszo, uszoLoading] = useUszoDetails(
         parseInt(searchParams.get("uszoId") ?? "-1")
     );
+    const createUszo = useCreateUszo();
 
     const [nev, setNev] = useState("");
     const [szuletesiEv, setSzuletesiEv] = useState((new Date()).getFullYear());
     const [nem, setNem] = useState<EmberiNem>("N");
 
+    const canCreateUszo = useMemo(() => {
+        return !!nev && !!szuletesiEv && !!nem;
+    }, [nem, nev, szuletesiEv]);
+
     const doCloseModal = useCallback(() => {
         setSearchParams(prevState => {
             prevState.delete("modal");
+            prevState.delete("uszoId");
             return prevState;
         });
     }, [setSearchParams]);
 
+    const doCreateUszo = useCallback(() => {
+        if (!!user && !!props.csapat && !!nev && !!szuletesiEv && !!nem) {
+            createUszo({
+                nev: nev,
+                szuletesiEv: szuletesiEv,
+                nem: nem,
+                csapatId: props.csapat.id
+            }).then(message => {
+                console.log(message);
+                doCloseModal();
+            }).catch(console.log);
+        }
+    }, [createUszo, doCloseModal, nem, nev, props.csapat, szuletesiEv, user]);
+
     useEffect(() => {
         if (!!uszo) {
             setNev(uszo.nev);
-            setSzuletesiEv(uszo.szuletesiDatum);
+            setSzuletesiEv(uszo.szuletesiEv);
             setNem(uszo.nem as EmberiNem);
         }
     }, [uszo]);
@@ -218,7 +265,10 @@ function UszoModal(props: {
                     <div className="flex flex-row items-center
                     justify-start gap-6 p-6 min-w-max max-w-sm">
                         <TitleIcon name="person"/>
-                        <h2>Úszó hozzáadása</h2>
+                        <h2>
+                            {searchParams.has("uszoId") ? "Úszó szerkesztése" :
+                                "Úszó hozzáadása"}
+                        </h2>
                     </div>
                     <div className="w-full border border-slate-100"></div>
                     <div className="flex flex-col gap-2 p-6">
@@ -239,7 +289,9 @@ function UszoModal(props: {
                     <div className="flex flex-row gap-2 p-6">
                         <SecondaryButton text="Inkább nem"
                                          onClick={doCloseModal}/>
-                        <PrimaryButton text="Mehet!"/>
+                        <PrimaryButton text="Mehet!"
+                                       onClick={doCreateUszo}
+                                       disabled={!canCreateUszo}/>
                     </div>
                 </Fragment>
             )}

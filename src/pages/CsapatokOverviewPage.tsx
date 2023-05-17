@@ -20,7 +20,7 @@ export function CsapatokOverviewPage() {
     useSetAdminLayoutTitle("Csapatok");
 
     return csapatokLoading ? (
-        <div className="grid place-content-center h-screen">
+        <div className="w-full h-full grid place-content-center">
             <LoadingSpinner/>
         </div>
     ) : (
