@@ -8,7 +8,8 @@ export function IconButton(props: {
         <button type="button" onClick={props.onClick}
                 className="grid place-content-center p-1 bg-slate-100 rounded-md
                 hover:bg-blue-100 group">
-            <RawMaterialIcon name="edit" className="group-hover:text-blue-500"/>
+            <RawMaterialIcon name={props.iconName}
+                             className="group-hover:text-blue-500"/>
         </button>
     );
 }
