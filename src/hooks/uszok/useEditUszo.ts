@@ -1,15 +1,16 @@
-import {useCallback} from "react";
-import {createCsapat} from "../../api/csapatok";
+import {Uszo} from "../../types/Uszo";
 import {useAuthUser} from "../auth/useAuthUser";
-import {Csapat} from "../../types/Csapat";
+import {useCallback} from "react";
+import {editUszo} from "../../api/uszok";
 
-export function useCreateCsapat(): (data: Omit<Csapat, "id">) => Promise<string> {
+export function useEditUszo():
+    (id: number, data: Partial<Omit<Uszo, "id">>) => Promise<string> {
     const user = useAuthUser();
 
-    return useCallback((data) => {
+    return useCallback((id, data) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
-                createCsapat(user, data).then(({message}) => {
+                editUszo(user, id, data).then(({message}) => {
                     resolve(message);
                 }).catch(reject);
             } else {

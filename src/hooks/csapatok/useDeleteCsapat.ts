@@ -8,7 +8,9 @@ export function useDeleteCsapat(): (id: number) => Promise<string> {
     return useCallback((id) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
-                deleteCsapat(user, id).then(({message}) => resolve(message));
+                deleteCsapat(user, id).then(({message}) => {
+                    resolve(message);
+                }).catch(reject);
             } else {
                 reject("Úgy látszik nem vagy bejelentkezve.");
             }

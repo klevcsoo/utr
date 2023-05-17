@@ -10,7 +10,9 @@ export function useEditCsapat():
     return useCallback((id, data) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
-                editCsapat(user, id, data).then(({message}) => resolve(message));
+                editCsapat(user, id, data).then(({message}) => {
+                    resolve(message);
+                }).catch(reject);
             } else {
                 reject("Úgy látszik nem vagy bejelentkezve.");
             }
