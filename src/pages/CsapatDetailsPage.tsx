@@ -75,7 +75,7 @@ export function CsapatDetailsPage() {
         </div>
     ) : (
         <Fragment>
-            <div className="w-full p-8 flex flex-col gap-8">
+            <div className="w-full flex flex-col gap-8">
                 <div className="flex flex-col gap-2">
                     <h3 className="ml-2">Általános információ:</h3>
                     <BorderCard className="grid grid-cols-2">
