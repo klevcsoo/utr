@@ -7,19 +7,11 @@ export async function getAllUszokInCsapat(
     user: UserDetails, csapatId: number
 ): Promise<Uszo[]> {
     const params = new URLSearchParams({csapatId: String(csapatId)});
-    const data = await apiRequest<Uszo[]>(user, `/uszok/?${params}`, "GET");
-    for (const uszo of data) {
-        uszo.szuletesiEv = (uszo as any)["szuletesiDatum"];
-        delete (uszo as any)["szuletesiDatum"];
-    }
-    return data;
+    return apiRequest<Uszo[]>(user, `/uszok/?${params}`, "GET");
 }
 
 export async function getUszo(user: UserDetails, id: number): Promise<Uszo> {
-    const data = await apiRequest<Uszo>(user, `/uszok/${id}`, "GET");
-    data.szuletesiEv = (data as any)["szuletesiDatum"];
-    delete (data as any)["szuletesiDatum"];
-    return data;
+    return await apiRequest<Uszo>(user, `/uszok/${id}`, "GET");
 }
 
 export async function createUszo(
