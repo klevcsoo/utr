@@ -71,7 +71,9 @@ export function DataTable<T extends object>(props: {
                         ))}
                         {!props.actionColumn ? null : (
                             <td className="pr-2">
-                                {props.actionColumn(props.dataList[indexEntry])}
+                                <div className="flex flex-row items-center gap-2">
+                                    {props.actionColumn(props.dataList[indexEntry])}
+                                </div>
                             </td>
                         )}
                     </tr>
