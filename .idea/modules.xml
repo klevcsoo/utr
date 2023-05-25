@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/utr-server.iml" filepath="$PROJECT_DIR$/utr-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/utr-server.iml" filepath="$PROJECT_DIR$/.idea/utr-server.iml" />
     </modules>
   </component>
 </project>
