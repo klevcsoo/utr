@@ -30,8 +30,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String displayName,
-        String password,
+    public UserDetailsImpl(Long id, String username, String displayName, String password,
         Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
@@ -45,12 +44,8 @@ public class UserDetailsImpl implements UserDetails {
             .map(role -> new SimpleGrantedAuthority(role.getName().name()))
             .collect(Collectors.toList());
 
-        return new UserDetailsImpl(
-            user.getId(),
-            user.getUsername(),
-            user.getDisplayName(),
-            user.getPassword(),
-            authorities);
+        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getDisplayName(),
+            user.getPassword(), authorities);
     }
 
     @Override

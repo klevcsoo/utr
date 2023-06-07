@@ -29,8 +29,7 @@ public class VersenyszamokController {
 
     @GetMapping("/")
     public ResponseEntity<?> getAllVersenyszamok(@RequestParam Long versenyId) {
-        return ResponseEntity.ok(
-            versenyszamRepository.findAllByVersenyId(versenyId));
+        return ResponseEntity.ok(versenyszamRepository.findAllByVersenyId(versenyId));
     }
 
     @PutMapping("/")
@@ -38,8 +37,7 @@ public class VersenyszamokController {
         @RequestParam Integer hossz, @RequestParam Integer uszasnemId,
         @RequestParam @Size(min = 1, max = 1) String emberiNemId,
         @RequestParam(required = false) Integer valto) {
-        Versenyszam versenyszam = new Versenyszam(versenyId, hossz, uszasnemId,
-            emberiNemId, valto);
+        Versenyszam versenyszam = new Versenyszam(versenyId, hossz, uszasnemId, emberiNemId, valto);
         versenyszamRepository.save(versenyszam);
 
         return ResponseEntity.ok(new MessageResponse("Versenyszám hozzáadva."));

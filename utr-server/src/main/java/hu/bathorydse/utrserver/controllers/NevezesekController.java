@@ -29,15 +29,13 @@ public class NevezesekController {
 
     @GetMapping("/")
     public ResponseEntity<?> getAllNevezesek(@RequestParam Long versenyszamId) {
-        List<Nevezes> nevezesek = nevezesRepository.findAllByVersenyszamId(
-            versenyszamId);
+        List<Nevezes> nevezesek = nevezesRepository.findAllByVersenyszamId(versenyszamId);
         return ResponseEntity.ok(nevezesek);
     }
 
     @PutMapping("/")
     public ResponseEntity<?> createNevezes(@RequestParam Long versenyszamId,
-        @RequestParam Long uszoId,
-        @RequestParam(required = false) String nevezesiIdo) {
+        @RequestParam Long uszoId, @RequestParam(required = false) String nevezesiIdo) {
         Integer interval;
         if (nevezesiIdo != null) {
             String minString = nevezesiIdo.split(":")[0];

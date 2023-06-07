@@ -46,8 +46,7 @@ public class NyitottController {
 
     @PostMapping("/megnyitas")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> uszoversenyMegnyitasa(
-        @RequestParam Long versenyId) {
+    public ResponseEntity<?> uszoversenyMegnyitasa(@RequestParam Long versenyId) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(versenyId)
             .orElseThrow(() -> new UszoversenyNotFoundException(versenyId));
 
@@ -84,8 +83,8 @@ public class NyitottController {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
-        List<Versenyszam> versenyszamok = versenyszamRepository
-            .findAllByVersenyId(uszoverseny.getId());
+        List<Versenyszam> versenyszamok = versenyszamRepository.findAllByVersenyId(
+            uszoverseny.getId());
 
         return ResponseEntity.ok(versenyszamok);
     }
@@ -100,12 +99,10 @@ public class NyitottController {
         // the id AND the versenyId makes sure that the Versenyszam
         // is in the opened Úszóverseny
         // if it isn't, the VersenyszamNotFoundException will be thrown
-        Versenyszam versenyszam = versenyszamRepository
-            .findByIdAndVersenyId(versenyszamId, uszoverseny.getId())
-            .orElseThrow(() -> new VersenyszamNotFoundException(versenyszamId));
+        Versenyszam versenyszam = versenyszamRepository.findByIdAndVersenyId(versenyszamId,
+            uszoverseny.getId()).orElseThrow(() -> new VersenyszamNotFoundException(versenyszamId));
 
-        List<Futam> futamok = futamRepository
-            .findAllByVersenyszamId(versenyszam.getId());
+        List<Futam> futamok = futamRepository.findAllByVersenyszamId(versenyszam.getId());
 
         return ResponseEntity.ok(futamok);
     }
@@ -123,15 +120,13 @@ public class NyitottController {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
-        List<Nevezes> uszoNevezesek = nevezesRepository
-            .findAllByVersenyszamIdAndUszoId(uszoverseny.getId(),
-                uszoId);
+        List<Nevezes> uszoNevezesek = nevezesRepository.findAllByVersenyszamIdAndUszoId(
+            uszoverseny.getId(), uszoId);
 
         uszoNevezesek.forEach(nevezes -> nevezes.setMegjelent(megjelent));
         nevezesRepository.saveAll(uszoNevezesek);
 
-        return ResponseEntity.ok(
-            new MessageResponse(uszoNevezesek.size() + " nevezés módosítva."));
+        return ResponseEntity.ok(new MessageResponse(uszoNevezesek.size() + " nevezés módosítva."));
     }
 
     @PatchMapping("/idoeredmeny")

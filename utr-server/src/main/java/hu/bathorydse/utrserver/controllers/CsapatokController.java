@@ -49,8 +49,7 @@ public class CsapatokController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> editCsapat(@PathVariable Long id,
-        @RequestParam(required = false) String nev,
-        @RequestParam(required = false) String varos) {
+        @RequestParam(required = false) String nev, @RequestParam(required = false) String varos) {
         Csapat csapat = csapatRepository.findById(id)
             .orElseThrow(() -> new CsapatNotFoundException(id));
 

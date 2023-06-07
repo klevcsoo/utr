@@ -42,8 +42,7 @@ public class UszoversenyekController {
         Uszoverseny uszoverseny = new Uszoverseny(nev, helyszin, date);
         uszoversenyRepository.save(uszoverseny);
 
-        return ResponseEntity.ok(
-            new MessageResponse("Úszóverseny létrehozva."));
+        return ResponseEntity.ok(new MessageResponse("Úszóverseny létrehozva."));
     }
 
     @GetMapping("/{id}")
@@ -56,8 +55,7 @@ public class UszoversenyekController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> editVerseny(@PathVariable Long id,
-        @RequestParam(required = false) String nev,
-        @RequestParam(required = false) String helyszin,
+        @RequestParam(required = false) String nev, @RequestParam(required = false) String helyszin,
         @RequestParam(required = false) String datum) {
         Date date = ControllerUtils.createDate(datum);
 

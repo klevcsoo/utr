@@ -26,8 +26,7 @@ public class FutamokController {
 
     @GetMapping("/")
     public ResponseEntity<?> getAllFutamok(@RequestParam Long versenyszamId) {
-        return ResponseEntity.ok(
-            futamRepository.findAllByVersenyszamId(versenyszamId));
+        return ResponseEntity.ok(futamRepository.findAllByVersenyszamId(versenyszamId));
     }
 
     @PutMapping("/")

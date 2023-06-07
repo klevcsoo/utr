@@ -34,9 +34,8 @@ public class UszokController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> createUszo(@RequestParam Long csapatId,
-        @RequestParam String nev, @RequestParam Short szuletesiEv,
-        @RequestParam @Size(min = 1, max = 1) String nem) {
+    public ResponseEntity<?> createUszo(@RequestParam Long csapatId, @RequestParam String nev,
+        @RequestParam Short szuletesiEv, @RequestParam @Size(min = 1, max = 1) String nem) {
         Uszo uszo = new Uszo(nev, szuletesiEv, csapatId, nem);
         uszoRepository.save(uszo);
 
@@ -45,8 +44,7 @@ public class UszokController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUszo(@PathVariable Long id) {
-        Uszo uszo = uszoRepository.findById(id)
-            .orElseThrow(() -> new UszoNotFoundException(id));
+        Uszo uszo = uszoRepository.findById(id).orElseThrow(() -> new UszoNotFoundException(id));
 
         return ResponseEntity.ok(uszo);
     }
@@ -57,8 +55,7 @@ public class UszokController {
         @RequestParam(required = false) String szuletesiEv,
         @RequestParam(required = false) Long csapat,
         @RequestParam(required = false) @Size(min = 1, max = 1) String nem) {
-        Uszo uszo = uszoRepository.findById(id)
-            .orElseThrow(() -> new UszoNotFoundException(id));
+        Uszo uszo = uszoRepository.findById(id).orElseThrow(() -> new UszoNotFoundException(id));
 
         if (nev != null) {
             uszo.setNev(nev);
@@ -83,8 +80,7 @@ public class UszokController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUszo(@PathVariable Long id) {
-        Uszo uszo = uszoRepository.findById(id)
-            .orElseThrow(() -> new UszoNotFoundException(id));
+        Uszo uszo = uszoRepository.findById(id).orElseThrow(() -> new UszoNotFoundException(id));
 
         uszoRepository.delete(uszo);
 

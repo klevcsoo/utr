@@ -17,8 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(
-        JwtUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${utr.app.jwtSecret}")
     private String jwtSecret;
@@ -30,15 +29,13 @@ public class JwtUtils {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
-        return Jwts.builder().setSubject((userPrincipal.getUsername()))
-            .setIssuedAt(new Date())
+        return Jwts.builder().setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
             .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
             .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token)
-            .getBody().getSubject();
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
