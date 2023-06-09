@@ -268,3 +268,9 @@ fabric.properties
 .idea/**/azureSettings.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,react,node
+
+# React build output
+build
+
+# Maven front-end plugin node generation
+node
