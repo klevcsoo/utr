@@ -28,6 +28,7 @@ public class Role implements Serializable {
     @Column(length = 20)
     private ERole name;
 
+    @SuppressWarnings("unused")
     public Role(ERole name) {
         this.name = name;
     }
