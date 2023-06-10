@@ -1,8 +1,11 @@
 package hu.bathorydse.utrserver.controllers;
 
+import hu.bathorydse.utrserver.models.InvalidUszasnemException;
+import hu.bathorydse.utrserver.models.Uszasnem;
 import hu.bathorydse.utrserver.models.Versenyszam;
 import hu.bathorydse.utrserver.models.VersenyszamNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
+import hu.bathorydse.utrserver.repository.UszasnemRepository;
 import hu.bathorydse.utrserver.repository.VersenyszamRepository;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class VersenyszamokController {
     @Autowired
     private VersenyszamRepository versenyszamRepository;
 
+    @Autowired
+    private UszasnemRepository uszasnemRepository;
+
     @GetMapping("/")
     public ResponseEntity<?> getAllVersenyszamok(@RequestParam Long versenyId) {
         return ResponseEntity.ok(versenyszamRepository.findAllByVersenyId(versenyId));
@@ -37,7 +43,10 @@ public class VersenyszamokController {
         @RequestParam Integer hossz, @RequestParam Integer uszasnemId,
         @RequestParam @Size(min = 1, max = 1) String emberiNemId,
         @RequestParam(required = false) Integer valto) {
-        Versenyszam versenyszam = new Versenyszam(versenyId, hossz, uszasnemId, emberiNemId, valto);
+        Uszasnem uszasnem = uszasnemRepository.findById(uszasnemId)
+            .orElseThrow(InvalidUszasnemException::new);
+
+        Versenyszam versenyszam = new Versenyszam(versenyId, hossz, uszasnem, emberiNemId, valto);
         versenyszamRepository.save(versenyszam);
 
         return ResponseEntity.ok(new MessageResponse("Versenyszám hozzáadva."));
@@ -65,7 +74,9 @@ public class VersenyszamokController {
         }
 
         if (uszasnem != null) {
-            versenyszam.setUszasnemId(uszasnem);
+            Uszasnem uszasnemObj = uszasnemRepository.findById(uszasnem)
+                .orElseThrow(InvalidUszasnemException::new);
+            versenyszam.setUszasnem(uszasnemObj);
         }
 
         if (nem != null) {
