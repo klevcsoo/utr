@@ -42,7 +42,12 @@ export function DataTable<T extends object>(props: {
             return Object.keys(entry).filter(key => {
                 return !props.excludedProperties?.includes(key as keyof T);
             }).map(key => {
-                return String(entry[key as keyof T]);
+                const val = entry[key as keyof T];
+                if (val instanceof Date) {
+                    return val.toISOString().split("T")[0].replaceAll("-", ". ") + ".";
+                }
+
+                return String(val);
             });
         });
     }, [props.dataList, props.excludedProperties]);
