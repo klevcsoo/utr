@@ -7,6 +7,7 @@ import {ProtectedView} from "./components/ProtectedView";
 import {NyitottVersenyPage} from "./pages/NyitottVersenyPage";
 import {AdminLayout} from "./layouts/AdminLayout";
 import {CsapatDetailsPage} from "./pages/overview/csapatok/CsapatDetailsPage";
+import {UszoversenyekOverviewPage} from "./pages/overview/uszoversenyek/UszoversenyekOverviewPage";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                         <AdminLayout/>
                     </ProtectedView>
                 }>
+                    <Route path="versenyek" element={<UszoversenyekOverviewPage/>}/>
                     <Route path="csapatok" element={<CsapatokOverviewPage/>}/>
                     <Route path="csapatok/:id/*" element={<CsapatDetailsPage/>}/>
                 </Route>
