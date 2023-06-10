@@ -5,7 +5,6 @@ import hu.bathorydse.utrserver.models.Nevezes;
 import hu.bathorydse.utrserver.models.NevezesNotFoundException;
 import hu.bathorydse.utrserver.models.NoNyitottUszoversenyException;
 import hu.bathorydse.utrserver.models.Uszoverseny;
-import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
 import hu.bathorydse.utrserver.models.Versenyszam;
 import hu.bathorydse.utrserver.models.VersenyszamNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
@@ -43,18 +42,6 @@ public class NyitottController {
 
     @Autowired
     private NevezesRepository nevezesRepository;
-
-    @PostMapping("/megnyitas")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> uszoversenyMegnyitasa(@RequestParam Long versenyId) {
-        Uszoverseny uszoverseny = uszoversenyRepository.findById(versenyId)
-            .orElseThrow(() -> new UszoversenyNotFoundException(versenyId));
-
-        uszoverseny.setNyitott(true);
-        uszoversenyRepository.save(uszoverseny);
-
-        return ResponseEntity.ok(new MessageResponse("Úszóverseny megnyitva."));
-    }
 
     @PostMapping("/lezaras")
     @PreAuthorize("hasRole('ADMIN')")

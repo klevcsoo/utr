@@ -3,6 +3,7 @@ package hu.bathorydse.utrserver.controllers;
 import hu.bathorydse.utrserver.core.ControllerUtils;
 import hu.bathorydse.utrserver.models.UszoNotFoundException;
 import hu.bathorydse.utrserver.models.Uszoverseny;
+import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.UszoversenyRepository;
 import java.util.Date;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -87,5 +89,17 @@ public class UszoversenyekController {
         uszoversenyRepository.delete(uszoverseny);
 
         return ResponseEntity.ok(new MessageResponse("Úszóverseny törölve."));
+    }
+
+    @PostMapping("/{id}/megnyitas")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> uszoversenyMegnyitasa(@PathVariable Long id) {
+        Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
+            .orElseThrow(() -> new UszoversenyNotFoundException(id));
+
+        uszoverseny.setNyitott(true);
+        uszoversenyRepository.save(uszoverseny);
+
+        return ResponseEntity.ok(new MessageResponse("Úszóverseny megnyitva."));
     }
 }
