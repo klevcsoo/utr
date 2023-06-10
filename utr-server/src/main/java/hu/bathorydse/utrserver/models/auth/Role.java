@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "auth_role")
 @Data
 @NoArgsConstructor
 public class Role implements Serializable {

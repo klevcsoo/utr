@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "uszoversenyek")
+@Table(name = "uszoverseny")
 @Data
 @NoArgsConstructor
 public class Uszoverseny implements Serializable {

@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "csapatok")
+@Table(name = "csapat")
 @Data
 @NoArgsConstructor
 public class Csapat {
