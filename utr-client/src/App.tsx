@@ -1,12 +1,12 @@
 import React from 'react';
 import {Outlet, Route, Routes} from "react-router-dom";
 import {LoginPage} from "./pages/LoginPage";
-import {CsapatokOverviewPage} from "./pages/CsapatokOverviewPage";
+import {CsapatokOverviewPage} from "./pages/overview/csapatok/CsapatokOverviewPage";
 import {UnprotectedView} from "./components/UnprotectedView";
 import {ProtectedView} from "./components/ProtectedView";
 import {NyitottVersenyPage} from "./pages/NyitottVersenyPage";
 import {AdminLayout} from "./layouts/AdminLayout";
-import {CsapatDetailsPage} from "./pages/CsapatDetailsPage";
+import {CsapatDetailsPage} from "./pages/overview/csapatok/CsapatDetailsPage";
 
 function App() {
     return (
