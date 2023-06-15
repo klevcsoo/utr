@@ -12,6 +12,7 @@ import {TitleIcon} from "../../../components/icons/TitleIcon";
 import {TextInput} from "../../../components/inputs/TextInput";
 import {PrimaryButton} from "../../../components/inputs/PrimaryButton";
 import {createUszoverseny} from "../../../api/versenyek";
+import {DateInput} from "../../../components/inputs/DateInput";
 
 export function UszoversenyekIndexPage() {
     const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
@@ -36,7 +37,7 @@ export function UszoversenyekIndexPage() {
                     </Link>
                 )}/>
                 <SecondaryButton text="Úszóverseny létrehozása" onClick={() => {
-                    setSearchParams({modal: "newCsapat"});
+                    setSearchParams({modal: "create"});
                 }}/>
             </div>
             {searchParams.get("modal") === "create" ? <NewUszoversenyModal/> : null}
@@ -50,7 +51,7 @@ function NewUszoversenyModal() {
 
     const [nev, setNev] = useState("");
     const [helyszin, setHelyszin] = useState("");
-    const [datum, setDatum] = useState(0);
+    const [datum, setDatum] = useState(Date.now());
 
     const canCreate = useMemo<boolean>(() => {
         return !!nev && !!helyszin && !!datum;
@@ -73,6 +74,8 @@ function NewUszoversenyModal() {
         }
     }, [user, nev, helyszin, datum, setSearchParams]);
 
+    console.log(datum);
+
     return (
         <FullPageModal className="flex flex-col">
             <div className="flex flex-row items-center justify-start gap-6 p-6
@@ -84,6 +87,7 @@ function NewUszoversenyModal() {
             <div className="flex flex-col gap-2 p-6">
                 <TextInput value={nev} onValue={setNev} placeholder="Név"/>
                 <TextInput value={helyszin} onValue={setHelyszin} placeholder="Város"/>
+                <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
             </div>
             <div className="flex flex-row gap-2 p-6">
                 <SecondaryButton text="Inkább nem" onClick={() => {
