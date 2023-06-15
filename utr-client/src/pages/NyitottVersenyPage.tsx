@@ -12,7 +12,7 @@ export function NyitottVersenyPage() {
 
     return uszoversenyLoading ? (
         <div className="w-screen h-screen grid place-content-center">
-            <LoadingSpinner scale={50}/>
+            <LoadingSpinner/>
         </div>
     ) : !uszoverseny ? (
         <div className="w-screen h-screen grid place-items-center place-content-center
