@@ -6,13 +6,12 @@ import {getAllUszoversenyekList} from "../../api/versenyek";
 export function useUszoversenyekList(): [Uszoverseny[], boolean] {
     const user = useAuthUser();
     const [list, setList] = useState<Uszoverseny[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!!user) {
             getAllUszoversenyekList(user).then(response => {
                 setList(response);
-                console.log(response);
             }).catch(reason => {
                 console.error(reason);
             }).finally(() => {
