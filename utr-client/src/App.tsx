@@ -8,6 +8,7 @@ import {IndexPage} from "./pages";
 import {AdminLayout} from "./layouts/AdminLayout";
 import {CsapatSlugPage} from "./pages/admin/csapatok/[:id]";
 import {UszoversenyekIndexPage} from "./pages/admin/uszoversenyek";
+import {AdminIndexPage} from "./pages/admin";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                         <AdminLayout/>
                     </ProtectedView>
                 }>
+                    <Route path="" element={<AdminIndexPage/>}/>
                     <Route path="versenyek" element={<UszoversenyekIndexPage/>}/>
                     <Route path="csapatok" element={<CsapatokIndexPage/>}/>
                     <Route path="csapatok/:id" element={<CsapatSlugPage/>}/>
