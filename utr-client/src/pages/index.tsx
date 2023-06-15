@@ -48,7 +48,7 @@ export function IndexPage() {
                 ))}
             </div>
             {user?.roles.includes("admin") ? (
-                <NavLink to="/admin/csapatok" className="bottom-4 right-4 fixed">
+                <NavLink to="/admin" className="bottom-4 right-4 fixed">
                     <PrimaryButton text="Admin felület"/>
                 </NavLink>
             ) : null}
