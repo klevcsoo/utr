@@ -13,7 +13,7 @@ import {createCsapat} from "../../../api/csapatok";
 import {useSetAdminLayoutTitle} from "../../../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../../../components/inputs/IconButton";
 
-export function CsapatokOverviewPage() {
+export function CsapatokIndexPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();
     const [searchParams, setSearchParams] = useSearchParams();
 

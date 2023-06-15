@@ -25,7 +25,7 @@ import {useDeleteUszo} from "../../../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../../../hooks/uszok/useCreateUszo";
 import {useAuthUser} from "../../../hooks/auth/useAuthUser";
 
-export function CsapatDetailsPage() {
+export function CsapatSlugPage() {
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 

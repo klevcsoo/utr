@@ -13,7 +13,7 @@ import {TextInput} from "../../../components/inputs/TextInput";
 import {PrimaryButton} from "../../../components/inputs/PrimaryButton";
 import {createUszoverseny} from "../../../api/versenyek";
 
-export function UszoversenyekOverviewPage() {
+export function UszoversenyekIndexPage() {
     const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
     const [searchParams, setSearchParams] = useSearchParams();
 

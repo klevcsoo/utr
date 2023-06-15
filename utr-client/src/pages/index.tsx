@@ -6,7 +6,7 @@ import {SecondaryButton} from "../components/inputs/SecondaryButton";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Fragment} from "react";
 
-export function NyitottVersenyPage() {
+export function IndexPage() {
     const [uszoverseny, uszoversenyLoading] = useNyitottVerseny();
     const user = useAuthUser();
 
@@ -19,7 +19,7 @@ export function NyitottVersenyPage() {
         gap-4">
             <p>Úgy látszik, nincs megnyitott úszóverseny.</p>
             {user?.roles.includes("admin") ? (
-                <Link to="/overview/versenyek">
+                <Link to="/admin/versenyek">
                     <PrimaryButton text="Tovább a versenyekhez"/>
                 </Link>
             ) : (
@@ -48,7 +48,7 @@ export function NyitottVersenyPage() {
                 ))}
             </div>
             {user?.roles.includes("admin") ? (
-                <NavLink to="/overview/csapatok" className="bottom-4 right-4 fixed">
+                <NavLink to="/admin/csapatok" className="bottom-4 right-4 fixed">
                     <PrimaryButton text="Admin felület"/>
                 </NavLink>
             ) : null}

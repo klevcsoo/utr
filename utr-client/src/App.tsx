@@ -1,13 +1,13 @@
 import React from 'react';
 import {Outlet, Route, Routes} from "react-router-dom";
-import {LoginPage} from "./pages/LoginPage";
-import {CsapatokOverviewPage} from "./pages/overview/csapatok/CsapatokOverviewPage";
+import {LoginPage} from "./pages/login";
+import {CsapatokIndexPage} from "./pages/admin/csapatok";
 import {UnprotectedView} from "./components/UnprotectedView";
 import {ProtectedView} from "./components/ProtectedView";
-import {NyitottVersenyPage} from "./pages/NyitottVersenyPage";
+import {IndexPage} from "./pages";
 import {AdminLayout} from "./layouts/AdminLayout";
-import {CsapatDetailsPage} from "./pages/overview/csapatok/CsapatDetailsPage";
-import {UszoversenyekOverviewPage} from "./pages/overview/uszoversenyek/UszoversenyekOverviewPage";
+import {CsapatSlugPage} from "./pages/admin/csapatok/[:id]";
+import {UszoversenyekIndexPage} from "./pages/admin/uszoversenyek";
 
 function App() {
     return (
@@ -17,15 +17,15 @@ function App() {
                     <Outlet/>
                 </ProtectedView>
             }>
-                <Route index element={<NyitottVersenyPage/>}/>
-                <Route path="overview" element={
+                <Route index element={<IndexPage/>}/>
+                <Route path="admin" element={
                     <ProtectedView role="admin">
                         <AdminLayout/>
                     </ProtectedView>
                 }>
-                    <Route path="versenyek" element={<UszoversenyekOverviewPage/>}/>
-                    <Route path="csapatok" element={<CsapatokOverviewPage/>}/>
-                    <Route path="csapatok/:id/*" element={<CsapatDetailsPage/>}/>
+                    <Route path="versenyek" element={<UszoversenyekIndexPage/>}/>
+                    <Route path="csapatok" element={<CsapatokIndexPage/>}/>
+                    <Route path="csapatok/:id" element={<CsapatSlugPage/>}/>
                 </Route>
             </Route>
             <Route path="/login" element={
