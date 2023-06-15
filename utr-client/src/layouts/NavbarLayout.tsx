@@ -23,13 +23,13 @@ export function NavbarLayout() {
             <div className="flex flex-col items-start gap-2 w-full">
                 <AppLogo className="m-4"/>
                 <NavbarNavButton icon="event" text="Versenyek"
-                                 to="/overview/versenyek"/>
+                                 to="/admin/versenyek"/>
                 <NavbarNavButton icon="groups" text="Csapatok"
-                                 to="/overview/csapatok"/>
+                                 to="/admin/csapatok"/>
                 <NavbarNavButton icon="print" text="Nyomtatás"
-                                 to="/overview/nyomtatas"/>
+                                 to="/admin/nyomtatas"/>
                 <NavbarNavButton icon="settings" text="Beállítások"
-                                 to="/overview/settings"/>
+                                 to="/admin/settings"/>
             </div>
             <div className="flex flex-col items-start gap-2 w-full">
                 <NavbarNavButton icon="support" text="Támogatás" to="/support"/>

@@ -38,7 +38,7 @@ export function IndexPage() {
                 {user?.roles.includes("admin") ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
                         <PrimaryButton text="Megnyitás"/>
-                        <Link to={`/overview/versenyek/${uszoverseny.id}`}>
+                        <Link to={`/admin/versenyek/${uszoverseny.id}`}>
                             <SecondaryButton text="Szerkesztés"/>
                         </Link>
                     </div>
