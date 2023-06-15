@@ -17,6 +17,11 @@ export async function apiRequest<T extends object>(
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 ): Promise<T> {
     const actualPath = path.startsWith("/") ? path.substring(1) : path;
+
+    if (window.location.origin.includes("localhost")) {
+        await sleep(Math.random() * 1200);
+    }
+
     return await fetch(`${serverURL}/api/${actualPath}`, {
         method: method,
         headers: {
@@ -24,4 +29,10 @@ export async function apiRequest<T extends object>(
             "Authorization": `Bearer ${user.jwtToken}`
         }
     }).then(res => res.json()) as T;
+}
+
+export async function sleep(milliseconds: number) {
+    return new Promise<void>(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
 }
