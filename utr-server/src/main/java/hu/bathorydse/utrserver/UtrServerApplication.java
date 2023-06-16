@@ -11,10 +11,7 @@ public class UtrServerApplication {
     private static final Logger logger = LoggerFactory.getLogger(UtrServerApplication.class);
 
     public static void main(String[] args) {
-        System.getenv().forEach((key, value) -> {
-            logger.info(key + "=" + value);
-        });
-
+        System.getenv().forEach((key, value) -> logger.info(key + "=" + value));
         SpringApplication.run(UtrServerApplication.class, args);
     }
 }
