@@ -36,3 +36,7 @@ export async function sleep(milliseconds: number) {
         setTimeout(resolve, milliseconds);
     });
 }
+
+export function customDateFormat(date: Date): string {
+    return date.toISOString().split("T")[0].replaceAll("-", ". ") + ".";
+}
