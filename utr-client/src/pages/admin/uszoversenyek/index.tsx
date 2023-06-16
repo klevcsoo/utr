@@ -13,10 +13,36 @@ import {TextInput} from "../../../components/inputs/TextInput";
 import {PrimaryButton} from "../../../components/inputs/PrimaryButton";
 import {createUszoverseny} from "../../../api/versenyek";
 import {DateInput} from "../../../components/inputs/DateInput";
+import {useOpenUszoverseny} from "../../../hooks/uszoversenyek/useOpenUszoverseny";
+import {BorderCard} from "../../../components/containers/BorderCard";
+import {useNyitottVerseny} from "../../../hooks/nyitottVerseny/useNyitottVerseny";
+import {useCloseUszoverseny} from "../../../hooks/uszoversenyek/useCloseUszoverseny";
+import {Uszoverseny} from "../../../types/Uszoverseny";
+import {customDateFormat} from "../../../utils";
+import {WarningButton} from "../../../components/inputs/WarningButton";
 
 export function UszoversenyekIndexPage() {
     const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
     const [searchParams, setSearchParams] = useSearchParams();
+    const [nyitottVerseny, nyitottVersenyLoading] = useNyitottVerseny();
+    const openUszoverseny = useOpenUszoverseny();
+    const closeUszoverseny = useCloseUszoverseny();
+
+    const doChangeVersenyNyitottState = useCallback((uszoverseny: Uszoverseny) => {
+        if (uszoverseny.nyitott) {
+            if (window.confirm("Zárjuk le a versenyt?")) {
+                closeUszoverseny()
+                    .then(console.log)
+                    .catch(console.error);
+            }
+        } else {
+            if (window.confirm("Nyissuk meg a versenyt?")) {
+                openUszoverseny(uszoverseny.id)
+                    .then(console.log)
+                    .catch(console.error);
+            }
+        }
+    }, [closeUszoverseny, openUszoverseny]);
 
     useSetAdminLayoutTitle("Úszóversenyek");
 
@@ -26,19 +52,48 @@ export function UszoversenyekIndexPage() {
         </div>
     ) : (
         <Fragment>
-            <div className="w-full flex flex-col gap-4 items-start">
-                <DataTable dataList={uszoversenyek} propertyNameOverride={{
-                    nev: "név",
-                    datum: "dátum",
-                    helyszin: "helyszín"
-                }} excludedProperties={["id", "nyitott"]} actionColumn={entry => (
-                    <Link to={String(entry.id)}>
-                        <IconButton iconName="edit"/>
-                    </Link>
-                )}/>
-                <SecondaryButton text="Úszóverseny létrehozása" onClick={() => {
-                    setSearchParams({modal: "create"});
-                }}/>
+            <div className="w-full flex flex-col gap-2 items-start">
+                {nyitottVersenyLoading ? (
+                    <LoadingSpinner/>
+                ) : !!nyitottVerseny ? (
+                    <Fragment>
+                        <h3>Nyitott verseny</h3>
+                        <BorderCard className="w-full flex flex-col gap-2">
+                            <p>
+                                <b>{nyitottVerseny.nev}</b> ·&nbsp;
+                                {nyitottVerseny.helyszin} ·&nbsp;
+                                {customDateFormat(nyitottVerseny.datum)}
+                            </p>
+                            <div className="flex flex-row gap-2 items-start">
+                                <WarningButton text="Úszóverseny lezárása" onClick={() => {
+                                    doChangeVersenyNyitottState(nyitottVerseny);
+                                }}/>
+                                <Link to={String(nyitottVerseny.id)} className="w-full">
+                                    <SecondaryButton text="Részletek megtekintése"/>
+                                </Link>
+                            </div>
+                        </BorderCard>
+                    </Fragment>
+                ) : null}
+                <h3 className="mt-2">További versenyek:</h3>
+                <div className="flex flex-col gap-4 w-full items-start">
+                    <DataTable dataList={uszoversenyek} propertyNameOverride={{
+                        nev: "név",
+                        datum: "dátum",
+                        helyszin: "helyszín"
+                    }} excludedProperties={["id", "nyitott"]} actionColumn={entry => (
+                        <Fragment>
+                            <IconButton iconName={entry.nyitott ? "stop" : "play_arrow"}
+                                        onClick={() => doChangeVersenyNyitottState(entry)}/>
+                            <Link to={String(entry.id)}>
+                                <IconButton iconName="edit"/>
+                            </Link>
+                        </Fragment>
+                    )}/>
+                    <SecondaryButton text="Úszóverseny létrehozása" onClick={() => {
+                        setSearchParams({modal: "create"});
+                    }}/>
+                </div>
             </div>
             {searchParams.get("modal") === "create" ? <NewUszoversenyModal/> : null}
         </Fragment>
@@ -73,8 +128,6 @@ function NewUszoversenyModal() {
             }).catch(console.error);
         }
     }, [user, nev, helyszin, datum, setSearchParams]);
-
-    console.log(datum);
 
     return (
         <FullPageModal className="flex flex-col">
