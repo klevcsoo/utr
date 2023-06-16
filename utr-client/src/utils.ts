@@ -22,13 +22,20 @@ export async function apiRequest<T extends object>(
         await sleep(Math.random() * 1200);
     }
 
-    return await fetch(`${serverURL}/api/${actualPath}`, {
+    const data = await fetch(`${serverURL}/api/${actualPath}`, {
         method: method,
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${user.jwtToken}`
         }
     }).then(res => res.json()) as T;
+
+    const error = (data as any)["error"];
+    if (error) {
+        throw new Error(error);
+    }
+
+    return data;
 }
 
 export async function sleep(milliseconds: number) {
