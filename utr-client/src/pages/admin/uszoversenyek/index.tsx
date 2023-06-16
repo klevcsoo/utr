@@ -18,7 +18,6 @@ import {BorderCard} from "../../../components/containers/BorderCard";
 import {useNyitottVerseny} from "../../../hooks/nyitottVerseny/useNyitottVerseny";
 import {useCloseUszoverseny} from "../../../hooks/uszoversenyek/useCloseUszoverseny";
 import {Uszoverseny} from "../../../types/Uszoverseny";
-import {customDateFormat} from "../../../utils";
 import {WarningButton} from "../../../components/inputs/WarningButton";
 
 export function UszoversenyekIndexPage() {
@@ -62,7 +61,7 @@ export function UszoversenyekIndexPage() {
                             <p>
                                 <b>{nyitottVerseny.nev}</b> ·&nbsp;
                                 {nyitottVerseny.helyszin} ·&nbsp;
-                                {customDateFormat(nyitottVerseny.datum)}
+                                {nyitottVerseny.datum.toLocaleDateString()}
                             </p>
                             <div className="flex flex-row gap-2 items-start">
                                 <WarningButton text="Úszóverseny lezárása" onClick={() => {

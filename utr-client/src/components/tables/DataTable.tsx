@@ -1,5 +1,4 @@
 import {ReactNode, useMemo} from "react";
-import {customDateFormat} from "../../utils";
 
 export function DataTable<T extends object>(props: {
     dataList: T[]
@@ -45,7 +44,7 @@ export function DataTable<T extends object>(props: {
             }).map(key => {
                 const val = entry[key as keyof T];
                 if (val instanceof Date) {
-                    return customDateFormat(val);
+                    return (val as Date).toLocaleDateString();
                 }
 
                 return String(val);
