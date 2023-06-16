@@ -19,7 +19,7 @@ export async function createUszoverseny(
     user: UserDetails, data: Omit<Uszoverseny, "id">
 ): Promise<MessageResponse> {
     const params = new URLSearchParams(createAllStringObject(data));
-    return apiRequest<MessageResponse>(user, `/csapatok/?${params}`, "PUT");
+    return apiRequest<MessageResponse>(user, `/uszoversenyek/?${params}`, "PUT");
 }
 
 export async function editUszoverseny(
