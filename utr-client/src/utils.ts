@@ -6,7 +6,11 @@ export function createAllStringObject<T extends object>(
 ): { [key in keyof T]: string } {
     const out: { [key in keyof T]: string } = {} as any;
     for (const key of Object.keys(obj) as (keyof T)[]) {
-        out[key] = String(obj[key]);
+        if (obj[key] instanceof Date) {
+            out[key] = (obj[key] as Date).toISOString();
+        } else {
+            out[key] = String(obj[key]);
+        }
     }
     return out;
 }
@@ -42,8 +46,4 @@ export async function sleep(milliseconds: number) {
     return new Promise<void>(resolve => {
         setTimeout(resolve, milliseconds);
     });
-}
-
-export function customDateFormat(date: Date): string {
-    return date.toISOString().split("T")[0].replaceAll("-", ". ") + ".";
 }

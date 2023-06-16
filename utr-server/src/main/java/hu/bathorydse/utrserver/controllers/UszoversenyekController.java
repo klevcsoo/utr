@@ -1,6 +1,5 @@
 package hu.bathorydse.utrserver.controllers;
 
-import hu.bathorydse.utrserver.core.ControllerUtils;
 import hu.bathorydse.utrserver.models.UszoNotFoundException;
 import hu.bathorydse.utrserver.models.Uszoverseny;
 import hu.bathorydse.utrserver.models.UszoversenyNotFoundException;
@@ -8,6 +7,10 @@ import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.UszoversenyRepository;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,16 +35,15 @@ public class UszoversenyekController {
 
     @GetMapping("/")
     public ResponseEntity<?> getAllVersenyek() {
-        return ResponseEntity.ok(uszoversenyRepository.findAll());
+        return ResponseEntity.ok(uszoversenyRepository.findAll(Sort.by(Direction.DESC, "datum")));
     }
 
     @PutMapping("/")
     public ResponseEntity<?> createNewVerseny(@RequestParam() String nev,
         @RequestParam(required = false) String helyszin,
-        @RequestParam(required = false) String datum) {
-        Date date = ControllerUtils.createDate(datum);
+        @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum) {
 
-        Uszoverseny uszoverseny = new Uszoverseny(nev, helyszin, date);
+        Uszoverseny uszoverseny = new Uszoverseny(nev, helyszin, datum);
         uszoversenyRepository.save(uszoverseny);
 
         return ResponseEntity.ok(new MessageResponse("Úszóverseny létrehozva."));
@@ -58,9 +60,7 @@ public class UszoversenyekController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> editVerseny(@PathVariable Long id,
         @RequestParam(required = false) String nev, @RequestParam(required = false) String helyszin,
-        @RequestParam(required = false) String datum) {
-        Date date = ControllerUtils.createDate(datum);
-
+        @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
             .orElseThrow(() -> new UszoNotFoundException(id));
 
@@ -73,7 +73,7 @@ public class UszoversenyekController {
         }
 
         if (datum != null) {
-            uszoverseny.setDatum(date);
+            uszoverseny.setDatum(datum);
         }
 
         uszoversenyRepository.save(uszoverseny);
