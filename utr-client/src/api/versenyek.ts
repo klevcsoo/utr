@@ -12,7 +12,9 @@ export async function getAllUszoversenyekList(user: UserDetails): Promise<Uszove
 }
 
 export async function getUszoverseny(user: UserDetails, id: number): Promise<Uszoverseny> {
-    return apiRequest<Uszoverseny>(user, `/uszoversenyek/${id}`, "GET");
+    const data = await apiRequest<Uszoverseny>(user, `/uszoversenyek/${id}`, "GET");
+    data.datum = new Date(data.datum);
+    return data;
 }
 
 export async function createUszoverseny(
