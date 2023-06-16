@@ -34,3 +34,13 @@ export async function deleteUszoverseny(
 ): Promise<MessageResponse> {
     return apiRequest(user, `/uszoversenyek/${id}`, "DELETE");
 }
+
+export async function openUszoverseny(
+    user: UserDetails, id: number
+): Promise<MessageResponse> {
+    return apiRequest(user, `/uszoversenyek/${id}/megnyitas`, "POST");
+}
+
+export async function closeUszoverseny(user: UserDetails): Promise<MessageResponse> {
+    return apiRequest(user, "/nyitott/lezaras", "POST");
+}
