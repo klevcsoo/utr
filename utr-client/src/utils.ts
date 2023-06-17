@@ -1,5 +1,6 @@
 import {UserDetails} from "./types/UserDetails";
 import {serverURL} from "./config";
+import {MessageResponse} from "./types/MessageResponse";
 
 export function createAllStringObject<T extends object>(
     obj: T
@@ -15,7 +16,7 @@ export function createAllStringObject<T extends object>(
     return out;
 }
 
-export async function apiRequest<T extends object>(
+export async function apiRequest<T extends object = MessageResponse>(
     user: UserDetails,
     path: string,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
