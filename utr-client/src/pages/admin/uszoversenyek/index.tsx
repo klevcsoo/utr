@@ -6,12 +6,10 @@ import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable} from "../../../components/tables/DataTable";
 import {IconButton} from "../../../components/inputs/IconButton";
 import {SecondaryButton} from "../../../components/inputs/SecondaryButton";
-import {useAuthUser} from "../../../hooks/auth/useAuthUser";
 import {FullPageModal} from "../../../components/modals/FullPageModal";
 import {TitleIcon} from "../../../components/icons/TitleIcon";
 import {TextInput} from "../../../components/inputs/TextInput";
 import {PrimaryButton} from "../../../components/inputs/PrimaryButton";
-import {createUszoverseny} from "../../../api/versenyek";
 import {DateInput} from "../../../components/inputs/DateInput";
 import {useOpenUszoverseny} from "../../../hooks/uszoversenyek/useOpenUszoverseny";
 import {BorderCard} from "../../../components/containers/BorderCard";
@@ -19,6 +17,7 @@ import {useNyitottVerseny} from "../../../hooks/nyitottVerseny/useNyitottVerseny
 import {useCloseUszoverseny} from "../../../hooks/uszoversenyek/useCloseUszoverseny";
 import {Uszoverseny} from "../../../types/Uszoverseny";
 import {WarningButton} from "../../../components/inputs/WarningButton";
+import {useCreateUszoverseny} from "../../../hooks/uszoversenyek/useCreateUszoverseny";
 
 export function UszoversenyekIndexPage() {
     const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
@@ -100,8 +99,8 @@ export function UszoversenyekIndexPage() {
 }
 
 function NewUszoversenyModal() {
-    const user = useAuthUser();
     const [, setSearchParams] = useSearchParams();
+    const createUszoverseny = useCreateUszoverseny();
 
     const [nev, setNev] = useState("");
     const [helyszin, setHelyszin] = useState("");
@@ -112,13 +111,13 @@ function NewUszoversenyModal() {
     }, [nev, helyszin, datum]);
 
     const doCreate = useCallback(() => {
-        if (!!user && !!nev && !!helyszin) {
-            createUszoverseny(user, {
+        if (!!nev && !!helyszin) {
+            createUszoverseny({
                 nev: nev,
                 helyszin: helyszin,
                 datum: new Date(datum),
                 nyitott: false
-            }).then(({message}) => {
+            }).then((message) => {
                 console.log(message);
                 setSearchParams(prevState => {
                     prevState.delete("modal");
@@ -126,7 +125,7 @@ function NewUszoversenyModal() {
                 });
             }).catch(console.error);
         }
-    }, [user, nev, helyszin, datum, setSearchParams]);
+    }, [nev, helyszin, createUszoverseny, datum, setSearchParams]);
 
     return (
         <FullPageModal className="flex flex-col">

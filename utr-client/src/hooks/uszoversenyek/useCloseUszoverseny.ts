@@ -1,6 +1,6 @@
 import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
-import {closeUszoverseny} from "../../api/versenyek";
+import {closeUszoverseny} from "../../api/uszoversenyek";
 
 export function useCloseUszoverseny(): () => Promise<string> {
     const user = useAuthUser();

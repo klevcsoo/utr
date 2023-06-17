@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {Uszoverseny} from "../../types/Uszoverseny";
-import {getAllUszoversenyekList} from "../../api/versenyek";
+import {getAllUszoversenyekList} from "../../api/uszoversenyek";
 
 export function useUszoversenyekList(): [Uszoverseny[], boolean] {
     const user = useAuthUser();

@@ -1,6 +1,6 @@
 import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
-import {editUszoverseny} from "../../api/versenyek";
+import {editUszoverseny} from "../../api/uszoversenyek";
 import {Uszoverseny} from "../../types/Uszoverseny";
 
 export function useEditUszoverseny():

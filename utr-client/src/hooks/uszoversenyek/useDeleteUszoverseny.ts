@@ -1,6 +1,6 @@
 import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
-import {deleteUszoverseny} from "../../api/versenyek";
+import {deleteUszoverseny} from "../../api/uszoversenyek";
 
 export function useDeleteUszoverseny():
     (id: number) => Promise<string> {
