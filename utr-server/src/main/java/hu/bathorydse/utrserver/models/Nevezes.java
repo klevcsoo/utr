@@ -42,5 +42,6 @@ public class Nevezes {
         this.uszo = uszo;
         this.versenyszamId = versenyszamId;
         this.nevezesiIdo = nevezesiIdo;
+        this.megjelent = true;
     }
 }
