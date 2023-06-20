@@ -7,6 +7,10 @@ export function createAllStringObject<T extends object>(
 ): { [key in keyof T]: string } {
     const out: { [key in keyof T]: string } = {} as any;
     for (const key of Object.keys(obj) as (keyof T)[]) {
+        if (!obj[key]) {
+            continue;
+        }
+
         if (obj[key] instanceof Date) {
             out[key] = (obj[key] as Date).toISOString();
         } else {
