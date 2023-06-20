@@ -1,11 +1,11 @@
-export type Versenyszam = {
-    id: number
+import {Uszasnem} from "./Uszasnem";
+import {Identifiable} from "../Identifiable";
+import {EmberiNem} from "../EmberiNem";
+
+export type Versenyszam = Identifiable<{
     versenyId: number
     hossz: number
-    uszasnem: {
-        id: number
-        elnevezes: string
-    }
-    nem: string
+    uszasnem: Uszasnem
+    nem: EmberiNem
     valto?: number
-}
+}>
