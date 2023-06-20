@@ -144,14 +144,6 @@ function VersenyszamokList(props: {
         });
     }, [versenyszamok]);
 
-    const doOpenEditVersenyszamModal = useCallback((id: number) => {
-        setSearchParams(prevState => {
-            prevState.set("modal", "versenyszam");
-            prevState.set("versenyszamId", String(id));
-            return prevState;
-        });
-    }, [setSearchParams]);
-
     const doOpenNewVersenyszamModal = useCallback(() => {
         setSearchParams(prevState => {
             prevState.set("modal", "versenyszam");
@@ -182,10 +174,9 @@ function VersenyszamokList(props: {
             }} excludedProperties={["id"]}
                        actionColumn={({id}) => (
                            <Fragment>
-                               <IconButton iconName="edit"
-                                           onClick={() => {
-                                               doOpenEditVersenyszamModal(id);
-                                           }}/>
+                               <Link to={`versenyszamok/${id}`}>
+                                   <IconButton iconName="edit"/>
+                               </Link>
                                <IconWarningButton iconName="delete"
                                                   onClick={() => {
                                                       doDeleteVersenyszam(id);

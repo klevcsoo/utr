@@ -10,6 +10,7 @@ import {CsapatSlugPage} from "./pages/admin/csapatok/[:id]";
 import {UszoversenyekIndexPage} from "./pages/admin/uszoversenyek";
 import {AdminIndexPage} from "./pages/admin";
 import {UszoversenyekSlugPage} from "./pages/admin/uszoversenyek/[:id]";
+import {UszoversenyVersenyszamokSlugPage} from "./pages/admin/uszoversenyek/versenyszamok/[:id]";
 
 function App() {
     return (
@@ -26,10 +27,19 @@ function App() {
                     </ProtectedView>
                 }>
                     <Route path="" element={<AdminIndexPage/>}/>
-                    <Route path="versenyek" element={<UszoversenyekIndexPage/>}/>
-                    <Route path="versenyek/:id" element={<UszoversenyekSlugPage/>}/>
-                    <Route path="csapatok" element={<CsapatokIndexPage/>}/>
-                    <Route path="csapatok/:id" element={<CsapatSlugPage/>}/>
+                    <Route path="versenyek">
+                        <Route path="" element={<UszoversenyekIndexPage/>}/>
+                        <Route path=":id">
+                            <Route path="" element={<UszoversenyekSlugPage/>}/>
+                            <Route path="versenyszamok">
+                                <Route path=":id" element={<UszoversenyVersenyszamokSlugPage/>}/>
+                            </Route>
+                        </Route>
+                    </Route>
+                    <Route path="csapatok">
+                        <Route path="" element={<CsapatokIndexPage/>}/>
+                        <Route path=":id" element={<CsapatSlugPage/>}/>
+                    </Route>
                 </Route>
             </Route>
             <Route path="/login" element={
