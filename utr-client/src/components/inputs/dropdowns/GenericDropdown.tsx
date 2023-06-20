@@ -1,6 +1,6 @@
 import {useMemo} from "react";
 
-export function Dropdown<T extends string>(props: {
+export function GenericDropdown<T extends string>(props: {
     options: T[] | readonly T[] | { [key in T]: string }
     selected: T
     onSelect(value: T): void
