@@ -5,12 +5,13 @@ export function NumberInput(props: {
     min?: number
     max?: number
     onSubmit?(): void
+    disabled?: boolean
 }) {
     return (
         <input type="number" value={props.value} min={props.min} max={props.max}
                className="max-w-sm h-8 px-2 border-2 rounded-md
                border-slate-200 bg-slate-100 focus:outline-none focus:border-blue-400"
-               placeholder={props.placeholder}
+               placeholder={props.placeholder} disabled={props.disabled}
                onChange={event => {
                    const val = parseInt(event.currentTarget.value);
                    const inRange = val >= (props.min ?? -Infinity) &&
