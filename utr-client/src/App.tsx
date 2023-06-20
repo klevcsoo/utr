@@ -1,5 +1,5 @@
 import React from 'react';
-import {Outlet, Route, Routes} from "react-router-dom";
+import {Navigate, Outlet, Route, Routes} from "react-router-dom";
 import {LoginPage} from "./pages/login";
 import {CsapatokIndexPage} from "./pages/admin/csapatok";
 import {UnprotectedView} from "./components/UnprotectedView";
@@ -32,6 +32,8 @@ function App() {
                         <Route path=":id">
                             <Route path="" element={<UszoversenyekSlugPage/>}/>
                             <Route path="versenyszamok">
+                                <Route path="" element={<Navigate to=".."
+                                                                  relative="path"/>}/>
                                 <Route path=":id" element={<UszoversenyVersenyszamokSlugPage/>}/>
                             </Route>
                         </Route>

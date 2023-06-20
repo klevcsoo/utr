@@ -10,7 +10,7 @@ import {FullPageModal} from "../../../components/modals/FullPageModal";
 import {TextInput} from "../../../components/inputs/TextInput";
 import {SecondaryButton} from "../../../components/inputs/SecondaryButton";
 import {TitleIcon} from "../../../components/icons/TitleIcon";
-import {EmberiNem} from "../../../types/model/EmberiNem";
+import {EmberiNem} from "../../../types/EmberiNem";
 import {NumberInput} from "../../../components/inputs/NumberInput";
 import {useSetAdminLayoutTitle} from "../../../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../../../components/inputs/IconButton";
@@ -278,7 +278,7 @@ function UszoModal(props: {
                                          min={1980}
                                          max={(new Date()).getFullYear()}/>
                             <label>Nem:</label>
-                            {/*<Dropdown options={{"N": "Nő", "F": "Férfi"}}*/}
+                            {/*<GenericDropdown options={{"N": "Nő", "F": "Férfi"}}*/}
                             {/*          onSelect={() => {*/}
                             {/*          }}/>*/}
                         </div>

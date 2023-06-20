@@ -24,7 +24,7 @@ import {FullPageModal} from "../../../components/modals/FullPageModal";
 import {DateInput} from "../../../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../../../hooks/versenyszamok/useCreateVersenyszam";
 import {NumberInput} from "../../../components/inputs/NumberInput";
-import {Dropdown} from "../../../components/inputs/Dropdown";
+import {GenericDropdown} from "../../../components/inputs/dropdowns/GenericDropdown";
 import {CheckBox} from "../../../components/inputs/CheckBox";
 
 export function UszoversenyekSlugPage() {
@@ -315,11 +315,11 @@ function VersenyszamModal(props: {
                     <label>Hossz:</label>
                     <NumberInput value={hossz} onValue={setHossz} min={25} max={200}/>
                     <label>Nem:</label>
-                    <Dropdown options={EMBERI_NEM_LIST} onSelect={value => {
+                    <GenericDropdown options={EMBERI_NEM_LIST} onSelect={value => {
                         setEmberiNem(value);
                     }} selected={emberiNem}/>
                     <label>Úszásnem:</label>
-                    <Dropdown options={USZASNEM_LIST} onSelect={value => {
+                    <GenericDropdown options={USZASNEM_LIST} onSelect={value => {
                         setUszasnem(value);
                     }} selected={uszasnem}/>
                 </div>
