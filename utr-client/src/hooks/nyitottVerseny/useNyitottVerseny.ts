@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {Versenyszam} from "../../types/Versenyszam";
-import {Uszoverseny} from "../../types/Uszoverseny";
+import {Versenyszam} from "../../types/model/Versenyszam";
+import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getOpenUszoverseny, getOpenVersenyszamok} from "../../api/nyitottVerseny";
 import {useAuthUser} from "../auth/useAuthUser";
 

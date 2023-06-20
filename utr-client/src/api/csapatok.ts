@@ -1,6 +1,6 @@
 import {UserDetails} from "../types/UserDetails";
-import {Csapat} from "../types/Csapat";
-import {MessageResponse} from "../types/MessageResponse";
+import {Csapat} from "../types/model/Csapat";
+import {MessageResponse} from "../types/response/MessageResponse";
 import {apiRequest} from "../utils";
 
 export async function getAllCsapatokList(user: UserDetails): Promise<Csapat[]> {

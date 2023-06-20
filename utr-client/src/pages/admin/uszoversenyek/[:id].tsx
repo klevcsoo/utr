@@ -9,7 +9,7 @@ import {LoadingSpinner} from "../../../components/LoadingSpinner";
 import {PrimaryButton} from "../../../components/inputs/PrimaryButton";
 import {BorderCard} from "../../../components/containers/BorderCard";
 import {WarningButton} from "../../../components/inputs/WarningButton";
-import {Uszoverseny} from "../../../types/Uszoverseny";
+import {Uszoverseny} from "../../../types/model/Uszoverseny";
 import {useVersenyszamokList} from "../../../hooks/versenyszamok/useVersenyszamokList";
 import {useDeleteVersenyszam} from "../../../hooks/versenyszamok/useDeleteVersenyszam";
 import {DataTable} from "../../../components/tables/DataTable";

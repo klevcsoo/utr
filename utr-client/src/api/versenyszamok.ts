@@ -1,6 +1,6 @@
 import {UserDetails} from "../types/UserDetails";
 import {apiRequest, createAllStringObject} from "../utils";
-import {Versenyszam} from "../types/Versenyszam";
+import {Versenyszam} from "../types/model/Versenyszam";
 import {VersenyszamCreationData} from "../types/request/VersenyszamCreationData";
 
 export async function getVersenyszamokInVerseny(user: UserDetails, versenyId: number) {

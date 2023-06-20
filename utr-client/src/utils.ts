@@ -1,6 +1,6 @@
 import {UserDetails} from "./types/UserDetails";
 import {serverURL} from "./config";
-import {MessageResponse} from "./types/MessageResponse";
+import {MessageResponse} from "./types/response/MessageResponse";
 
 export function createAllStringObject<T extends object>(
     obj: T

@@ -1,7 +1,7 @@
-import {Uszoverseny} from "../types/Uszoverseny";
+import {Uszoverseny} from "../types/model/Uszoverseny";
 import {apiRequest, createAllStringObject} from "../utils";
 import {UserDetails} from "../types/UserDetails";
-import {MessageResponse} from "../types/MessageResponse";
+import {MessageResponse} from "../types/response/MessageResponse";
 
 export async function getAllUszoversenyekList(user: UserDetails): Promise<Uszoverseny[]> {
     const data = await apiRequest<Uszoverseny[]>(user, "/uszoversenyek/", "GET");

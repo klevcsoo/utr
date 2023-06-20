@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Csapat} from "../../types/Csapat";
+import {Csapat} from "../../types/model/Csapat";
 import {getAllCsapatokList} from "../../api/csapatok";
 import {useAuthUser} from "../auth/useAuthUser";
 

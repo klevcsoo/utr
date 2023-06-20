@@ -1,6 +1,6 @@
 import {UserDetails} from "../types/UserDetails";
-import {Uszo} from "../types/Uszo";
-import {MessageResponse} from "../types/MessageResponse";
+import {Uszo} from "../types/model/Uszo";
+import {MessageResponse} from "../types/response/MessageResponse";
 import {apiRequest, createAllStringObject} from "../utils";
 
 export async function getAllUszokInCsapat(

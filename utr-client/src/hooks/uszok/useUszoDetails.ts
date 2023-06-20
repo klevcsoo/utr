@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Uszo} from "../../types/Uszo";
+import {Uszo} from "../../types/model/Uszo";
 import {useAuthUser} from "../auth/useAuthUser";
 import {getUszo} from "../../api/uszok";
 

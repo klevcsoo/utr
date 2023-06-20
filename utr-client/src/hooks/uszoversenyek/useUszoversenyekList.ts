@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
-import {Uszoverseny} from "../../types/Uszoverseny";
+import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getAllUszoversenyekList} from "../../api/uszoversenyek";
 
 export function useUszoversenyekList(): [Uszoverseny[], boolean] {

@@ -1,6 +1,6 @@
 import {serverURL} from "../config";
 import {UserRole} from "../types/UserRole";
-import {LoginResponse} from "../types/LoginResponse";
+import {LoginResponse} from "../types/response/LoginResponse";
 import {UserDetails} from "../types/UserDetails";
 import {createContext} from "react";
 

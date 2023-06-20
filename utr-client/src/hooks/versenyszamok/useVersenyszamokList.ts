@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
-import {Versenyszam} from "../../types/Versenyszam";
+import {Versenyszam} from "../../types/model/Versenyszam";
 import {getVersenyszamokInVerseny} from "../../api/versenyszamok";
 
 export function useVersenyszamokList(uszoversenyId: number | undefined): [Versenyszam[], boolean] {

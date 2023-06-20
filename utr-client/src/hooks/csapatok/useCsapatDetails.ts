@@ -1,4 +1,4 @@
-import {Csapat} from "../../types/Csapat";
+import {Csapat} from "../../types/model/Csapat";
 import {useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {getCsapat} from "../../api/csapatok";

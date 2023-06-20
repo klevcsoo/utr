@@ -10,7 +10,7 @@ import {FullPageModal} from "../../../components/modals/FullPageModal";
 import {TextInput} from "../../../components/inputs/TextInput";
 import {SecondaryButton} from "../../../components/inputs/SecondaryButton";
 import {TitleIcon} from "../../../components/icons/TitleIcon";
-import {EmberiNem} from "../../../types/EmberiNem";
+import {EmberiNem} from "../../../types/model/EmberiNem";
 import {NumberInput} from "../../../components/inputs/NumberInput";
 import {useSetAdminLayoutTitle} from "../../../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../../../components/inputs/IconButton";
@@ -19,7 +19,7 @@ import {useUszoDetails} from "../../../hooks/uszok/useUszoDetails";
 import {useDeleteCsapat} from "../../../hooks/csapatok/useDeleteCsapat";
 import {useEditCsapat} from "../../../hooks/csapatok/useEditCsapat";
 import {IconWarningButton} from "../../../components/inputs/IconWarningButton";
-import {Csapat} from "../../../types/Csapat";
+import {Csapat} from "../../../types/model/Csapat";
 import {useDeleteUszo} from "../../../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../../../hooks/uszok/useCreateUszo";
 

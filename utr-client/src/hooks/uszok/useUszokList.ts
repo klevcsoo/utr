@@ -1,4 +1,4 @@
-import {Uszo} from "../../types/Uszo";
+import {Uszo} from "../../types/model/Uszo";
 import {useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {getAllUszokInCsapat} from "../../api/uszok";

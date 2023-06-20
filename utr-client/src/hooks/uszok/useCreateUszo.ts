@@ -1,4 +1,4 @@
-import {Uszo} from "../../types/Uszo";
+import {Uszo} from "../../types/model/Uszo";
 import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {createUszo} from "../../api/uszok";

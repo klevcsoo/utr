@@ -15,7 +15,7 @@ import {useOpenUszoverseny} from "../../../hooks/uszoversenyek/useOpenUszoversen
 import {BorderCard} from "../../../components/containers/BorderCard";
 import {useNyitottVerseny} from "../../../hooks/nyitottVerseny/useNyitottVerseny";
 import {useCloseUszoverseny} from "../../../hooks/uszoversenyek/useCloseUszoverseny";
-import {Uszoverseny} from "../../../types/Uszoverseny";
+import {Uszoverseny} from "../../../types/model/Uszoverseny";
 import {WarningButton} from "../../../components/inputs/WarningButton";
 import {useCreateUszoverseny} from "../../../hooks/uszoversenyek/useCreateUszoverseny";
 

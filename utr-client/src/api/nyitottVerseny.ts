@@ -1,5 +1,5 @@
-import {Uszoverseny} from "../types/Uszoverseny";
-import {Versenyszam} from "../types/Versenyszam";
+import {Uszoverseny} from "../types/model/Uszoverseny";
+import {Versenyszam} from "../types/model/Versenyszam";
 import {UserDetails} from "../types/UserDetails";
 import {apiRequest} from "../utils";
 
