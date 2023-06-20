@@ -11,7 +11,6 @@ import {TextInput} from "../../../components/inputs/TextInput";
 import {SecondaryButton} from "../../../components/inputs/SecondaryButton";
 import {TitleIcon} from "../../../components/icons/TitleIcon";
 import {EmberiNem} from "../../../types/EmberiNem";
-import {Dropdown} from "../../../components/inputs/Dropdown";
 import {NumberInput} from "../../../components/inputs/NumberInput";
 import {useSetAdminLayoutTitle} from "../../../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../../../components/inputs/IconButton";
@@ -23,7 +22,6 @@ import {IconWarningButton} from "../../../components/inputs/IconWarningButton";
 import {Csapat} from "../../../types/Csapat";
 import {useDeleteUszo} from "../../../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../../../hooks/uszok/useCreateUszo";
-import {useAuthUser} from "../../../hooks/auth/useAuthUser";
 
 export function CsapatSlugPage() {
     const {id} = useParams();
@@ -211,7 +209,6 @@ function CsapatModal(props: {
 function UszoModal(props: {
     csapat?: Csapat
 }) {
-    const user = useAuthUser();
     const [searchParams, setSearchParams] = useSearchParams();
     const [uszo, uszoLoading] = useUszoDetails(
         parseInt(searchParams.get("uszoId") ?? "-1")
@@ -235,7 +232,7 @@ function UszoModal(props: {
     }, [setSearchParams]);
 
     const doCreateUszo = useCallback(() => {
-        if (!!user && !!props.csapat && !!nev && !!szuletesiEv && !!nem) {
+        if (!!props.csapat && !!nev && !!szuletesiEv && !!nem) {
             createUszo({
                 nev: nev,
                 szuletesiEv: szuletesiEv,
@@ -246,7 +243,7 @@ function UszoModal(props: {
                 doCloseModal();
             }).catch(console.log);
         }
-    }, [createUszo, doCloseModal, nem, nev, props.csapat, szuletesiEv, user]);
+    }, [createUszo, doCloseModal, nem, nev, props.csapat, szuletesiEv]);
 
     useEffect(() => {
         if (!!uszo) {
@@ -281,9 +278,9 @@ function UszoModal(props: {
                                          min={1980}
                                          max={(new Date()).getFullYear()}/>
                             <label>Nem:</label>
-                            <Dropdown options={{"N": "Nő", "F": "Férfi"}}
-                                      onSelect={() => {
-                                      }}/>
+                            {/*<Dropdown options={{"N": "Nő", "F": "Férfi"}}*/}
+                            {/*          onSelect={() => {*/}
+                            {/*          }}/>*/}
                         </div>
                     </div>
                     <div className="flex flex-row gap-2 p-6">
