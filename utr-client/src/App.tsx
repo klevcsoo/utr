@@ -9,6 +9,7 @@ import {AdminLayout} from "./layouts/AdminLayout";
 import {CsapatSlugPage} from "./pages/admin/csapatok/[:id]";
 import {UszoversenyekIndexPage} from "./pages/admin/uszoversenyek";
 import {AdminIndexPage} from "./pages/admin";
+import {UszoversenyekSlugPage} from "./pages/admin/uszoversenyek/[:id]";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                 }>
                     <Route path="" element={<AdminIndexPage/>}/>
                     <Route path="versenyek" element={<UszoversenyekIndexPage/>}/>
+                    <Route path="versenyek/:id" element={<UszoversenyekSlugPage/>}/>
                     <Route path="csapatok" element={<CsapatokIndexPage/>}/>
                     <Route path="csapatok/:id" element={<CsapatSlugPage/>}/>
                 </Route>
