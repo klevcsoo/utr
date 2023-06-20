@@ -1,9 +1,13 @@
 package hu.bathorydse.utrserver.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +22,9 @@ public class Nevezes {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "uszo_id")
-    private Long uszoId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "uszo_id")
+    private UszoDetailed uszo;
 
     @Column(name = "versenyszam_id")
     private Long versenyszamId;
@@ -33,10 +38,9 @@ public class Nevezes {
     @Column(name = "megjelent")
     private Boolean megjelent;
 
-    public Nevezes(Long uszoId, Long versenyszamId, Integer nevezesiIdo) {
-        this.uszoId = uszoId;
+    public Nevezes(UszoDetailed uszo, Long versenyszamId, Integer nevezesiIdo) {
+        this.uszo = uszo;
         this.versenyszamId = versenyszamId;
         this.nevezesiIdo = nevezesiIdo;
-        this.megjelent = true;
     }
 }

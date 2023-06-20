@@ -2,8 +2,11 @@ package hu.bathorydse.utrserver.controllers;
 
 import hu.bathorydse.utrserver.models.Nevezes;
 import hu.bathorydse.utrserver.models.NevezesNotFoundException;
+import hu.bathorydse.utrserver.models.UszoDetailed;
+import hu.bathorydse.utrserver.models.UszoNotFoundException;
 import hu.bathorydse.utrserver.payload.response.MessageResponse;
 import hu.bathorydse.utrserver.repository.NevezesRepository;
+import hu.bathorydse.utrserver.repository.UszoDetailedRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,9 @@ public class NevezesekController {
     @Autowired
     private NevezesRepository nevezesRepository;
 
+    @Autowired
+    private UszoDetailedRepository uszoDetailedRepository;
+
     @GetMapping("/")
     public ResponseEntity<?> getAllNevezesek(@RequestParam Long versenyszamId) {
         List<Nevezes> nevezesek = nevezesRepository.findAllByVersenyszamId(versenyszamId);
@@ -47,7 +53,10 @@ public class NevezesekController {
             interval = null;
         }
 
-        Nevezes nevezes = new Nevezes(uszoId, versenyszamId, interval);
+        UszoDetailed uszo = uszoDetailedRepository.findById(uszoId)
+            .orElseThrow(() -> new UszoNotFoundException(uszoId));
+
+        Nevezes nevezes = new Nevezes(uszo, versenyszamId, interval);
         nevezesRepository.save(nevezes);
 
         return ResponseEntity.ok(new MessageResponse("Nevezés hozzáadva."));
@@ -74,7 +83,10 @@ public class NevezesekController {
         }
 
         if (uszoId != null) {
-            nevezes.setUszoId(uszoId);
+            UszoDetailed uszo = uszoDetailedRepository.findById(uszoId)
+                .orElseThrow(() -> new UszoNotFoundException(uszoId));
+
+            nevezes.setUszo(uszo);
         }
 
         if (nevezesiIdo != null) {
