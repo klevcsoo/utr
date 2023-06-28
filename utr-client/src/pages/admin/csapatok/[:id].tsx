@@ -131,7 +131,7 @@ function UszokList(props: {
             ) : (
                 <DataTable dataList={uszok} propertyNameOverride={{
                     nev: "név",
-                    szuletesiEv: "születési év"
+                    szuletesiDatum: "születési év"
                 }} excludedProperties={["id", "csapatId"]}
                            actionColumn={({id}) => (
                                <Fragment>
@@ -235,7 +235,7 @@ function UszoModal(props: {
         if (!!props.csapat && !!nev && !!szuletesiEv && !!nem) {
             createUszo({
                 nev: nev,
-                szuletesiEv: szuletesiEv,
+                szuletesiDatum: szuletesiEv,
                 nem: nem,
                 csapatId: props.csapat.id
             }).then(message => {
@@ -248,7 +248,7 @@ function UszoModal(props: {
     useEffect(() => {
         if (!!uszo) {
             setNev(uszo.nev);
-            setSzuletesiEv(uszo.szuletesiEv);
+            setSzuletesiEv(uszo.szuletesiDatum);
             setNem(uszo.nem as EmberiNem);
         }
     }, [uszo]);
