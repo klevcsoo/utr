@@ -37,7 +37,7 @@ export function UszoversenyVersenyszamokSlugPage() {
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     const [versenyszam, loadingVersenyszam] = useVersenyszamDetails(idNumber);
     const [uszoverseny, loadingUszoverseny] = useUszoversenyDetails(
