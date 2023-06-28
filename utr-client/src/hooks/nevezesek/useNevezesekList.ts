@@ -6,7 +6,7 @@ import {getAllNevezesek} from "../../api/nevezesek";
 export function useNevezesekList(versenyszamId: number | undefined): [Nevezes[], boolean] {
     const user = useAuthUser();
     const [list, setList] = useState<Nevezes[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!!versenyszamId && !!user) {
