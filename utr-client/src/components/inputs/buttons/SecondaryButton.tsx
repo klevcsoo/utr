@@ -1,8 +1,6 @@
-export function SecondaryButton(props: {
-    text: string
-    onClick?(): void
-    disabled?: boolean
-}) {
+import {CommonButtonProps} from "../../../types/componentProps/common/CommonButtonProps";
+
+export function SecondaryButton(props: CommonButtonProps) {
     return (
         <button type="button" disabled={props.disabled} onClick={props.onClick}
                 className="max-w-xs min-w-max w-full px-4 py-1

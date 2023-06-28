@@ -1,12 +1,6 @@
-export function NumberInput(props: {
-    value: number
-    onValue(value: number): void
-    placeholder?: string
-    min?: number
-    max?: number
-    onSubmit?(): void
-    disabled?: boolean
-}) {
+import {NumberInputProps} from "../../../types/componentProps/inputs/NumberInputProps";
+
+export function NumberInput(props: NumberInputProps) {
     return (
         <input type="number" value={props.value} min={props.min} max={props.max}
                className="max-w-xs h-8 px-2 border-2 rounded-md

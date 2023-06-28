@@ -1,13 +1,11 @@
-import {ReactNode, useMemo} from "react";
+import {useMemo} from "react";
 import {Identifiable} from "../../types/Identifiable";
+import {DataTableProps} from "../../types/componentProps/tables/DataTableProps";
 
-export function DataTable<T extends Identifiable<K>, K extends object = object>(props: {
-    dataList: T[]
-    loadAllInOnePage?: boolean
-    propertyNameOverride?: { [key in keyof T]?: string }
-    excludedProperties?: (keyof T)[]
-    actionColumn?: (entry: T) => ReactNode
-}) {
+export function DataTable<
+    T extends Identifiable<K>,
+    K extends object = object
+>(props: DataTableProps<T>) {
     const propDisplayNames = useMemo<{ [key in keyof T]?: string }>(() => {
         const out: { [key in keyof T]?: string } = {};
 

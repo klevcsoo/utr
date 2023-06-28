@@ -1,9 +1,7 @@
 import {RawMaterialIcon} from "../../icons/RawMaterialIcon";
+import {CommonIconButtonProps} from "../../../types/componentProps/common/CommonIconButtonProps";
 
-export function IconButton(props: {
-    iconName: string
-    onClick?(): void
-}) {
+export function IconButton(props: CommonIconButtonProps) {
     return (
         <button type="button" onClick={props.onClick}
                 className="grid place-content-center p-1 bg-slate-100 rounded-md

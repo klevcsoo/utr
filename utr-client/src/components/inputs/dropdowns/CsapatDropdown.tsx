@@ -2,11 +2,9 @@ import {GenericDropdown} from "./GenericDropdown";
 import {useCsapatokList} from "../../../hooks/csapatok/useCsapatokList";
 import {LoadingSpinner} from "../../LoadingSpinner";
 import {useMemo} from "react";
+import {CommonDropdownProps} from "../../../types/componentProps/common/CommonDropdownProps";
 
-export function CsapatDropdown(props: {
-    selected: number
-    onSelected(id: number): void
-}) {
+export function CsapatDropdown(props: CommonDropdownProps<number>) {
     const [csapatok, loadingCsapatok] = useCsapatokList();
 
     const options = useMemo<{ [id: string]: string }>(() => {
@@ -27,7 +25,7 @@ export function CsapatDropdown(props: {
         <GenericDropdown options={options}
                          selected={String(props.selected)}
                          onSelect={value => {
-                             props.onSelected(parseInt(value));
+                             props.onSelect(parseInt(value));
                          }}/>
     );
 }

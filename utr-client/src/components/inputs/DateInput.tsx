@@ -1,11 +1,7 @@
 import {useCallback} from "react";
+import {DateInputProps} from "../../types/componentProps/inputs/DateInputProps";
 
-export function DateInput(props: {
-    value: number
-    onValue(date: number): void
-    min?: number
-    max?: number
-}) {
+export function DateInput(props: DateInputProps) {
     const dateToString = useCallback((value: number) => {
         const d = new Date(value);
         const year = d.getFullYear();

@@ -1,11 +1,10 @@
-import {ReactNode, useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {UserDetails} from "../types/UserDetails";
 import {AuthContext, login} from "../api/auth";
 import {UserRole} from "../types/UserRole";
+import {CommonChildrenOnlyProps} from "../types/componentProps/common/CommonChildrenOnlyProps";
 
-function AuthProvider(props: {
-    children: ReactNode
-}) {
+function AuthProvider(props: CommonChildrenOnlyProps) {
     const [user, setUser] = useState<UserDetails>();
 
     const doLogin = useCallback(

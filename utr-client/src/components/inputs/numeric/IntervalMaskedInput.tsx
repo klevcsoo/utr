@@ -1,11 +1,9 @@
 import InputMask from "react-input-mask";
+import {
+    IntervalMaskedInputProps
+} from "../../../types/componentProps/inputs/IntervalMaskedInputProps";
 
-export function IntervalMaskedInput(props: {
-    value: string | undefined
-    onValue(val: string): void
-    onSubmit?(): void
-    disabled?: boolean
-}) {
+export function IntervalMaskedInput(props: IntervalMaskedInputProps) {
     return (
         <InputMask mask="9:99.999" value={props.value} onChange={event => {
             props.onValue(event.currentTarget.value);

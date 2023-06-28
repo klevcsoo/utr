@@ -150,9 +150,9 @@ export function VersenyszamDetails(props: {
             <p>Hossz: </p>
             <NumberInput value={hossz} onValue={setHossz}/>
             <p>Nem: </p>
-            <VersenyszamNemDropdown selected={nem} onSelected={setNem}/>
+            <VersenyszamNemDropdown selected={nem} onSelect={setNem}/>
             <p>Úszásnem: </p>
-            <UszasnemDropdown selected={uszasnem} onSelected={setUszasnem}/>
+            <UszasnemDropdown selected={uszasnem} onSelect={setUszasnem}/>
             {unsavedChanges ? (
                 <SecondaryButton text="Módosítások mentése" onClick={doCommitChanges}/>
             ) : null}
@@ -278,12 +278,12 @@ function NevezesModal(props: {
             <div className="grid grid-rows-[auto_auto] grid-cols-[auto_auto]
                         gap-y-2 gap-x-8 items-center p-6">
                 <label>Csapat:</label>
-                <CsapatDropdown selected={csapat} onSelected={setCsapat}/>
+                <CsapatDropdown selected={csapat} onSelect={setCsapat}/>
                 {csapat ? (
                     <Fragment>
                         <label>Úszó:</label>
                         <UszoDropdown csapatId={csapat} selected={uszo}
-                                      onSelected={setUszo}/>
+                                      onSelect={setUszo}/>
                     </Fragment>
                 ) : null}
                 {uszo ? (

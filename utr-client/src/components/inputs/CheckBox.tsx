@@ -1,8 +1,6 @@
-export function CheckBox(props: {
-    value: boolean
-    onValue(value: boolean): void
-    disabled?: boolean
-}) {
+import {CheckBoxProps} from "../../types/componentProps/inputs/CheckBoxProps";
+
+export function CheckBox(props: CheckBoxProps) {
     return (
         <div className="grid place-content-center">
             <input type="checkbox" checked={props.value}

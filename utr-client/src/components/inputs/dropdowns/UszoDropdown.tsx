@@ -2,12 +2,9 @@ import {GenericDropdown} from "./GenericDropdown";
 import {LoadingSpinner} from "../../LoadingSpinner";
 import {useMemo} from "react";
 import {useUszokList} from "../../../hooks/uszok/useUszokList";
+import {UszoDropdownProps} from "../../../types/componentProps/inputs/UszoDropdownProps";
 
-export function UszoDropdown(props: {
-    csapatId: number
-    selected: number
-    onSelected(id: number): void
-}) {
+export function UszoDropdown(props: UszoDropdownProps) {
     const [uszok, loadingUszok] = useUszokList(props.csapatId);
 
     const options = useMemo<{ [id: string]: string }>(() => {
@@ -28,7 +25,7 @@ export function UszoDropdown(props: {
         <GenericDropdown options={options}
                          selected={String(props.selected)}
                          onSelect={value => {
-                             props.onSelected(parseInt(value));
+                             props.onSelect(parseInt(value));
                          }}/>
     );
 }

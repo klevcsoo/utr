@@ -1,10 +1,6 @@
-export function TextInput(props: {
-    value: string
-    onValue(val: string): void
-    password?: boolean
-    placeholder?: string
-    onSubmit?: () => void
-}) {
+import {TextInputProps} from "../../types/componentProps/inputs/TextInputProps";
+
+export function TextInput(props: TextInputProps) {
     return (
         <input type={props.password ? "password" : "text"} value={props.value}
                className="max-w-sm h-8 px-2 border-2 rounded-md

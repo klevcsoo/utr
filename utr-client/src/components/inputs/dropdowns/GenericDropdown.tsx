@@ -1,10 +1,7 @@
 import {useMemo} from "react";
+import {GenericDropdownProps} from "../../../types/componentProps/inputs/GenericDropdownProps";
 
-export function GenericDropdown<T extends string>(props: {
-    options: T[] | readonly T[] | { [key in T]: string }
-    selected: T
-    onSelect(value: T): void
-}) {
+export function GenericDropdown<T extends string>(props: GenericDropdownProps<T>) {
     const resolvedOptions = useMemo<[string, string][]>(() => {
         if (props.options instanceof Array) {
             return (props.options as string[]).map(value => [value, value]);

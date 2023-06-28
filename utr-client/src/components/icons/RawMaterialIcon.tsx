@@ -1,7 +1,6 @@
-export function RawMaterialIcon(props: {
-    name: string
-    className?: string
-}) {
+import {RawMaterialIconProps} from "../../types/componentProps/icons/RawMaterialIconProps";
+
+export function RawMaterialIcon(props: RawMaterialIconProps) {
     return (
         <span className={
             "material-symbols-rounded text-inherit select-none " +

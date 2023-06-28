@@ -1,12 +1,9 @@
-import {Fragment, ReactNode} from "react";
+import {Fragment} from "react";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
-import {UserRole} from "../types/UserRole";
 import {Navigate} from "react-router-dom";
+import {ProtectedViewProps} from "../types/componentProps/ProtectedViewProps";
 
-export function ProtectedView(props: {
-    children: ReactNode
-    role?: UserRole
-}) {
+export function ProtectedView(props: ProtectedViewProps) {
     const user = useAuthUser();
 
     return !user ? <Navigate to="/login"/> :
