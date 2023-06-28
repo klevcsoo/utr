@@ -1,5 +1,5 @@
-import {Link, useNavigate, useParams} from "react-router-dom";
-import {Fragment, useCallback, useMemo, useState} from "react";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSetAdminLayoutTitle} from "../../../../hooks/useSetAdminLayoutTitle";
 import {useVersenyszamDetails} from "../../../../hooks/versenyszamok/useVersenyszamDetails";
 import {useUszoversenyDetails} from "../../../../hooks/uszoversenyek/useUszoversenyDetails";
@@ -19,15 +19,29 @@ import {
 import {UszasnemDropdown} from "../../../../components/inputs/dropdowns/UszasnemDropdown";
 import {SecondaryButton} from "../../../../components/inputs/SecondaryButton";
 import {useEditVersenyszam} from "../../../../hooks/versenyszamok/useEditVersenyszam";
+import {useNevezesekList} from "../../../../hooks/nevezesek/useNevezesekList";
+import {useDeleteNevezes} from "../../../../hooks/nevezesek/useDeleteNevezes";
+import {DataTable} from "../../../../components/tables/DataTable";
+import {DisplayedNevezes} from "../../../../types/DisplayedNevezes";
+import {formatInterval} from "../../../../utils";
+import {IconWarningButton} from "../../../../components/inputs/IconWarningButton";
+import {FullPageModal} from "../../../../components/modals/FullPageModal";
+import {CsapatDropdown} from "../../../../components/inputs/dropdowns/CsapatDropdown";
+import {TitleIcon} from "../../../../components/icons/TitleIcon";
+import {useCreateNevezes} from "../../../../hooks/nevezesek/useCreateNevezes";
+import {UszoDropdown} from "../../../../components/inputs/dropdowns/UszoDropdown";
+import {IntervalMaskedInput} from "../../../../components/inputs/IntervalMaskedInput";
 
 export function UszoversenyVersenyszamokSlugPage() {
     const navigate = useNavigate();
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const [versenyszam, loadingVersenyszam] = useVersenyszamDetails(idNumber);
     const [uszoverseny, loadingUszoverseny] = useUszoversenyDetails(
-        versenyszam?.id ?? -1
+        versenyszam?.versenyId ?? -1
     );
     const deleteVersenyszam = useDeleteVersenyszam();
 
@@ -78,8 +92,12 @@ export function UszoversenyVersenyszamokSlugPage() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <h3 className="ml-2 col-span-2">Nevezések:</h3>
+                    <NevezesekList versenyszam={versenyszam}/>
                 </div>
             </div>
+            {searchParams.get("modal") === "nevezes" ? (
+                <NevezesModal versenyszam={versenyszam}/>
+            ) : null}
         </Fragment>
     );
 }
@@ -139,5 +157,153 @@ export function VersenyszamDetails(props: {
                 <SecondaryButton text="Módosítások mentése" onClick={doCommitChanges}/>
             ) : null}
         </BorderCard>
+    );
+}
+
+export function NevezesekList(props: {
+    versenyszam: Versenyszam
+}) {
+    const [nevezesek, loadingNevezesek] = useNevezesekList(props.versenyszam.id);
+    const deleteNevezes = useDeleteNevezes();
+    const [, setSearchParams] = useSearchParams();
+
+    const displayedNevezesek = useMemo<Omit<DisplayedNevezes, "megjelent">[]>(() => {
+        return nevezesek.map(value => {
+            return {
+                id: value.id,
+                uszoNev: value.uszo.nev,
+                uszoSzuletesiEv: value.uszo.szuletesiDatum,
+                csapatNev: value.uszo.csapat.nev,
+                nevezesiIdo: value.nevezesiIdo ? formatInterval(value.nevezesiIdo) : "nincs",
+                idoeredmeny: value.idoeredmeny ? formatInterval(value.idoeredmeny) : "nincs"
+            };
+        });
+    }, [nevezesek]);
+
+    const doDeleteNevezes = useCallback((id: number) => {
+        deleteNevezes(id).then(console.log).catch(console.error);
+    }, [deleteNevezes]);
+
+    const doOpenNewNevezesModal = useCallback(() => {
+        setSearchParams(prevState => {
+            prevState.set("modal", "nevezes");
+            return prevState;
+        });
+    }, [setSearchParams]);
+
+    return loadingNevezesek ? (
+        <div className="grid place-content-center">
+            <LoadingSpinner/>
+        </div>
+    ) : !nevezesek || !nevezesek.length ? (
+        <BorderCard>
+            <p>
+                Jelenleg egy úszó sincs benevezve a versenyszámba.
+                Adjunk hozzá egyet?
+            </p>
+        </BorderCard>
+    ) : (
+        <Fragment>
+            <DataTable dataList={displayedNevezesek} propertyNameOverride={{
+                uszoNev: "úszó",
+                uszoSzuletesiEv: "születési év",
+                csapatNev: "csapat",
+                nevezesiIdo: "nevezési idő",
+                idoeredmeny: "időeredmény"
+            }} excludedProperties={["id"]} actionColumn={({id}) => (
+                <Fragment>
+                    <IconWarningButton iconName="delete"
+                                       onClick={() => doDeleteNevezes(id)}/>
+                </Fragment>
+            )}/>
+            <SecondaryButton text="Úszó benevezése" onClick={doOpenNewNevezesModal}/>
+        </Fragment>
+    );
+}
+
+function NevezesModal(props: {
+    versenyszam: Versenyszam
+}) {
+    const [, setSearchParams] = useSearchParams();
+    const createNevezes = useCreateNevezes();
+
+    const [csapat, setCsapat] = useState<number>(NaN);
+    const [uszo, setUszo] = useState<number>(NaN);
+    const [nevezesiIdo, setNevezesiIdo] = useState<string>();
+    const [nevezesiIdoEnabled, setNevezesiIdoEnabled] = useState(false);
+
+    const canAdd = useMemo(() => {
+        return !!uszo &&
+            (nevezesiIdoEnabled ?
+                (!!nevezesiIdo && !nevezesiIdo.includes("_")) :
+                true);
+    }, [nevezesiIdo, nevezesiIdoEnabled, uszo]);
+
+    const doCloseModal = useCallback(() => {
+        setSearchParams(prevState => {
+            prevState.delete("modal");
+            prevState.delete("versenyszamId");
+            return prevState;
+        });
+    }, [setSearchParams]);
+
+    const doAddNevezes = useCallback(() => {
+        if (!canAdd) {
+            return;
+        }
+
+        createNevezes({
+            megjelent: true,
+            nevezesiIdo: nevezesiIdo,
+            versenyszamId: props.versenyszam.id,
+            uszoId: uszo
+        }).then(message => {
+            console.log(message);
+            doCloseModal();
+        }).catch(console.error);
+    }, [canAdd, createNevezes, doCloseModal, nevezesiIdo, props.versenyszam, uszo]);
+
+    useEffect(() => {
+        setUszo(NaN);
+    }, [csapat]);
+
+    return (
+        <FullPageModal className="flex flex-col">
+            <div className="flex flex-row items-center
+                    justify-start gap-6 p-6 min-w-max max-w-sm">
+                <TitleIcon name="person"/>
+                <h2>Úszó benevezése</h2>
+            </div>
+            <div className="w-full border border-slate-100"></div>
+            <div className="grid grid-rows-[auto_auto] grid-cols-[auto_auto]
+                        gap-y-2 gap-x-8 items-center p-6">
+                <label>Csapat:</label>
+                <CsapatDropdown selected={csapat} onSelected={setCsapat}/>
+                {csapat ? (
+                    <Fragment>
+                        <label>Úszó:</label>
+                        <UszoDropdown csapatId={csapat} selected={uszo}
+                                      onSelected={setUszo}/>
+                    </Fragment>
+                ) : null}
+                {uszo ? (
+                    <Fragment>
+                        <label>Nevezési idő:</label>
+                        <div className="flex flex-row gap-2 justify-items-start">
+                            <CheckBox value={nevezesiIdoEnabled}
+                                      onValue={setNevezesiIdoEnabled}/>
+                            <IntervalMaskedInput value={nevezesiIdo}
+                                                 onValue={setNevezesiIdo}
+                                                 disabled={!nevezesiIdoEnabled}/>
+                        </div>
+                    </Fragment>
+                ) : null}
+            </div>
+            <div className="flex flex-row gap-2 p-6">
+                <SecondaryButton text="Inkább nem" onClick={doCloseModal}/>
+                <PrimaryButton text="Mehet!" onClick={doAddNevezes}
+                               disabled={!canAdd}/>
+            </div>
+        </FullPageModal>
     );
 }
