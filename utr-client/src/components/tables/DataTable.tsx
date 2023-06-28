@@ -1,6 +1,7 @@
 import {ReactNode, useMemo} from "react";
+import {Identifiable} from "../../types/Identifiable";
 
-export function DataTable<T extends object>(props: {
+export function DataTable<T extends Identifiable<K>, K extends object = object>(props: {
     dataList: T[]
     loadAllInOnePage?: boolean
     propertyNameOverride?: { [key in keyof T]?: string }
