@@ -52,3 +52,11 @@ export async function sleep(milliseconds: number) {
         setTimeout(resolve, milliseconds);
     });
 }
+
+export function formatInterval(milliseconds: number): string {
+    const seconds = milliseconds / 1000;
+    const minutes = Math.floor(seconds / 60);
+    const remainderSeconds = (seconds % 60).toFixed(3);
+
+    return `${minutes}:${remainderSeconds}`;
+}
