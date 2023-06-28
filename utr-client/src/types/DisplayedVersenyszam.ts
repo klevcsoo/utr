@@ -3,5 +3,5 @@ export type DisplayedVersenyszam = {
     hossz: `${number}m`
     uszasnem: string
     nem: "fiú" | "lány"
-    valto: `${number}x` | "nincs"
+    valto: `${number}x` | ""
 }
