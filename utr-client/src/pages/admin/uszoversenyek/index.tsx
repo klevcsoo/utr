@@ -4,19 +4,19 @@ import {useSetAdminLayoutTitle} from "../../../hooks/useSetAdminLayoutTitle";
 import {LoadingSpinner} from "../../../components/LoadingSpinner";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable} from "../../../components/tables/DataTable";
-import {IconButton} from "../../../components/inputs/IconButton";
-import {SecondaryButton} from "../../../components/inputs/SecondaryButton";
+import {IconButton} from "../../../components/inputs/buttons/IconButton";
+import {SecondaryButton} from "../../../components/inputs/buttons/SecondaryButton";
 import {FullPageModal} from "../../../components/modals/FullPageModal";
 import {TitleIcon} from "../../../components/icons/TitleIcon";
 import {TextInput} from "../../../components/inputs/TextInput";
-import {PrimaryButton} from "../../../components/inputs/PrimaryButton";
+import {PrimaryButton} from "../../../components/inputs/buttons/PrimaryButton";
 import {DateInput} from "../../../components/inputs/DateInput";
 import {useOpenUszoverseny} from "../../../hooks/uszoversenyek/useOpenUszoverseny";
 import {BorderCard} from "../../../components/containers/BorderCard";
 import {useNyitottVerseny} from "../../../hooks/nyitottVerseny/useNyitottVerseny";
 import {useCloseUszoverseny} from "../../../hooks/uszoversenyek/useCloseUszoverseny";
 import {Uszoverseny} from "../../../types/model/Uszoverseny";
-import {WarningButton} from "../../../components/inputs/WarningButton";
+import {WarningButton} from "../../../components/inputs/buttons/WarningButton";
 import {useCreateUszoverseny} from "../../../hooks/uszoversenyek/useCreateUszoverseny";
 
 export function UszoversenyekIndexPage() {

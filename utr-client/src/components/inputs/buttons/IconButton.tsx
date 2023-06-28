@@ -1,4 +1,4 @@
-import {RawMaterialIcon} from "../icons/RawMaterialIcon";
+import {RawMaterialIcon} from "../../icons/RawMaterialIcon";
 
 export function IconButton(props: {
     iconName: string

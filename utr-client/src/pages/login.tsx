@@ -1,6 +1,6 @@
 import {useCallback, useContext, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
-import {PrimaryButton} from "../components/inputs/PrimaryButton";
+import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {AuthContext} from "../api/auth";
 import {AppLogo} from "../components/icons/AppLogo";
 

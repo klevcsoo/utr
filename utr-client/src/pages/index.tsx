@@ -1,8 +1,8 @@
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {Link, NavLink} from "react-router-dom";
-import {PrimaryButton} from "../components/inputs/PrimaryButton";
-import {SecondaryButton} from "../components/inputs/SecondaryButton";
+import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
+import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Fragment} from "react";
 

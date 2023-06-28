@@ -2,16 +2,16 @@ import {useCsapatokList} from "../../../hooks/csapatok/useCsapatokList";
 import {DataTable} from "../../../components/tables/DataTable";
 import {LoadingSpinner} from "../../../components/LoadingSpinner";
 import {Link, useSearchParams} from "react-router-dom";
-import {PrimaryButton} from "../../../components/inputs/PrimaryButton";
+import {PrimaryButton} from "../../../components/inputs/buttons/PrimaryButton";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {FullPageModal} from "../../../components/modals/FullPageModal";
 import {TitleIcon} from "../../../components/icons/TitleIcon";
-import {SecondaryButton} from "../../../components/inputs/SecondaryButton";
+import {SecondaryButton} from "../../../components/inputs/buttons/SecondaryButton";
 import {TextInput} from "../../../components/inputs/TextInput";
 import {useAuthUser} from "../../../hooks/auth/useAuthUser";
 import {createCsapat} from "../../../api/csapatok";
 import {useSetAdminLayoutTitle} from "../../../hooks/useSetAdminLayoutTitle";
-import {IconButton} from "../../../components/inputs/IconButton";
+import {IconButton} from "../../../components/inputs/buttons/IconButton";
 
 export function CsapatokIndexPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();

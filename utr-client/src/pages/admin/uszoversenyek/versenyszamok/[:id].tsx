@@ -4,33 +4,33 @@ import {useSetAdminLayoutTitle} from "../../../../hooks/useSetAdminLayoutTitle";
 import {useVersenyszamDetails} from "../../../../hooks/versenyszamok/useVersenyszamDetails";
 import {useUszoversenyDetails} from "../../../../hooks/uszoversenyek/useUszoversenyDetails";
 import {LoadingSpinner} from "../../../../components/LoadingSpinner";
-import {PrimaryButton} from "../../../../components/inputs/PrimaryButton";
+import {PrimaryButton} from "../../../../components/inputs/buttons/PrimaryButton";
 import {BorderCard} from "../../../../components/containers/BorderCard";
 import {useDeleteVersenyszam} from "../../../../hooks/versenyszamok/useDeleteVersenyszam";
-import {WarningButton} from "../../../../components/inputs/WarningButton";
+import {WarningButton} from "../../../../components/inputs/buttons/WarningButton";
 import {Versenyszam} from "../../../../types/model/Versenyszam";
 import {EmberiNem} from "../../../../types/EmberiNem";
 import {UszasnemElnevezes} from "../../../../types/UszasnemElnevezes";
-import {NumberInput} from "../../../../components/inputs/NumberInput";
+import {NumberInput} from "../../../../components/inputs/numeric/NumberInput";
 import {CheckBox} from "../../../../components/inputs/CheckBox";
 import {
     VersenyszamNemDropdown
 } from "../../../../components/inputs/dropdowns/VersenyszamNemDropdown";
 import {UszasnemDropdown} from "../../../../components/inputs/dropdowns/UszasnemDropdown";
-import {SecondaryButton} from "../../../../components/inputs/SecondaryButton";
+import {SecondaryButton} from "../../../../components/inputs/buttons/SecondaryButton";
 import {useEditVersenyszam} from "../../../../hooks/versenyszamok/useEditVersenyszam";
 import {useNevezesekList} from "../../../../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../../../../hooks/nevezesek/useDeleteNevezes";
 import {DataTable} from "../../../../components/tables/DataTable";
 import {DisplayedNevezes} from "../../../../types/DisplayedNevezes";
 import {formatInterval} from "../../../../utils";
-import {IconWarningButton} from "../../../../components/inputs/IconWarningButton";
+import {IconWarningButton} from "../../../../components/inputs/buttons/IconWarningButton";
 import {FullPageModal} from "../../../../components/modals/FullPageModal";
 import {CsapatDropdown} from "../../../../components/inputs/dropdowns/CsapatDropdown";
 import {TitleIcon} from "../../../../components/icons/TitleIcon";
 import {useCreateNevezes} from "../../../../hooks/nevezesek/useCreateNevezes";
 import {UszoDropdown} from "../../../../components/inputs/dropdowns/UszoDropdown";
-import {IntervalMaskedInput} from "../../../../components/inputs/IntervalMaskedInput";
+import {IntervalMaskedInput} from "../../../../components/inputs/numeric/IntervalMaskedInput";
 
 export function UszoversenyVersenyszamokSlugPage() {
     const navigate = useNavigate();
