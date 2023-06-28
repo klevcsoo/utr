@@ -58,7 +58,7 @@ export function DataTable<T extends object>(props: {
                 <thead className="bg-slate-100 rounded-md">
                 <tr className="h-12">
                     {columnNames.map((value, index) => (
-                        <th key={index} className="text-start first:pl-2 last:pr-2
+                        <th key={index} className="text-start first:pl-4 last:pr-2
                         uppercase">
                             {value}
                         </th>
@@ -70,7 +70,7 @@ export function DataTable<T extends object>(props: {
                 {columnValues.map((entry, indexEntry) => (
                     <tr key={indexEntry} className="h-12">
                         {entry.map((value, indexValue) => (
-                            <td key={indexValue} className="first:pl-2">
+                            <td key={indexValue} className="first:pl-4">
                                 {value}
                             </td>
                         ))}
