@@ -97,7 +97,7 @@ export function UszoversenyekSlugPage() {
                         <p>Helyszín: </p>
                         <p><b>{uszoverseny.helyszin}</b></p>
                     </BorderCard>
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row gap-2 flex-wrap">
                         <PrimaryButton text="Úszóverseny adatainak szerkesztése"
                                        onClick={doOpenEditUszoversenyModal}/>
                         {uszoverseny.nyitott ? (
@@ -136,10 +136,10 @@ function VersenyszamokList(props: {
         return versenyszamok.map(value => {
             return {
                 id: value.id,
-                uszasnem: value.uszasnem.elnevezes,
+                valto: !!value.valto ? `${value.valto}x` : "",
+                hossz: `${value.hossz}m`,
                 nem: value.nem === "F" ? "fiú" : "lány",
-                valto: !!value.valto ? `${value.valto}x` : "nincs",
-                hossz: `${value.hossz}m`
+                uszasnem: value.uszasnem.elnevezes
             };
         });
     }, [versenyszamok]);
