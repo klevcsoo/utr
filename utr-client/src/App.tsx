@@ -1,16 +1,16 @@
 import React from 'react';
 import {Navigate, Outlet, Route, Routes} from "react-router-dom";
-import {LoginPage} from "./pages/login";
-import {CsapatokIndexPage} from "./pages/admin/csapatok";
+import {LoginPage} from "./pages/LoginPage";
+import {CsapatokIndexPage} from "./pages/CsapatokIndexPage";
 import {UnprotectedView} from "./components/UnprotectedView";
 import {ProtectedView} from "./components/ProtectedView";
-import {IndexPage} from "./pages";
+import {IndexPage} from "./pages/IndexPage";
 import {AdminLayout} from "./layouts/AdminLayout";
-import {CsapatSlugPage} from "./pages/admin/csapatok/[:id]";
-import {UszoversenyekIndexPage} from "./pages/admin/uszoversenyek";
-import {AdminIndexPage} from "./pages/admin";
-import {UszoversenyekSlugPage} from "./pages/admin/uszoversenyek/[:id]";
-import {UszoversenyVersenyszamokSlugPage} from "./pages/admin/uszoversenyek/versenyszamok/[:id]";
+import {CsapatokSlugPage} from "./pages/CsapatokSlugPage";
+import {UszoversenyekIndexPage} from "./pages/UszoversenyekIndexPage";
+import {AdminIndexPage} from "./pages/AdminIndexPage";
+import {UszoversenyekSlugPage} from "./pages/UszoversenyekSlugPage";
+import {VersenyszamokSlugPage} from "./pages/VersenyszamokSlugPage";
 
 function App() {
     return (
@@ -34,13 +34,13 @@ function App() {
                             <Route path="versenyszamok">
                                 <Route path="" element={<Navigate to=".."
                                                                   relative="path"/>}/>
-                                <Route path=":id" element={<UszoversenyVersenyszamokSlugPage/>}/>
+                                <Route path=":id" element={<VersenyszamokSlugPage/>}/>
                             </Route>
                         </Route>
                     </Route>
                     <Route path="csapatok">
                         <Route path="" element={<CsapatokIndexPage/>}/>
-                        <Route path=":id" element={<CsapatSlugPage/>}/>
+                        <Route path=":id" element={<CsapatokSlugPage/>}/>
                     </Route>
                 </Route>
             </Route>

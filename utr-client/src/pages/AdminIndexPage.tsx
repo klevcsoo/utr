@@ -1,4 +1,4 @@
-import {useSetAdminLayoutTitle} from "../../hooks/useSetAdminLayoutTitle";
+import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 
 export function AdminIndexPage() {
     useSetAdminLayoutTitle("Áttekintés", true);
