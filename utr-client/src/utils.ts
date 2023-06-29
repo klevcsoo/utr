@@ -1,5 +1,5 @@
 import {UserDetails} from "./types/UserDetails";
-import {serverURL} from "./config";
+import {artificialAPIDelay, serverURL} from "./config";
 import {MessageResponse} from "./types/response/MessageResponse";
 
 export function createAllStringObject<T extends object>(
@@ -27,7 +27,7 @@ export async function apiRequest<T extends object = MessageResponse>(
 ): Promise<T> {
     const actualPath = path.startsWith("/") ? path.substring(1) : path;
 
-    if (window.location.origin.includes("localhost")) {
+    if (window.location.origin.includes("localhost") && artificialAPIDelay) {
         await sleep(Math.random() * 1200);
     }
 
