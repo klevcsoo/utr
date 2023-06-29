@@ -1,6 +1,5 @@
 package hu.bathorydse.utrserver.models;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +27,7 @@ public class UszoDetailed {
     @Column(name = "szuletesi_ev")
     private Short szuletesiDatum;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "csapat_id")
     private Csapat csapat;
 
