@@ -27,7 +27,7 @@ function App() {
                     </ProtectedView>
                 }>
                     <Route path="" element={<AdminIndexPage/>}/>
-                    <Route path="versenyek">
+                    <Route path="uszoversenyek">
                         <Route path="" element={<UszoversenyekIndexPage/>}/>
                         <Route path=":id">
                             <Route path="" element={<UszoversenyekSlugPage/>}/>

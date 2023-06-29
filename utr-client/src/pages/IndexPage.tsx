@@ -19,7 +19,7 @@ export function IndexPage() {
         gap-4">
             <p>Úgy látszik, nincs megnyitott úszóverseny.</p>
             {user?.roles.includes("admin") ? (
-                <Link to="/admin/versenyek">
+                <Link to="/admin/uszoversenyek">
                     <PrimaryButton text="Tovább a versenyekhez"/>
                 </Link>
             ) : (
@@ -38,7 +38,7 @@ export function IndexPage() {
                 {user?.roles.includes("admin") ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
                         <PrimaryButton text="Megnyitás"/>
-                        <Link to={`/admin/versenyek/${uszoverseny.id}`}>
+                        <Link to={`/admin/uszoversenyek/${uszoverseny.id}`}>
                             <SecondaryButton text="Szerkesztés"/>
                         </Link>
                     </div>

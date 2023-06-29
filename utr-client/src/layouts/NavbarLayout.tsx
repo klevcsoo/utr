@@ -22,8 +22,8 @@ export function NavbarLayout() {
         flex flex-col items-start gap-4 p-4 justify-between">
             <div className="flex flex-col items-start gap-2 w-full">
                 <AppLogo className="m-4"/>
-                <NavbarNavButton icon="event" text="Versenyek"
-                                 to="/admin/versenyek"/>
+                <NavbarNavButton icon="event" text="Úszóversenyek"
+                                 to="/admin/uszoversenyek"/>
                 <NavbarNavButton icon="groups" text="Csapatok"
                                  to="/admin/csapatok"/>
                 <NavbarNavButton icon="print" text="Nyomtatás"
