@@ -83,6 +83,6 @@
     <start-class>hu.bathorydse.utrserver.UtrServerApplication</start-class>
   </properties>
 
-  <version>0.1.0</version>
+  <version>0.1.1-alpha</version>
 
 </project>
