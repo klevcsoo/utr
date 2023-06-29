@@ -11,6 +11,7 @@ import {UszoversenyekIndexPage} from "./pages/UszoversenyekIndexPage";
 import {AdminIndexPage} from "./pages/AdminIndexPage";
 import {UszoversenyekSlugPage} from "./pages/UszoversenyekSlugPage";
 import {VersenyszamokSlugPage} from "./pages/VersenyszamokSlugPage";
+import {Error404Page} from "./pages/Error404Page";
 
 function App() {
     return (
@@ -49,6 +50,7 @@ function App() {
                     <LoginPage/>
                 </UnprotectedView>
             }/>
+            <Route path="*" element={<Error404Page/>}/>
         </Routes>
     );
 }
