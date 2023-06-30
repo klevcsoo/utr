@@ -1,11 +1,17 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useState} from "react";
 import {UserDetails} from "../types/UserDetails";
 import {AuthContext, login} from "../api/auth";
 import {UserRole} from "../types/UserRole";
 import {CommonChildrenOnlyProps} from "../types/componentProps/common/CommonChildrenOnlyProps";
 
+const AUTH_DATA_KEY = "auth_data";
+
 function AuthProvider(props: CommonChildrenOnlyProps) {
-    const [user, setUser] = useState<UserDetails>();
+    const [user, setUser] = useState<UserDetails | undefined>(
+        !!sessionStorage.getItem(AUTH_DATA_KEY) ? (
+            JSON.parse(sessionStorage.getItem(AUTH_DATA_KEY)!)
+        ) : undefined
+    );
 
     const doLogin = useCallback(
         (username: string, password: string): Promise<UserDetails> => {
@@ -15,7 +21,7 @@ function AuthProvider(props: CommonChildrenOnlyProps) {
 
             return login(username as UserRole, password).then(user => {
                 setUser(user);
-                sessionStorage.setItem("auth_data", JSON.stringify(user));
+                sessionStorage.setItem(AUTH_DATA_KEY, JSON.stringify(user));
                 return user;
             });
         }, []
@@ -24,16 +30,9 @@ function AuthProvider(props: CommonChildrenOnlyProps) {
     const doLogout = useCallback((): Promise<void> => {
         return new Promise(resolve => {
             setUser(undefined);
-            sessionStorage.removeItem("auth_data");
+            sessionStorage.removeItem(AUTH_DATA_KEY);
             resolve();
         });
-    }, []);
-
-    useEffect(() => {
-        const data = sessionStorage.getItem("auth_data");
-        if (!!data) {
-            setUser(JSON.parse(data));
-        }
     }, []);
 
     return (
