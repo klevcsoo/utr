@@ -32,7 +32,7 @@ export function NavbarLayout() {
                                  to="/admin/settings"/>
             </div>
             <div className="flex flex-col items-start gap-2 w-full">
-                <NavbarNavButton icon="support" text="Támogatás" to="/support"/>
+                <NavbarNavButton icon="support" text="Támogatás" to="/admin/support"/>
                 <div className="w-full border-t-2 border-slate-300 my-2"></div>
                 <div className="w-full flex flex-row gap-4
                 items-center justify-between">
