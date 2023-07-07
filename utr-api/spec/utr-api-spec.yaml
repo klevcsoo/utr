@@ -1,0 +1,1184 @@
+openapi: 3.0.3
+info:
+  title: UTR API
+  description: Úszóverseny támogató rendszer API
+  version: 0.1.1-alpha
+servers:
+  - url: 'https://utr.hu'
+  - url: 'http://localhost:8080'
+paths:
+  /api/auth/login:
+    post:
+      summary: "Felhasználói bejelentkezés"
+      operationId: "authenticateUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtResponse"
+      tags:
+        - "Hitelesítés"
+  /api/auth/new-user:
+    post:
+      summary: "Új felhasználó létrehozása"
+      operationId: "registerUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Hitelesítés"
+  /api/test/admin:
+    get:
+      summary: "Admin hitelesítési teszt"
+      operationId: "adminAccess"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - "Hitelesítés tesztelés"
+  /api/test/all:
+    get:
+      summary: "Nyitott hitelesítési teszt"
+      operationId: "allAccess"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - "Hitelesítés tesztelés"
+  /api/test/allitobiro:
+    get:
+      summary: "Állítóbíró hitelesítési teszt"
+      operationId: "allitobiroAccess"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - "Hitelesítés tesztelés"
+  /api/test/idorogzito:
+    get:
+      summary: "Időrögzítő hitelesítési teszt"
+      operationId: "idorogzitoAccess"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - "Hitelesítés tesztelés"
+  /api/test/speaker:
+    get:
+      summary: "Speaker hitelesítési teszt"
+      operationId: "speakerAccess"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - "Hitelesítés tesztelés"
+  /api/csapatok/:
+    get:
+      summary: "Összes csapat lekérdezése"
+      operationId: "getAllCsapatok"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Csapat"
+      tags:
+        - "Csapatok"
+    put:
+      summary: "Új csapat létrehozása"
+      operationId: "createCsapat"
+      parameters:
+        - name: "nev"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "varos"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Csapatok"
+  /api/csapatok/{id}:
+    get:
+      summary: "Csapat lekérdezése azonosító alapján"
+      operationId: "getCsapat"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Csapat"
+      tags:
+        - "Csapatok"
+    patch:
+      summary: "Csapat adatainak szerkesztése"
+      operationId: "editCsapat"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nev"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "varos"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Csapatok"
+    delete:
+      summary: "Csapat törlése"
+      operationId: "deleteCsapat"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Csapatok"
+  /api/uszok/:
+    get:
+      summary: "Úszók lekérdezése egy csapatban"
+      operationId: "getAllUszok"
+      parameters:
+        - name: "csapatId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Uszo"
+      tags:
+        - "Úszók"
+    put:
+      summary: "Új úszó hozzáadása"
+      operationId: "createUszo"
+      parameters:
+        - name: "csapatId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nev"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "szuletesiEv"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "nem"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Úszók"
+  /api/uszok/{id}:
+    get:
+      summary: "Úszó lekérdezése azonosító alapján"
+      operationId: "getUszo"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Uszo"
+      tags:
+        - "Úszók"
+    patch:
+      summary: "Úszó adatainak szerkesztése"
+      operationId: "editUszo"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nev"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "szuletesiEv"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "csapat"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nem"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Úszók"
+    delete:
+      summary: "Úszó törlése"
+      operationId: "deleteUszo"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Úszók"
+  /api/uszoversenyek/:
+    get:
+      summary: "Összes úszóverseny lekérdezése"
+      operationId: "getAllVersenyek"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Uszoverseny"
+      tags:
+        - "Úszóversenyek"
+    put:
+      summary: "Új úszóverseny létrehozása"
+      operationId: "createNewVerseny"
+      parameters:
+        - name: "nev"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "helyszin"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "datum"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+            format: "date-time"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Úszóversenyek"
+  /api/uszoversenyek/{id}:
+    get:
+      summary: "Úszóverseny lekérdezése azonosító alapján"
+      operationId: "getVerseny"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Uszoverseny"
+      tags:
+        - "Úszóversenyek"
+    patch:
+      summary: "Úszóverseny adatainak szerkesztése"
+      operationId: "editVerseny"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nev"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "helyszin"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "datum"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+            format: "date-time"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Úszóversenyek"
+    delete:
+      summary: "Úszóverseny törlése"
+      operationId: "deleteVerseny"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Úszóversenyek"
+  /api/uszoversenyek/{id}/megnyitas:
+    post:
+      summary: "Úszóverseny megnyitása"
+      description: "Abban az esetben, ha már van úszóverseny megnyitva, a request el fog bukni."
+      operationId: "uszoversenyMegnyitasa"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Úszóversenyek"
+  /api/versenyszamok/:
+    get:
+      summary: "Összes versenyszám lekérdezése úszóverseny alapján"
+      operationId: "getAllVersenyszamok"
+      parameters:
+        - name: "versenyId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Versenyszam"
+      tags:
+        - "Versenyszámok"
+    put:
+      summary: "Új versenyszám létrehozása"
+      operationId: "createVersenyszam"
+      parameters:
+        - name: "versenyId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "hossz"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "uszasnemId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "emberiNemId"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "valto"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Versenyszámok"
+  /api/versenyszamok/{id}:
+    get:
+      summary: "Versenyszám lekérdezése azonosító alapján"
+      operationId: "getVersenyszam"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Versenyszam"
+      tags:
+        - "Versenyszámok"
+    patch:
+      summary: "Versenyszám adatainak szerkesztése"
+      operationId: "editVersenyszam"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "hossz"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "uszasnem"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "nem"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "valto"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Versenyszámok"
+    delete:
+      summary: "Versenyszám törlése"
+      operationId: "deleteVersenyszam"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Versenyszámok"
+  /api/nevezesek/:
+    get:
+      summary: "Összes nevezés lekérdezése a versenyszámban"
+      operationId: "getAllNevezesek"
+      parameters:
+        - name: "versenyszamId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Nevezes"
+      tags:
+        - "Nevezések"
+    put:
+      summary: "Úszó benvezése a versenyszámban"
+      operationId: "createNevezes"
+      parameters:
+        - name: "versenyszamId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "uszoId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nevezesiIdo"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Nevezések"
+  /api/nevezesek/{id}:
+    get:
+      summary: "Nevezés lekérdezése azonosító alapján"
+      operationId: "getNevezes"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Nevezes"
+      tags:
+        - "Nevezések"
+    patch:
+      summary: "Nevezés adatainak módosítása"
+      operationId: "editNevezes"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "versenyszamId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "uszoId"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nevezesiIdo"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Nevezések"
+    delete:
+      summary: "Nevezés törlése"
+      operationId: "deleteNevezes"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Nevezések"
+  /api/futamok/:
+    get:
+      summary: "Összes futam lekérdezése a versenyszámban"
+      operationId: "getAllFutamok"
+      parameters:
+        - name: "versenyszamId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Futam"
+      tags:
+        - "Futamok"
+    put:
+      summary: "Futam létrehozása"
+      description: "Deprecated! Ezt az endpoint-ot ne használjuk, jövőben el lesz távolítva. Futamokat csak a rendszer ad hozzá a rajtlista összeállításakor."
+      operationId: "createFutam"
+      parameters:
+        - name: "versenyszamId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Futamok"
+  /api/futamok/{futamId}/rajtlista:
+    get:
+      summary: "Rajtlista lekérdezése azonosító alapján"
+      operationId: "getRajtlista"
+      parameters:
+        - name: "futamId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/NevezesDetailed"
+      tags:
+        - "Futamok"
+  /api/nyitott/idoeredmeny:
+    patch:
+      summary: "Nevezés időeredményének módosítása"
+      description: "Csak a jelenleg nyitott úszóverseny versenyszámainak nevezéseiben használható."
+      operationId: "editIdoeredmeny"
+      parameters:
+        - name: "nevezesId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "idoeredmeny"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Nyitott úszóverseny"
+    delete:
+      summary: "Nevezés időeredményének törlése"
+      description: "Csak a jelenleg nyitott úszóverseny versenyszámainak nevezéseiben használható."
+      operationId: "deleteIdoeredmeny"
+      parameters:
+        - name: "nevezesId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Nyitott úszóverseny"
+  /api/nyitott/jelenlet:
+    patch:
+      summary: "Úszó jelenlétének módosítása"
+      description: "Csak a jelenleg nyitott úszóverseny versenyszámainak nevezéseiben használható."
+      operationId: "editJelenlet"
+      parameters:
+        - name: "uszoId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "megjelent"
+          in: "query"
+          required: true
+          schema:
+            type: "boolean"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Nyitott úszóverseny"
+  /api/nyitott/lezaras:
+    post:
+      summary: "Nyitott úszóverseny lezárása."
+      operationId: "uszoversenyLezarasa"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Nyitott úszóverseny"
+  /api/nyitott/rajtlista:
+    get:
+      summary: "Versenyszám rajtlistájának lekérdezése"
+      description: "Csak a jelenleg nyitott úszóverseny versenyszámainak nevezéseiben használható. Abban az esetben, ha nincs rajtlista összeállítva a versenyhez, a request el fog bukni."
+      operationId: "getRajtlista"
+      parameters:
+        - name: "versenyszamId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Futam"
+      tags:
+        - "Nyitott úszóverseny"
+    post:
+      summary: "Rajtlista összeállítása"
+      description: "Csak a jelenleg nyitott úszóverseny versenyszámainak nevezéseiben használható."
+      operationId: "rajtlistaOsszeallitasa"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+      tags:
+        - "Nyitott úszóverseny"
+  /api/nyitott/reszletek:
+    get:
+      summary: "Nyitott úszóverseny adatainak lekérdezése"
+      operationId: "nyitottVersenyReszletek"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Uszoverseny"
+      tags:
+        - "Nyitott úszóverseny"
+  /api/nyitott/versenyszamok:
+    get:
+      summary: "Nyitott úszóverseny versenyszámainak lekérdezése"
+      operationId: "nyitottVersenyszamok"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Versenyszam"
+      tags:
+        - "Nyitott úszóverseny"
+  /api/support/env:
+    get:
+      summary: "Az API szerver környezeti változóinak lekérdezése"
+      operationId: "getEnvironmentVariables"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+      tags:
+        - "Támogatás"
+  /api/support/log:
+    get:
+      summary: "Az API szerver eddigi log-jainak lekérdezése"
+      operationId: "getServerLog"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+      tags:
+        - "Támogatás"
+components:
+  schemas:
+    LoginRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+    JwtResponse:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+        type:
+          type: "string"
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        displayName:
+          type: "string"
+        roles:
+          type: "array"
+          items:
+            type: "string"
+    NewUserRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        displayName:
+          type: "string"
+        role:
+          type: "array"
+          items:
+            type: "string"
+        password:
+          type: "string"
+    Uszo:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        nev:
+          type: "string"
+        szuletesiEv:
+          type: "integer"
+          format: "int32"
+        csapatId:
+          type: "integer"
+          format: "int64"
+        nem:
+          type: "string"
+    MessageResponse:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+    Uszoverseny:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        nev:
+          type: "string"
+        helyszin:
+          type: "string"
+        datum:
+          type: "string"
+          format: "date-time"
+        nyitott:
+          type: "boolean"
+    Uszasnem:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        elnevezes:
+          type: "string"
+    Versenyszam:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        versenyId:
+          type: "integer"
+          format: "int64"
+        hossz:
+          type: "integer"
+          format: "int32"
+        uszasnem:
+          $ref: "#/components/schemas/Uszasnem"
+        nem:
+          type: "string"
+        valto:
+          type: "integer"
+          format: "int32"
+    Csapat:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        nev:
+          type: "string"
+        varos:
+          type: "string"
+    UszoDetailed:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        nev:
+          type: "string"
+        szuletesiDatum:
+          type: "integer"
+          format: "int32"
+        csapat:
+          $ref: "#/components/schemas/Csapat"
+        nem:
+          type: "string"
+    Nevezes:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        uszo:
+          $ref: "#/components/schemas/UszoDetailed"
+        versenyszamId:
+          type: "integer"
+          format: "int64"
+        nevezesiIdo:
+          type: "integer"
+          format: "int32"
+        idoeredmeny:
+          type: "integer"
+          format: "int32"
+        megjelent:
+          type: "boolean"
+    NevezesDetailed:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        uszo:
+          $ref: "#/components/schemas/UszoDetailed"
+        versenyszam:
+          $ref: "#/components/schemas/Versenyszam"
+        nevezesiIdo:
+          type: "integer"
+          format: "int32"
+        idoeredmeny:
+          type: "integer"
+          format: "int32"
+        megjelent:
+          type: "boolean"
+    Futam:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        versenyszamId:
+          type: "integer"
+          format: "int64"
+        rajtlista:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NevezesDetailed"
