@@ -2,8 +2,11 @@ package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.models.Futam;
 import hu.bathorydse.utrapi.models.FutamNotFoundException;
+import hu.bathorydse.utrapi.models.NevezesDetailed;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.FutamRepository;
+import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,12 +28,12 @@ public class FutamokController {
     FutamRepository futamRepository;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllFutamok(@RequestParam Long versenyszamId) {
+    public ResponseEntity<List<Futam>> getAllFutamok(@RequestParam Long versenyszamId) {
         return ResponseEntity.ok(futamRepository.findAllByVersenyszamId(versenyszamId));
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> createFutam(@RequestParam Long versenyszamId) {
+    public ResponseEntity<MessageResponse> createFutam(@RequestParam Long versenyszamId) {
         Futam futam = new Futam(versenyszamId);
         futamRepository.save(futam);
 
@@ -38,7 +41,7 @@ public class FutamokController {
     }
 
     @GetMapping("/{futamId}/rajtlista")
-    public ResponseEntity<?> getRajtlista(@PathVariable Long futamId) {
+    public ResponseEntity<Set<NevezesDetailed>> getRajtlista(@PathVariable Long futamId) {
         Futam futam = futamRepository.findById(futamId)
             .orElseThrow(() -> new FutamNotFoundException(futamId));
 

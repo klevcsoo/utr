@@ -1,6 +1,7 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.core.ConsoleOutputStream;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SupportController {
 
     @GetMapping("/env")
-    public ResponseEntity<?> getEnvironmentVariables() {
+    public ResponseEntity<Map<String, String>> getEnvironmentVariables() {
         return ResponseEntity.ok(System.getenv());
     }
 
     @GetMapping("/log")
-    public ResponseEntity<?> getServerLog() {
+    public ResponseEntity<String[]> getServerLog() {
         String rawOutput = ConsoleOutputStream.getInstance().getConsoleOutput();
         String[] lines = rawOutput.split("\n");
 

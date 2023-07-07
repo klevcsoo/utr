@@ -5,6 +5,7 @@ import hu.bathorydse.utrapi.models.Uszo;
 import hu.bathorydse.utrapi.models.UszoNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.UszoRepository;
+import java.util.List;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +30,13 @@ public class UszokController {
     UszoRepository uszoRepository;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllUszok(@RequestParam Long csapatId) {
+    public ResponseEntity<List<Uszo>> getAllUszok(@RequestParam Long csapatId) {
         return ResponseEntity.ok(uszoRepository.findAllByCsapatId(csapatId));
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> createUszo(@RequestParam Long csapatId, @RequestParam String nev,
+    public ResponseEntity<MessageResponse> createUszo(@RequestParam Long csapatId,
+        @RequestParam String nev,
         @RequestParam Short szuletesiEv, @RequestParam @Size(min = 1, max = 1) String nem) {
         Uszo uszo = new Uszo(nev, szuletesiEv, csapatId, nem);
         uszoRepository.save(uszo);
@@ -43,14 +45,14 @@ public class UszokController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUszo(@PathVariable Long id) {
+    public ResponseEntity<Uszo> getUszo(@PathVariable Long id) {
         Uszo uszo = uszoRepository.findById(id).orElseThrow(() -> new UszoNotFoundException(id));
 
         return ResponseEntity.ok(uszo);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editUszo(@PathVariable Long id,
+    public ResponseEntity<MessageResponse> editUszo(@PathVariable Long id,
         @RequestParam(required = false) String nev,
         @RequestParam(required = false) String szuletesiEv,
         @RequestParam(required = false) Long csapat,
@@ -79,7 +81,7 @@ public class UszokController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUszo(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteUszo(@PathVariable Long id) {
         Uszo uszo = uszoRepository.findById(id).orElseThrow(() -> new UszoNotFoundException(id));
 
         uszoRepository.delete(uszo);

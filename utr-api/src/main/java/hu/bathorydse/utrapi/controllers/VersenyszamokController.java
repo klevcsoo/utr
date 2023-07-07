@@ -7,6 +7,7 @@ import hu.bathorydse.utrapi.models.VersenyszamNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.UszasnemRepository;
 import hu.bathorydse.utrapi.repository.VersenyszamRepository;
+import java.util.List;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,12 @@ public class VersenyszamokController {
     private UszasnemRepository uszasnemRepository;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllVersenyszamok(@RequestParam Long versenyId) {
+    public ResponseEntity<List<Versenyszam>> getAllVersenyszamok(@RequestParam Long versenyId) {
         return ResponseEntity.ok(versenyszamRepository.findAllByVersenyId(versenyId));
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> createVersenyszam(@RequestParam Long versenyId,
+    public ResponseEntity<MessageResponse> createVersenyszam(@RequestParam Long versenyId,
         @RequestParam Integer hossz, @RequestParam Integer uszasnemId,
         @RequestParam @Size(min = 1, max = 1) String emberiNemId,
         @RequestParam(required = false) Integer valto) {
@@ -53,7 +54,7 @@ public class VersenyszamokController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getVersenyszam(@PathVariable Long id) {
+    public ResponseEntity<Versenyszam> getVersenyszam(@PathVariable Long id) {
         Versenyszam versenyszam = versenyszamRepository.findById(id)
             .orElseThrow(() -> new VersenyszamNotFoundException(id));
 
@@ -61,7 +62,7 @@ public class VersenyszamokController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editVersenyszam(@PathVariable Long id,
+    public ResponseEntity<MessageResponse> editVersenyszam(@PathVariable Long id,
         @RequestParam(required = false) Integer hossz,
         @RequestParam(required = false) Integer uszasnem,
         @RequestParam(required = false) @Size(min = 1, max = 1) String nem,
@@ -93,7 +94,7 @@ public class VersenyszamokController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteVersenyszam(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteVersenyszam(@PathVariable Long id) {
         Versenyszam versenyszam = versenyszamRepository.findById(id)
             .orElseThrow(() -> new VersenyszamNotFoundException(id));
 

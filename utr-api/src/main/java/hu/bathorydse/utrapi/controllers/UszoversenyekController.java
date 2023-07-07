@@ -6,6 +6,7 @@ import hu.bathorydse.utrapi.models.UszoversenyNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.UszoversenyRepository;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -34,12 +35,12 @@ public class UszoversenyekController {
     private UszoversenyRepository uszoversenyRepository;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllVersenyek() {
+    public ResponseEntity<List<Uszoverseny>> getAllVersenyek() {
         return ResponseEntity.ok(uszoversenyRepository.findAll(Sort.by(Direction.DESC, "datum")));
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> createNewVerseny(@RequestParam() String nev,
+    public ResponseEntity<MessageResponse> createNewVerseny(@RequestParam() String nev,
         @RequestParam(required = false) String helyszin,
         @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum) {
 
@@ -50,7 +51,7 @@ public class UszoversenyekController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getVerseny(@PathVariable Long id) {
+    public ResponseEntity<Uszoverseny> getVerseny(@PathVariable Long id) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
             .orElseThrow(() -> new UszoNotFoundException(id));
 
@@ -58,7 +59,7 @@ public class UszoversenyekController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editVerseny(@PathVariable Long id,
+    public ResponseEntity<MessageResponse> editVerseny(@PathVariable Long id,
         @RequestParam(required = false) String nev, @RequestParam(required = false) String helyszin,
         @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
@@ -82,7 +83,7 @@ public class UszoversenyekController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteVerseny(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteVerseny(@PathVariable Long id) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
             .orElseThrow(() -> new UszoNotFoundException(id));
 
@@ -93,7 +94,7 @@ public class UszoversenyekController {
 
     @PostMapping("/{id}/megnyitas")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> uszoversenyMegnyitasa(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> uszoversenyMegnyitasa(@PathVariable Long id) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
             .orElseThrow(() -> new UszoversenyNotFoundException(id));
 

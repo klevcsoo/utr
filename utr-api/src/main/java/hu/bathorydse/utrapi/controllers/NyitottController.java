@@ -45,7 +45,7 @@ public class NyitottController {
 
     @PostMapping("/lezaras")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> uszoversenyLezarasa() {
+    public ResponseEntity<MessageResponse> uszoversenyLezarasa() {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
@@ -57,7 +57,7 @@ public class NyitottController {
 
     @GetMapping("/reszletek")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
-    public ResponseEntity<?> nyitottVersenyReszletek() {
+    public ResponseEntity<Uszoverseny> nyitottVersenyReszletek() {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
@@ -66,7 +66,7 @@ public class NyitottController {
 
     @GetMapping("/versenyszamok")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
-    public ResponseEntity<?> nyitottVersenyszamok() {
+    public ResponseEntity<List<Versenyszam>> nyitottVersenyszamok() {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
@@ -78,7 +78,7 @@ public class NyitottController {
 
     @GetMapping("/rajtlista")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO', 'ALLITOBIRO', 'SPEAKER')")
-    public ResponseEntity<?> getRajtlista(@RequestParam Long versenyszamId) {
+    public ResponseEntity<List<Futam>> getRajtlista(@RequestParam Long versenyszamId) {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
@@ -102,7 +102,7 @@ public class NyitottController {
 
     @PatchMapping("/jelenlet")
     @PreAuthorize("hasAnyRole('ADMIN', 'ALLITOBITO')")
-    public ResponseEntity<?> editJelenlet(@RequestParam Long uszoId,
+    public ResponseEntity<MessageResponse> editJelenlet(@RequestParam Long uszoId,
         @RequestParam Boolean megjelent) {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
@@ -118,7 +118,7 @@ public class NyitottController {
 
     @PatchMapping("/idoeredmeny")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO')")
-    public ResponseEntity<?> editIdoeredmeny(@RequestParam Long nevezesId,
+    public ResponseEntity<MessageResponse> editIdoeredmeny(@RequestParam Long nevezesId,
         @RequestParam String idoeredmeny) {
         if (!uszoversenyRepository.existsByNyitott(true)) {
             throw new NoNyitottUszoversenyException();
@@ -142,7 +142,7 @@ public class NyitottController {
 
     @DeleteMapping("/idoeredmeny")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO')")
-    public ResponseEntity<?> deleteIdoeredmeny(@RequestParam Long nevezesId) {
+    public ResponseEntity<MessageResponse> deleteIdoeredmeny(@RequestParam Long nevezesId) {
         if (!uszoversenyRepository.existsByNyitott(true)) {
             throw new NoNyitottUszoversenyException();
         }

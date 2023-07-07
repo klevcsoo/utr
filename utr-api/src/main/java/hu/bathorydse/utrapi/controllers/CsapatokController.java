@@ -4,6 +4,7 @@ import hu.bathorydse.utrapi.models.Csapat;
 import hu.bathorydse.utrapi.models.CsapatNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.CsapatRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,12 +28,12 @@ public class CsapatokController {
     private CsapatRepository csapatRepository;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllCsapatok() {
+    public ResponseEntity<List<Csapat>> getAllCsapatok() {
         return ResponseEntity.ok(csapatRepository.findAll());
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> createCsapat(@RequestParam String nev,
+    public ResponseEntity<MessageResponse> createCsapat(@RequestParam String nev,
         @RequestParam(required = false) String varos) {
         Csapat csapat = new Csapat(nev, varos);
         csapatRepository.save(csapat);
@@ -40,7 +41,7 @@ public class CsapatokController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCsapat(@PathVariable Long id) {
+    public ResponseEntity<Csapat> getCsapat(@PathVariable Long id) {
         Csapat csapat = csapatRepository.findById(id)
             .orElseThrow(() -> new CsapatNotFoundException(id));
 
@@ -48,7 +49,7 @@ public class CsapatokController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editCsapat(@PathVariable Long id,
+    public ResponseEntity<MessageResponse> editCsapat(@PathVariable Long id,
         @RequestParam(required = false) String nev, @RequestParam(required = false) String varos) {
         Csapat csapat = csapatRepository.findById(id)
             .orElseThrow(() -> new CsapatNotFoundException(id));
@@ -67,7 +68,7 @@ public class CsapatokController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCsapat(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteCsapat(@PathVariable Long id) {
         Csapat csapat = csapatRepository.findById(id)
             .orElseThrow(() -> new CsapatNotFoundException(id));
 

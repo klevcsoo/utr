@@ -34,13 +34,13 @@ public class NevezesekController {
     private UszoDetailedRepository uszoDetailedRepository;
 
     @GetMapping("/")
-    public ResponseEntity<?> getAllNevezesek(@RequestParam Long versenyszamId) {
+    public ResponseEntity<List<Nevezes>> getAllNevezesek(@RequestParam Long versenyszamId) {
         List<Nevezes> nevezesek = nevezesRepository.findAllByVersenyszamId(versenyszamId);
         return ResponseEntity.ok(nevezesek);
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> createNevezes(@RequestParam Long versenyszamId,
+    public ResponseEntity<MessageResponse> createNevezes(@RequestParam Long versenyszamId,
         @RequestParam Long uszoId, @RequestParam(required = false) String nevezesiIdo) {
         Integer interval;
         if (nevezesiIdo != null) {
@@ -63,7 +63,7 @@ public class NevezesekController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getNevezes(@PathVariable Long id) {
+    public ResponseEntity<Nevezes> getNevezes(@PathVariable Long id) {
         Nevezes nevezes = nevezesRepository.findById(id)
             .orElseThrow(() -> new NevezesNotFoundException(id));
 
@@ -71,7 +71,7 @@ public class NevezesekController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editNevezes(@PathVariable Long id,
+    public ResponseEntity<MessageResponse> editNevezes(@PathVariable Long id,
         @RequestParam(required = false) Long versenyszamId,
         @RequestParam(required = false) Long uszoId,
         @RequestParam(required = false) String nevezesiIdo) {
@@ -106,7 +106,7 @@ public class NevezesekController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteNevezes(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteNevezes(@PathVariable Long id) {
         Nevezes nevezes = nevezesRepository.findById(id)
             .orElseThrow(() -> new NevezesNotFoundException(id));
 
