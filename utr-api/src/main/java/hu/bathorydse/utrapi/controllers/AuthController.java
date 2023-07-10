@@ -207,4 +207,18 @@ public class AuthController {
         userRepository.save(user.get());
         return ResponseEntity.ok(new MessageResponse("User roles updated."));
     }
+
+    @PostMapping("/change-display-name")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<MessageResponse> changeUserDisplayName(@RequestParam Long userId,
+        @RequestParam String displayName) {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        user.get().setDisplayName(displayName);
+        userRepository.save(user.get());
+        return ResponseEntity.ok(new MessageResponse("User display name updated."));
+    }
 }
