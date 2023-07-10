@@ -12,8 +12,10 @@ import hu.bathorydse.utrapi.repository.RoleRepository;
 import hu.bathorydse.utrapi.repository.UserRepository;
 import hu.bathorydse.utrapi.security.jwt.JwtUtils;
 import hu.bathorydse.utrapi.security.services.UserDetailsImpl;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -165,8 +167,7 @@ public class AuthController {
 
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.get().getUsername(),
-                request.getOldPassword())
-        );
+                request.getOldPassword()));
         if (!authentication.isAuthenticated()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid password"));
         }
@@ -174,5 +175,36 @@ public class AuthController {
         user.get().setPassword(encoder.encode(request.getNewPassword()));
         userRepository.save(user.get());
         return ResponseEntity.ok(new MessageResponse("Password changed."));
+    }
+
+    @PostMapping("/change-roles")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<MessageResponse> changeUserRoles(@RequestParam Long userId,
+        @RequestParam("role") List<String> roles) {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, Role> roleMap = new HashMap<>();
+        roleMap.put("ROLE_ADMIN", roleRepository.findByName(ERole.ROLE_ADMIN)
+            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+        roleMap.put("ROLE_IDOROGZITO", roleRepository.findByName(ERole.ROLE_IDOROGZITO)
+            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+        roleMap.put("ROLE_ALLITOBIRO", roleRepository.findByName(ERole.ROLE_ALLITOBIRO)
+            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+        roleMap.put("ROLE_SPEAKER", roleRepository.findByName(ERole.ROLE_SPEAKER)
+            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+
+        Set<Role> roleSet = new HashSet<>();
+        for (String role : roles) {
+            if (roleMap.containsKey(role)) {
+                roleSet.add(roleMap.get(role));
+            }
+        }
+
+        user.get().setRoles(roleSet);
+        userRepository.save(user.get());
+        return ResponseEntity.ok(new MessageResponse("User roles updated."));
     }
 }
