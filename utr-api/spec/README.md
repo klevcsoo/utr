@@ -4,10 +4,9 @@ Az **utr-api-spec.yaml** fájl frissítése esetén szükséges az **utr-api-spe
 Ezt a fejlesztői eszközön hajtsuk végre és szükséges hozzá `node` és `npm`.
 
 **Nagyon fontos!**
-Az **utr-api-spec.yaml** ha módosítunk valamit, mindig frissítsük a verziót az **utr-api** Maven
-modul pom.xml-ben található verziójával.
-Ha nem változik a specifikáció akkor nem kell, de ha igen, akkor mindig a jelenlegi verzióra
-frissüljön a YAML fájl.
+Az **utr-api-spec.yaml** ha módosítunk valamit, mindig frissítsük a verziót a jelenlegi aktív
+verzióra amin dolgozunk (az aktív jegynek a mérföldköve), nem a legutóbbi kiadott verzióra ami a
+**pom.xml**-ben van.
 
 ### Telepítés
 
