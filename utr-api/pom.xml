@@ -12,6 +12,7 @@
     </plugins>
   </build>
   <dependencies>
+    <!--suppress VulnerableLibrariesLocal -->
     <dependency>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
       <groupId>org.springframework.boot</groupId>
