@@ -138,4 +138,41 @@ public class AuthController {
         return ResponseEntity.ok(
             new MessageResponse("User registered successfully! ID: " + user.getId()));
     }
+
+    @PostMapping("/delete-user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<MessageResponse> deleteUser(@RequestParam Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userRepository.delete(user.get());
+        return ResponseEntity.ok(new MessageResponse("User deleted."));
+    }
+
+    @PostMapping("/change-password")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<MessageResponse> changeUserPassword(
+        @Valid @RequestBody ChangePasswordRequest request) {
+        // Only the admin can change the password of a user, and that is intentional.
+        // To avoid abuse, the old password is of course required to make the change.
+
+        Optional<User> user = userRepository.findById(request.getUserId());
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.get().getUsername(),
+                request.getOldPassword())
+        );
+        if (!authentication.isAuthenticated()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid password"));
+        }
+
+        user.get().setPassword(encoder.encode(request.getNewPassword()));
+        userRepository.save(user.get());
+        return ResponseEntity.ok(new MessageResponse("Password changed."));
+    }
 }
