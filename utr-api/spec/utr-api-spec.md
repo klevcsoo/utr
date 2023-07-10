@@ -1,5 +1,5 @@
 ---
-title: UTR API v0.1.1-alpha
+title: UTR API v0.3.0-alpha
 language_tabs: []
 language_clients: []
 toc_footers: []
@@ -12,7 +12,7 @@ headingLevel: 2
 
 <!-- Generator: Widdershins v4.0.1 -->
 
-<h1 id="utr-api">UTR API v0.1.1-alpha</h1>
+<h1 id="utr-api">UTR API v0.3.0-alpha</h1>
 
 > Scroll down for example requests and responses.
 
@@ -23,6 +23,140 @@ Base URLs:
 * <a href="https://utr.hu">https://utr.hu</a>
 
 * <a href="http://localhost:8080">http://localhost:8080</a>
+
+<h1 id="utr-api-default">Default</h1>
+
+## changeUserDisplayName
+
+<a id="opIdchangeUserDisplayName"></a>
+
+> Code samples
+
+`POST /api/auth/change-display-name`
+
+*POST api/auth/change-display-name*
+
+<h3 id="changeuserdisplayname-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|query|integer(int64)|true|none|
+|displayName|query|string|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="changeuserdisplayname-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## changeUserPassword
+
+<a id="opIdchangeUserPassword"></a>
+
+> Code samples
+
+`POST /api/auth/change-password`
+
+*POST api/auth/change-password*
+
+> Body parameter
+
+```json
+{
+  "userId": 0,
+  "oldPassword": "string",
+  "newPassword": "string"
+}
+```
+
+<h3 id="changeuserpassword-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|[ChangePasswordRequest](#schemachangepasswordrequest)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="changeuserpassword-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## changeUserRoles
+
+<a id="opIdchangeUserRoles"></a>
+
+> Code samples
+
+`POST /api/auth/change-roles`
+
+*POST api/auth/change-roles*
+
+<h3 id="changeuserroles-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|query|integer(int64)|true|none|
+|role|query|array[string]|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="changeuserroles-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## deleteUser
+
+<a id="opIddeleteUser"></a>
+
+> Code samples
+
+`POST /api/auth/delete-user`
+
+*POST api/auth/delete-user*
+
+<h3 id="deleteuser-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|query|integer(int64)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="deleteuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
 
 <h1 id="utr-api-hiteles-t-s">Hitelesítés</h1>
 
@@ -1686,6 +1820,30 @@ This operation does not require authentication
 |displayName|string|false|none|none|
 |role|[string]|false|none|none|
 |password|string|false|none|none|
+
+<h2 id="tocS_ChangePasswordRequest">ChangePasswordRequest</h2>
+<!-- backwards compatibility -->
+<a id="schemachangepasswordrequest"></a>
+<a id="schema_ChangePasswordRequest"></a>
+<a id="tocSchangepasswordrequest"></a>
+<a id="tocschangepasswordrequest"></a>
+
+```json
+{
+  "userId": 0,
+  "oldPassword": "string",
+  "newPassword": "string"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|userId|integer(int64)|false|none|none|
+|oldPassword|string|false|none|none|
+|newPassword|string|false|none|none|
 
 <h2 id="tocS_Uszo">Uszo</h2>
 <!-- backwards compatibility -->

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: UTR API
   description: Úszóverseny támogató rendszer API
-  version: 0.1.1-alpha
+  version: 0.3.0-alpha
 servers:
   - url: 'https://utr.hu'
   - url: 'http://localhost:8080'
@@ -45,6 +45,89 @@ paths:
                 $ref: "#/components/schemas/MessageResponse"
       tags:
         - "Hitelesítés"
+  /api/auth/change-display-name:
+    post:
+      summary: "POST api/auth/change-display-name"
+      operationId: "changeUserDisplayName"
+      parameters:
+        - name: "userId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "displayName"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+  /api/auth/change-password:
+    post:
+      summary: "POST api/auth/change-password"
+      operationId: "changeUserPassword"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+  /api/auth/change-roles:
+    post:
+      summary: "POST api/auth/change-roles"
+      operationId: "changeUserRoles"
+      parameters:
+        - name: "userId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "role"
+          in: "query"
+          required: true
+          schema:
+            type: "array"
+            items:
+              type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+  /api/auth/delete-user:
+    post:
+      summary: "POST api/auth/delete-user"
+      operationId: "deleteUser"
+      parameters:
+        - name: "userId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
   /api/test/admin:
     get:
       summary: "Admin hitelesítési teszt"
@@ -1043,6 +1126,16 @@ components:
           items:
             type: "string"
         password:
+          type: "string"
+    ChangePasswordRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        oldPassword:
+          type: "string"
+        newPassword:
           type: "string"
     Uszo:
       type: "object"
