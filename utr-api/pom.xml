@@ -84,6 +84,6 @@
     <start-class>hu.bathorydse.utrapi.UtrServerApplication</start-class>
   </properties>
 
-  <version>0.2.0-alpha</version>
+  <version>0.2.1-alpha</version>
 
 </project>
