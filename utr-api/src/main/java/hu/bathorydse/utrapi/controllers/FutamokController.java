@@ -1,11 +1,13 @@
 package hu.bathorydse.utrapi.controllers;
 
+import hu.bathorydse.utrapi.language.UtrMessageSource;
 import hu.bathorydse.utrapi.models.Futam;
 import hu.bathorydse.utrapi.models.FutamNotFoundException;
 import hu.bathorydse.utrapi.models.NevezesDetailed;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.FutamRepository;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class FutamokController {
 
     @Autowired
-    FutamRepository futamRepository;
+    private FutamRepository futamRepository;
+
+    @Autowired
+    private UtrMessageSource messageSource;
 
     @GetMapping("/")
     public ResponseEntity<List<Futam>> getAllFutamok(@RequestParam Long versenyszamId) {
@@ -33,11 +38,12 @@ public class FutamokController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<MessageResponse> createFutam(@RequestParam Long versenyszamId) {
+    public ResponseEntity<MessageResponse> createFutam(@RequestParam Long versenyszamId,
+        Locale locale) {
         Futam futam = new Futam(versenyszamId);
         futamRepository.save(futam);
 
-        return ResponseEntity.ok(new MessageResponse("Futam hozzáadva."));
+        return ResponseEntity.ok(new MessageResponse(messageSource.get(locale, "futamok.created")));
     }
 
     @GetMapping("/{futamId}/rajtlista")

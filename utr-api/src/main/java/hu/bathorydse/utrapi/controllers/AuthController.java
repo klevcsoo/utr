@@ -1,5 +1,6 @@
 package hu.bathorydse.utrapi.controllers;
 
+import hu.bathorydse.utrapi.language.UtrMessageSource;
 import hu.bathorydse.utrapi.models.auth.ERole;
 import hu.bathorydse.utrapi.models.auth.Role;
 import hu.bathorydse.utrapi.models.auth.User;
@@ -15,6 +16,7 @@ import hu.bathorydse.utrapi.security.services.UserDetailsImpl;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -43,19 +45,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private UtrMessageSource messageSource;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest request) {
@@ -77,9 +82,10 @@ public class AuthController {
 
     @PostMapping("/new-user")
     public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody NewUserRequest request,
-        Authentication authentication) {
+        Authentication authentication, Locale locale) {
         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            .orElseThrow(
+                () -> new RuntimeException(messageSource.get(locale, "auth.error.role_not_found")));
 
         // If an admin user exists but the user is not admin return with an error.
         // The reason for that, is that if there are no admins to create other users,
@@ -90,12 +96,13 @@ public class AuthController {
             .contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
         if (existsAdmin && !isUserAdmin) {
             return ResponseEntity.badRequest()
-                .body(new MessageResponse("Error: Insufficient authority."));
+                .body(new MessageResponse(
+                    messageSource.get(locale, "auth.error.insufficient_authority")));
         }
 
         if (userRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity.badRequest()
-                .body(new MessageResponse("Error: Username is already taken!"));
+                .body(new MessageResponse(messageSource.get(locale, "auth.error.username_taken")));
         }
 
         // Create new user's account
@@ -114,21 +121,24 @@ public class AuthController {
                 }
                 case "idorogzito": {
                     Role idorogzitoRole = roleRepository.findByName(ERole.ROLE_IDOROGZITO)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        .orElseThrow(() -> new RuntimeException(
+                            messageSource.get(locale, "auth.error.role_not_found")));
                     roles.add(idorogzitoRole);
 
                     break;
                 }
                 case "allitobiro": {
                     Role allitobiroRole = roleRepository.findByName(ERole.ROLE_ALLITOBIRO)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        .orElseThrow(() -> new RuntimeException(
+                            messageSource.get(locale, "auth.error.role_not_found")));
                     roles.add(allitobiroRole);
 
                     break;
                 }
                 default: {
                     Role userRole = roleRepository.findByName(ERole.ROLE_SPEAKER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        .orElseThrow(() -> new RuntimeException(
+                            messageSource.get(locale, "auth.error.role_not_found")));
                     roles.add(userRole);
                 }
             }
@@ -138,25 +148,27 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(
-            new MessageResponse("User registered successfully! ID: " + user.getId()));
+            new MessageResponse(
+                messageSource.get(locale, "auth.user_registered", user.getUsername())));
     }
 
     @PostMapping("/delete-user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<MessageResponse> deleteUser(@RequestParam Long userId) {
+    public ResponseEntity<MessageResponse> deleteUser(@RequestParam Long userId, Locale locale) {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
         userRepository.delete(user.get());
-        return ResponseEntity.ok(new MessageResponse("User deleted."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "auth.user_deleted")));
     }
 
     @PostMapping("/change-password")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> changeUserPassword(
-        @Valid @RequestBody ChangePasswordRequest request) {
+        @Valid @RequestBody ChangePasswordRequest request, Locale locale) {
         // Only the admin can change the password of a user, and that is intentional.
         // To avoid abuse, the old password is of course required to make the change.
 
@@ -169,18 +181,20 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(user.get().getUsername(),
                 request.getOldPassword()));
         if (!authentication.isAuthenticated()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid password"));
+            return ResponseEntity.badRequest().body(
+                new MessageResponse(messageSource.get(locale, "auth.error.invalid_password")));
         }
 
         user.get().setPassword(encoder.encode(request.getNewPassword()));
         userRepository.save(user.get());
-        return ResponseEntity.ok(new MessageResponse("Password changed."));
+        return ResponseEntity.ok(new MessageResponse(
+            messageSource.get(locale, "auth.password_changed", user.get().getUsername())));
     }
 
     @PostMapping("/change-roles")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponse> changeUserRoles(@RequestParam Long userId,
-        @RequestParam("role") List<String> roles) {
+        @RequestParam("role") List<String> roles, Locale locale) {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -188,13 +202,17 @@ public class AuthController {
 
         Map<String, Role> roleMap = new HashMap<>();
         roleMap.put("ROLE_ADMIN", roleRepository.findByName(ERole.ROLE_ADMIN)
-            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+            .orElseThrow(() -> new RuntimeException(
+                messageSource.get(locale, "auth.error.role_not_found"))));
         roleMap.put("ROLE_IDOROGZITO", roleRepository.findByName(ERole.ROLE_IDOROGZITO)
-            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+            .orElseThrow(() -> new RuntimeException(
+                messageSource.get(locale, "auth.error.role_not_found"))));
         roleMap.put("ROLE_ALLITOBIRO", roleRepository.findByName(ERole.ROLE_ALLITOBIRO)
-            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+            .orElseThrow(() -> new RuntimeException(
+                messageSource.get(locale, "auth.error.role_not_found"))));
         roleMap.put("ROLE_SPEAKER", roleRepository.findByName(ERole.ROLE_SPEAKER)
-            .orElseThrow(() -> new RuntimeException("Error: Role not found.")));
+            .orElseThrow(() -> new RuntimeException(
+                messageSource.get(locale, "auth.error.role_not_found"))));
 
         Set<Role> roleSet = new HashSet<>();
         for (String role : roles) {
@@ -205,13 +223,14 @@ public class AuthController {
 
         user.get().setRoles(roleSet);
         userRepository.save(user.get());
-        return ResponseEntity.ok(new MessageResponse("User roles updated."));
+        return ResponseEntity.ok(new MessageResponse(
+            messageSource.get(locale, "auth.roles_changed", user.get().getUsername())));
     }
 
     @PostMapping("/change-display-name")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MessageResponse> changeUserDisplayName(@RequestParam Long userId,
-        @RequestParam String displayName) {
+        @RequestParam String displayName, Locale locale) {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -219,6 +238,7 @@ public class AuthController {
 
         user.get().setDisplayName(displayName);
         userRepository.save(user.get());
-        return ResponseEntity.ok(new MessageResponse("User display name updated."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "auth.display_name_changed")));
     }
 }

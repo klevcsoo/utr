@@ -1,5 +1,6 @@
 package hu.bathorydse.utrapi.controllers;
 
+import hu.bathorydse.utrapi.language.UtrMessageSource;
 import hu.bathorydse.utrapi.models.UszoNotFoundException;
 import hu.bathorydse.utrapi.models.Uszoverseny;
 import hu.bathorydse.utrapi.models.UszoversenyNotFoundException;
@@ -7,6 +8,7 @@ import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.UszoversenyRepository;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -34,6 +36,9 @@ public class UszoversenyekController {
     @Autowired
     private UszoversenyRepository uszoversenyRepository;
 
+    @Autowired
+    private UtrMessageSource messageSource;
+
     @GetMapping("/")
     public ResponseEntity<List<Uszoverseny>> getAllVersenyek() {
         return ResponseEntity.ok(uszoversenyRepository.findAll(Sort.by(Direction.DESC, "datum")));
@@ -42,12 +47,14 @@ public class UszoversenyekController {
     @PutMapping("/")
     public ResponseEntity<MessageResponse> createNewVerseny(@RequestParam() String nev,
         @RequestParam(required = false) String helyszin,
-        @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum) {
+        @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum,
+        Locale locale) {
 
         Uszoverseny uszoverseny = new Uszoverseny(nev, helyszin, datum);
         uszoversenyRepository.save(uszoverseny);
 
-        return ResponseEntity.ok(new MessageResponse("Úszóverseny létrehozva."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "uszoversenyek.created")));
     }
 
     @GetMapping("/{id}")
@@ -61,7 +68,8 @@ public class UszoversenyekController {
     @PatchMapping("/{id}")
     public ResponseEntity<MessageResponse> editVerseny(@PathVariable Long id,
         @RequestParam(required = false) String nev, @RequestParam(required = false) String helyszin,
-        @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum) {
+        @RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE_TIME) Date datum,
+        Locale locale) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
             .orElseThrow(() -> new UszoNotFoundException(id));
 
@@ -79,28 +87,32 @@ public class UszoversenyekController {
 
         uszoversenyRepository.save(uszoverseny);
 
-        return ResponseEntity.ok(new MessageResponse("Módosítások mentve."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "generic.changes_saved")));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteVerseny(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteVerseny(@PathVariable Long id, Locale locale) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
             .orElseThrow(() -> new UszoNotFoundException(id));
 
         uszoversenyRepository.delete(uszoverseny);
 
-        return ResponseEntity.ok(new MessageResponse("Úszóverseny törölve."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "uszoversenyek.deleted")));
     }
 
     @PostMapping("/{id}/megnyitas")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MessageResponse> uszoversenyMegnyitasa(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> uszoversenyMegnyitasa(@PathVariable Long id,
+        Locale locale) {
         Uszoverseny uszoverseny = uszoversenyRepository.findById(id)
             .orElseThrow(() -> new UszoversenyNotFoundException(id));
 
         uszoverseny.setNyitott(true);
         uszoversenyRepository.save(uszoverseny);
 
-        return ResponseEntity.ok(new MessageResponse("Úszóverseny megnyitva."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "uszoversenyek.opened")));
     }
 }

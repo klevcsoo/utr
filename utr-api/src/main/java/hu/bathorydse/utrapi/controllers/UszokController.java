@@ -1,11 +1,13 @@
 package hu.bathorydse.utrapi.controllers;
 
 
+import hu.bathorydse.utrapi.language.UtrMessageSource;
 import hu.bathorydse.utrapi.models.Uszo;
 import hu.bathorydse.utrapi.models.UszoNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.UszoRepository;
 import java.util.List;
+import java.util.Locale;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UszokController {
 
     @Autowired
-    UszoRepository uszoRepository;
+    private UszoRepository uszoRepository;
+
+    @Autowired
+    private UtrMessageSource messageSource;
 
     @GetMapping("/")
     public ResponseEntity<List<Uszo>> getAllUszok(@RequestParam Long csapatId) {
@@ -37,11 +42,12 @@ public class UszokController {
     @PutMapping("/")
     public ResponseEntity<MessageResponse> createUszo(@RequestParam Long csapatId,
         @RequestParam String nev,
-        @RequestParam Short szuletesiEv, @RequestParam @Size(min = 1, max = 1) String nem) {
+        @RequestParam Short szuletesiEv, @RequestParam @Size(min = 1, max = 1) String nem,
+        Locale locale) {
         Uszo uszo = new Uszo(nev, szuletesiEv, csapatId, nem);
         uszoRepository.save(uszo);
 
-        return ResponseEntity.ok(new MessageResponse("Úszó hozzáadva."));
+        return ResponseEntity.ok(new MessageResponse(messageSource.get(locale, "uszok.created")));
     }
 
     @GetMapping("/{id}")
@@ -56,7 +62,8 @@ public class UszokController {
         @RequestParam(required = false) String nev,
         @RequestParam(required = false) String szuletesiEv,
         @RequestParam(required = false) Long csapat,
-        @RequestParam(required = false) @Size(min = 1, max = 1) String nem) {
+        @RequestParam(required = false) @Size(min = 1, max = 1) String nem,
+        Locale locale) {
         Uszo uszo = uszoRepository.findById(id).orElseThrow(() -> new UszoNotFoundException(id));
 
         if (nev != null) {
@@ -77,15 +84,16 @@ public class UszokController {
 
         uszoRepository.save(uszo);
 
-        return ResponseEntity.ok(new MessageResponse("Módosítások mentve."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "generic.changes_saved")));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteUszo(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteUszo(@PathVariable Long id, Locale locale) {
         Uszo uszo = uszoRepository.findById(id).orElseThrow(() -> new UszoNotFoundException(id));
 
         uszoRepository.delete(uszo);
 
-        return ResponseEntity.ok(new MessageResponse("Úszó törölve."));
+        return ResponseEntity.ok(new MessageResponse(messageSource.get(locale, "uszok.deleted")));
     }
 }

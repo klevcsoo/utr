@@ -1,10 +1,12 @@
 package hu.bathorydse.utrapi.controllers;
 
+import hu.bathorydse.utrapi.language.UtrMessageSource;
 import hu.bathorydse.utrapi.models.Csapat;
 import hu.bathorydse.utrapi.models.CsapatNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.CsapatRepository;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +29,9 @@ public class CsapatokController {
     @Autowired
     private CsapatRepository csapatRepository;
 
+    @Autowired
+    private UtrMessageSource messageSource;
+
     @GetMapping("/")
     public ResponseEntity<List<Csapat>> getAllCsapatok() {
         return ResponseEntity.ok(csapatRepository.findAll());
@@ -34,10 +39,11 @@ public class CsapatokController {
 
     @PutMapping("/")
     public ResponseEntity<MessageResponse> createCsapat(@RequestParam String nev,
-        @RequestParam(required = false) String varos) {
+        @RequestParam(required = false) String varos, Locale locale) {
         Csapat csapat = new Csapat(nev, varos);
         csapatRepository.save(csapat);
-        return ResponseEntity.ok(new MessageResponse("Csapat létrehozva"));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "csapatok.created")));
     }
 
     @GetMapping("/{id}")
@@ -50,7 +56,8 @@ public class CsapatokController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<MessageResponse> editCsapat(@PathVariable Long id,
-        @RequestParam(required = false) String nev, @RequestParam(required = false) String varos) {
+        @RequestParam(required = false) String nev, @RequestParam(required = false) String varos,
+        Locale locale) {
         Csapat csapat = csapatRepository.findById(id)
             .orElseThrow(() -> new CsapatNotFoundException(id));
 
@@ -64,16 +71,18 @@ public class CsapatokController {
 
         csapatRepository.save(csapat);
 
-        return ResponseEntity.ok(new MessageResponse("Módosítások mentve"));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "generic.changes_saved")));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteCsapat(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteCsapat(@PathVariable Long id, Locale locale) {
         Csapat csapat = csapatRepository.findById(id)
             .orElseThrow(() -> new CsapatNotFoundException(id));
 
         csapatRepository.delete(csapat);
 
-        return ResponseEntity.ok(new MessageResponse("Csapat törölve."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "csapatok.deleted")));
     }
 }

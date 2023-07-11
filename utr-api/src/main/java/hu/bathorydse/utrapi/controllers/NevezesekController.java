@@ -1,5 +1,6 @@
 package hu.bathorydse.utrapi.controllers;
 
+import hu.bathorydse.utrapi.language.UtrMessageSource;
 import hu.bathorydse.utrapi.models.Nevezes;
 import hu.bathorydse.utrapi.models.NevezesNotFoundException;
 import hu.bathorydse.utrapi.models.UszoDetailed;
@@ -8,6 +9,7 @@ import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.NevezesRepository;
 import hu.bathorydse.utrapi.repository.UszoDetailedRepository;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +35,9 @@ public class NevezesekController {
     @Autowired
     private UszoDetailedRepository uszoDetailedRepository;
 
+    @Autowired
+    private UtrMessageSource messageSource;
+
     @GetMapping("/")
     public ResponseEntity<List<Nevezes>> getAllNevezesek(@RequestParam Long versenyszamId) {
         List<Nevezes> nevezesek = nevezesRepository.findAllByVersenyszamId(versenyszamId);
@@ -41,7 +46,8 @@ public class NevezesekController {
 
     @PutMapping("/")
     public ResponseEntity<MessageResponse> createNevezes(@RequestParam Long versenyszamId,
-        @RequestParam Long uszoId, @RequestParam(required = false) String nevezesiIdo) {
+        @RequestParam Long uszoId, @RequestParam(required = false) String nevezesiIdo,
+        Locale locale) {
         Integer interval;
         if (nevezesiIdo != null) {
             String minString = nevezesiIdo.split(":")[0];
@@ -59,7 +65,8 @@ public class NevezesekController {
         Nevezes nevezes = new Nevezes(uszo, versenyszamId, interval);
         nevezesRepository.save(nevezes);
 
-        return ResponseEntity.ok(new MessageResponse("Nevezés hozzáadva."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "nevezesek.created")));
     }
 
     @GetMapping("/{id}")
@@ -74,7 +81,8 @@ public class NevezesekController {
     public ResponseEntity<MessageResponse> editNevezes(@PathVariable Long id,
         @RequestParam(required = false) Long versenyszamId,
         @RequestParam(required = false) Long uszoId,
-        @RequestParam(required = false) String nevezesiIdo) {
+        @RequestParam(required = false) String nevezesiIdo,
+        Locale locale) {
         Nevezes nevezes = nevezesRepository.findById(id)
             .orElseThrow(() -> new NevezesNotFoundException(id));
 
@@ -102,15 +110,17 @@ public class NevezesekController {
 
         nevezesRepository.save(nevezes);
 
-        return ResponseEntity.ok(new MessageResponse("Módosítások mentve"));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "generic.changes_saved")));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteNevezes(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteNevezes(@PathVariable Long id, Locale locale) {
         Nevezes nevezes = nevezesRepository.findById(id)
             .orElseThrow(() -> new NevezesNotFoundException(id));
 
         nevezesRepository.delete(nevezes);
-        return ResponseEntity.ok(new MessageResponse("Nevezés törölve."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "nevezesek.deleted")));
     }
 }

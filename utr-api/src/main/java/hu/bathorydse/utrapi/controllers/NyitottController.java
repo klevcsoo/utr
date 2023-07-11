@@ -1,5 +1,6 @@
 package hu.bathorydse.utrapi.controllers;
 
+import hu.bathorydse.utrapi.language.UtrMessageSource;
 import hu.bathorydse.utrapi.models.Futam;
 import hu.bathorydse.utrapi.models.Nevezes;
 import hu.bathorydse.utrapi.models.NevezesNotFoundException;
@@ -13,6 +14,7 @@ import hu.bathorydse.utrapi.repository.NevezesRepository;
 import hu.bathorydse.utrapi.repository.UszoversenyRepository;
 import hu.bathorydse.utrapi.repository.VersenyszamRepository;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,16 +45,20 @@ public class NyitottController {
     @Autowired
     private NevezesRepository nevezesRepository;
 
+    @Autowired
+    private UtrMessageSource messageSource;
+
     @PostMapping("/lezaras")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MessageResponse> uszoversenyLezarasa() {
+    public ResponseEntity<MessageResponse> uszoversenyLezarasa(Locale locale) {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
         uszoverseny.setNyitott(false);
         uszoversenyRepository.save(uszoverseny);
 
-        return ResponseEntity.ok(new MessageResponse("Úszóverseny lezárva."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "uszoversenyek.closed")));
     }
 
     @GetMapping("/reszletek")
@@ -103,7 +109,7 @@ public class NyitottController {
     @PatchMapping("/jelenlet")
     @PreAuthorize("hasAnyRole('ADMIN', 'ALLITOBITO')")
     public ResponseEntity<MessageResponse> editJelenlet(@RequestParam Long uszoId,
-        @RequestParam Boolean megjelent) {
+        @RequestParam Boolean megjelent, Locale locale) {
         Uszoverseny uszoverseny = uszoversenyRepository.findByNyitott(true)
             .orElseThrow(NoNyitottUszoversenyException::new);
 
@@ -113,13 +119,15 @@ public class NyitottController {
         uszoNevezesek.forEach(nevezes -> nevezes.setMegjelent(megjelent));
         nevezesRepository.saveAll(uszoNevezesek);
 
-        return ResponseEntity.ok(new MessageResponse(uszoNevezesek.size() + " nevezés módosítva."));
+        return ResponseEntity.ok(new MessageResponse(
+            messageSource.get(locale, "nevezesek.jelenlet.changed",
+                Integer.toString(uszoNevezesek.size()))));
     }
 
     @PatchMapping("/idoeredmeny")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO')")
     public ResponseEntity<MessageResponse> editIdoeredmeny(@RequestParam Long nevezesId,
-        @RequestParam String idoeredmeny) {
+        @RequestParam String idoeredmeny, Locale locale) {
         if (!uszoversenyRepository.existsByNyitott(true)) {
             throw new NoNyitottUszoversenyException();
         }
@@ -137,12 +145,14 @@ public class NyitottController {
         nevezes.setIdoeredmeny(interval);
         nevezesRepository.save(nevezes);
 
-        return ResponseEntity.ok(new MessageResponse("Időeredmény mentve."));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "nevezesek.idoeredmeny.changed")));
     }
 
     @DeleteMapping("/idoeredmeny")
     @PreAuthorize("hasAnyRole('ADMIN', 'IDOROGZITO')")
-    public ResponseEntity<MessageResponse> deleteIdoeredmeny(@RequestParam Long nevezesId) {
+    public ResponseEntity<MessageResponse> deleteIdoeredmeny(@RequestParam Long nevezesId,
+        Locale locale) {
         if (!uszoversenyRepository.existsByNyitott(true)) {
             throw new NoNyitottUszoversenyException();
         }
@@ -153,6 +163,7 @@ public class NyitottController {
         nevezes.setIdoeredmeny(null);
         nevezesRepository.save(nevezes);
 
-        return ResponseEntity.ok(new MessageResponse("Időeredmény törölve"));
+        return ResponseEntity.ok(
+            new MessageResponse(messageSource.get(locale, "nevezesek.idoeredmeny.deleted")));
     }
 }
