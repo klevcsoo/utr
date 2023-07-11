@@ -17,12 +17,7 @@ export async function loadTranslationMap(locale: Locale): Promise<Readonly<[stri
         headers: {
             "Content-Type": "text/plain; charset=UTF-8"
         }
-    }).then(value => {
-        return value.arrayBuffer();
-    }).then(value => {
-        const decoder = new TextDecoder("iso-8859-1");
-        return decoder.decode(value);
-    });
+    }).then(value => value.text());
 
     return content.trim().split("\n").map(line => {
         return line.split("=");
