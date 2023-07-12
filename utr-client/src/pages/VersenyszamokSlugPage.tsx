@@ -21,7 +21,7 @@ import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
-import {formatInterval} from "../utils";
+import {formatInterval, hungarianNormalize} from "../utils";
 import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
 import {FullPageModal} from "../components/modals/FullPageModal";
 import {CsapatDropdown} from "../components/inputs/dropdowns/CsapatDropdown";
@@ -29,8 +29,11 @@ import {TitleIcon} from "../components/icons/TitleIcon";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
 import {UszoDropdown} from "../components/inputs/dropdowns/UszoDropdown";
 import {IntervalMaskedInput} from "../components/inputs/numeric/IntervalMaskedInput";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export function VersenyszamokSlugPage() {
+    const t = useTranslation();
+
     const navigate = useNavigate();
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
@@ -45,23 +48,26 @@ export function VersenyszamokSlugPage() {
 
     const elnevezes = useMemo(() => {
         if (!versenyszam) {
-            return "Betöltés...";
+            return t("generic_label.loading")!;
         }
 
         const valto = versenyszam.valto ? `${versenyszam.valto}x` : "";
-        const nem = versenyszam.nem === "F" ? "fiú" : "leány";
-        const uszasnem = versenyszam.uszasnem.elnevezes;
-        return `${valto}${versenyszam.hossz} ${nem} ${uszasnem}`;
-    }, [versenyszam]);
+        const nem = versenyszam.nem === "F" ?
+            t("generic_label.male.versenyszam") :
+            t("generic_label.female.versenyszam");
+        const uszasnem = hungarianNormalize(versenyszam.uszasnem.elnevezes);
+        const translatedUszasnem = t(`generic_label.uszasnem.${uszasnem}`);
+        return `${valto}${versenyszam.hossz} ${nem} ${translatedUszasnem}`;
+    }, [t, versenyszam]);
 
     const doDeleteVersenyszam = useCallback(() => {
-        if (!!versenyszam && window.confirm("Biztos, hogy töröljük?")) {
+        if (!!versenyszam && window.confirm(t("confirm.generic.delete"))) {
             deleteVersenyszam(versenyszam.id).then(message => {
                 console.log(message);
                 navigate("..");
             }).catch(console.error);
         }
-    }, [deleteVersenyszam, navigate, versenyszam]);
+    }, [deleteVersenyszam, navigate, t, versenyszam]);
 
     useSetAdminLayoutTitle(elnevezes);
 
@@ -72,9 +78,9 @@ export function VersenyszamokSlugPage() {
     ) : !versenyszam || !uszoverseny ? (
         <div className="h-full grid place-content-center">
             <div className="flex flex-col gap-2 items-center">
-                <p>Versenyszám nem található</p>
+                <p>{t("versenyszam.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text="Vissza"/>
+                    <PrimaryButton text={t("actions.generic.back")!}/>
                 </Link>
             </div>
         </div>
@@ -83,13 +89,13 @@ export function VersenyszamokSlugPage() {
             <div className="w-full flex flex-col gap-8">
                 <h2>{uszoverseny.nev}</h2>
                 <div className="flex flex-col gap-2">
-                    <h3 className="ml-2">Általános információ:</h3>
+                    <h3 className="ml-2">{t("generic_label.generic_info.with_colon")}</h3>
                     <VersenyszamDetails versenyszam={versenyszam}/>
-                    <WarningButton text="Versenyszám törlése"
+                    <WarningButton text={t("actions.versenyszam.delete")!}
                                    onClick={doDeleteVersenyszam}/>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="ml-2 col-span-2">Nevezések:</h3>
+                    <h3 className="ml-2 col-span-2">{t("versenyszam.nevezesek")}</h3>
                     <NevezesekList versenyszam={versenyszam}/>
                 </div>
             </div>
@@ -103,6 +109,8 @@ export function VersenyszamokSlugPage() {
 export function VersenyszamDetails(props: {
     versenyszam: Versenyszam
 }) {
+    const t = useTranslation();
+
     const [valtoEnabled, setValtoEnabled] = useState(!!props.versenyszam.valto);
     const [valto, setValto] = useState<number>(props.versenyszam.valto ?? 4);
     const [hossz, setHossz] = useState<number>(props.versenyszam.hossz);
@@ -139,20 +147,21 @@ export function VersenyszamDetails(props: {
 
     return (
         <BorderCard className="grid grid-cols-2 gap-2">
-            <p>Váltó: </p>
+            <p>{t("versenyszam.valto")}</p>
             <div className="flex flex-row gap-2 justify-items-start">
                 <CheckBox value={valtoEnabled} onValue={setValtoEnabled}/>
                 <NumberInput value={valto} onValue={setValto}
                              disabled={!valtoEnabled}/>
             </div>
-            <p>Hossz: </p>
+            <p>{t("versenyszam.hossz")}</p>
             <NumberInput value={hossz} onValue={setHossz}/>
-            <p>Nem: </p>
+            <p>{t("versenyszam.nem")}</p>
             <VersenyszamNemDropdown selected={nem} onSelect={setNem}/>
-            <p>Úszásnem: </p>
+            <p>{t("versenyszam.uszasnem")}</p>
             <UszasnemDropdown selected={uszasnem} onSelect={setUszasnem}/>
             {unsavedChanges ? (
-                <SecondaryButton text="Módosítások mentése" onClick={doCommitChanges}/>
+                <SecondaryButton text={t("actions.generic.save_changes")!}
+                                 onClick={doCommitChanges}/>
             ) : null}
         </BorderCard>
     );
@@ -161,6 +170,8 @@ export function VersenyszamDetails(props: {
 export function NevezesekList(props: {
     versenyszam: Versenyszam
 }) {
+    const t = useTranslation();
+
     const [nevezesek, loadingNevezesek] = useNevezesekList(props.versenyszam.id);
     const deleteNevezes = useDeleteNevezes();
     const [, setSearchParams] = useSearchParams();
@@ -195,26 +206,24 @@ export function NevezesekList(props: {
         </div>
     ) : !nevezesek || !nevezesek.length ? (
         <BorderCard>
-            <p>
-                Jelenleg egy úszó sincs benevezve a versenyszámba.
-                Adjunk hozzá egyet?
-            </p>
+            <p>{t("versenyszam.no_uszo")}</p>
         </BorderCard>
     ) : (
         <Fragment>
             <DataTable dataList={displayedNevezesek} propertyNameOverride={{
-                uszoNev: "úszó",
-                uszoSzuletesiEv: "születési év",
-                csapatNev: "csapat",
-                nevezesiIdo: "nevezési idő",
-                idoeredmeny: "időeredmény"
+                uszoNev: t("generic_label.uszo"),
+                uszoSzuletesiEv: t("generic_label.year_of_birth"),
+                csapatNev: t("generic_label.csapat"),
+                nevezesiIdo: t("generic_label.nevezesi_ido"),
+                idoeredmeny: t("generic_label.idoeredmeny")
             }} excludedProperties={["id"]} actionColumn={({id}) => (
                 <Fragment>
                     <IconWarningButton iconName="delete"
                                        onClick={() => doDeleteNevezes(id)}/>
                 </Fragment>
             )}/>
-            <SecondaryButton text="Úszó benevezése" onClick={doOpenNewNevezesModal}/>
+            <SecondaryButton text={t("actions.versenyszam.add_uszo")!}
+                             onClick={doOpenNewNevezesModal}/>
         </Fragment>
     );
 }
@@ -222,6 +231,8 @@ export function NevezesekList(props: {
 function NevezesModal(props: {
     versenyszam: Versenyszam
 }) {
+    const t = useTranslation();
+
     const [, setSearchParams] = useSearchParams();
     const createNevezes = useCreateNevezes();
 
@@ -270,23 +281,23 @@ function NevezesModal(props: {
             <div className="flex flex-row items-center
                     justify-start gap-6 p-6 min-w-max max-w-sm">
                 <TitleIcon name="person"/>
-                <h2>Úszó benevezése</h2>
+                <h2>{t("actions.versenyszam.add_uszo")}</h2>
             </div>
             <div className="w-full border border-slate-100"></div>
             <div className="grid grid-rows-[auto_auto] grid-cols-[auto_auto]
                         gap-y-2 gap-x-8 items-center p-6">
-                <label>Csapat:</label>
+                <label>{t("generic_label.csapat.with_colon")}</label>
                 <CsapatDropdown selected={csapat} onSelect={setCsapat}/>
                 {csapat ? (
                     <Fragment>
-                        <label>Úszó:</label>
+                        <label>{t("csapat.uszok.with_colon")}</label>
                         <UszoDropdown csapatId={csapat} selected={uszo}
                                       onSelect={setUszo}/>
                     </Fragment>
                 ) : null}
                 {uszo ? (
                     <Fragment>
-                        <label>Nevezési idő:</label>
+                        <label>{t("generic_label.nevezesi_ido.with_colon")}</label>
                         <div className="flex flex-row gap-2 justify-items-start">
                             <CheckBox value={nevezesiIdoEnabled}
                                       onValue={setNevezesiIdoEnabled}/>
@@ -298,9 +309,10 @@ function NevezesModal(props: {
                 ) : null}
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text="Inkább nem" onClick={doCloseModal}/>
-                <PrimaryButton text="Mehet!" onClick={doAddNevezes}
-                               disabled={!canAdd}/>
+                <SecondaryButton text={t("generic_label.rather_not")!}
+                                 onClick={doCloseModal}/>
+                <PrimaryButton text={t("generic_label.lets_go")!}
+                               onClick={doAddNevezes} disabled={!canAdd}/>
             </div>
         </FullPageModal>
     );

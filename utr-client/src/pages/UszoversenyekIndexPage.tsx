@@ -18,8 +18,11 @@ import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export function UszoversenyekIndexPage() {
+    const t = useTranslation();
+
     const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
     const [searchParams, setSearchParams] = useSearchParams();
     const [nyitottVerseny, nyitottVersenyLoading] = useNyitottVerseny();
@@ -28,13 +31,13 @@ export function UszoversenyekIndexPage() {
 
     const doChangeVersenyNyitottState = useCallback((uszoverseny: Uszoverseny) => {
         if (uszoverseny.nyitott) {
-            if (window.confirm("Zárjuk le a versenyt?")) {
+            if (window.confirm(t("confirm.uszoverseny.close"))) {
                 closeUszoverseny()
                     .then(console.log)
                     .catch(console.error);
             }
         } else {
-            if (window.confirm("Nyissuk meg a versenyt?")) {
+            if (window.confirm(t("confirm.uszoverseny.open"))) {
                 openUszoverseny(uszoverseny.id)
                     .then(console.log)
                     .catch(console.error);
@@ -42,7 +45,7 @@ export function UszoversenyekIndexPage() {
         }
     }, [closeUszoverseny, openUszoverseny]);
 
-    useSetAdminLayoutTitle("Úszóversenyek");
+    useSetAdminLayoutTitle(t("title.admin_layout.uszoversenyek")!);
 
     return uszoversenyekLoading ? (
         <div className="w-full h-full grid place-content-center">
@@ -55,7 +58,7 @@ export function UszoversenyekIndexPage() {
                     <LoadingSpinner/>
                 ) : !!nyitottVerseny ? (
                     <Fragment>
-                        <h3>Nyitott verseny</h3>
+                        <h3>{t("uszoverseny.opened")}</h3>
                         <BorderCard className="w-full flex flex-col gap-2">
                             <p>
                                 <b>{nyitottVerseny.nev}</b> ·&nbsp;
@@ -63,22 +66,23 @@ export function UszoversenyekIndexPage() {
                                 {nyitottVerseny.datum.toLocaleDateString()}
                             </p>
                             <div className="flex flex-row gap-2 items-start">
-                                <WarningButton text="Úszóverseny lezárása" onClick={() => {
-                                    doChangeVersenyNyitottState(nyitottVerseny);
-                                }}/>
+                                <WarningButton text={t("actions.uszoverseny.close")!}
+                                               onClick={() => {
+                                                   doChangeVersenyNyitottState(nyitottVerseny);
+                                               }}/>
                                 <Link to={String(nyitottVerseny.id)} className="w-full">
-                                    <SecondaryButton text="Részletek megtekintése"/>
+                                    <SecondaryButton text={t("actions.generic.view_details")!}/>
                                 </Link>
                             </div>
                         </BorderCard>
                     </Fragment>
                 ) : null}
-                <h3 className="mt-2">További versenyek:</h3>
+                <h3 className="mt-2">{t("uszoversenyek.other_versenyek")}</h3>
                 <div className="flex flex-col gap-4 w-full items-start">
                     <DataTable dataList={uszoversenyek} propertyNameOverride={{
-                        nev: "név",
-                        datum: "dátum",
-                        helyszin: "helyszín"
+                        nev: t("generic_label.name"),
+                        datum: t("generic_label.date"),
+                        helyszin: t("generic_label.location")
                     }} excludedProperties={["id", "nyitott"]} actionColumn={entry => (
                         <Fragment>
                             <IconButton iconName={entry.nyitott ? "stop" : "play_arrow"}
@@ -88,7 +92,7 @@ export function UszoversenyekIndexPage() {
                             </Link>
                         </Fragment>
                     )}/>
-                    <SecondaryButton text="Úszóverseny létrehozása" onClick={() => {
+                    <SecondaryButton text={t("actions.uszoverseny.create")!} onClick={() => {
                         setSearchParams({modal: "create"});
                     }}/>
                 </div>
@@ -99,6 +103,7 @@ export function UszoversenyekIndexPage() {
 }
 
 function NewUszoversenyModal() {
+    const t = useTranslation();
     const [, setSearchParams] = useSearchParams();
     const createUszoverseny = useCreateUszoverseny();
 
@@ -132,22 +137,25 @@ function NewUszoversenyModal() {
             <div className="flex flex-row items-center justify-start gap-6 p-6
                     min-w-max max-w-sm">
                 <TitleIcon name="groups"/>
-                <h2>Úszóverseny hozzáadása</h2>
+                <h2>{t("actions.uszoverseny.create")}</h2>
             </div>
             <div className="w-full border border-slate-100"></div>
             <div className="flex flex-col gap-2 p-6">
-                <TextInput value={nev} onValue={setNev} placeholder="Név"/>
-                <TextInput value={helyszin} onValue={setHelyszin} placeholder="Város"/>
+                <TextInput value={nev} onValue={setNev}
+                           placeholder={t("generic_label.name")}/>
+                <TextInput value={helyszin} onValue={setHelyszin}
+                           placeholder={t("generic_label.city")}/>
                 <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text="Inkább nem" onClick={() => {
-                    setSearchParams(prevState => {
-                        prevState.delete("modal");
-                        return prevState;
-                    });
-                }}/>
-                <PrimaryButton text="Mehet!" onClick={doCreate}
+                <SecondaryButton text={t("generic_label.rather_not")!}
+                                 onClick={() => {
+                                     setSearchParams(prevState => {
+                                         prevState.delete("modal");
+                                         return prevState;
+                                     });
+                                 }}/>
+                <PrimaryButton text={t("generic_label.lets_go")!} onClick={doCreate}
                                disabled={!canCreate}/>
             </div>
         </FullPageModal>

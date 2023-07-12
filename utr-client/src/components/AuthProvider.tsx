@@ -3,10 +3,13 @@ import {UserDetails} from "../types/UserDetails";
 import {AuthContext, login} from "../api/auth";
 import {UserRole} from "../types/UserRole";
 import {CommonChildrenOnlyProps} from "../types/componentProps/common/CommonChildrenOnlyProps";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 const AUTH_DATA_KEY = "auth_data";
 
 function AuthProvider(props: CommonChildrenOnlyProps) {
+    const t = useTranslation();
+
     const [user, setUser] = useState<UserDetails | undefined>(
         !!sessionStorage.getItem(AUTH_DATA_KEY) ? (
             JSON.parse(sessionStorage.getItem(AUTH_DATA_KEY)!)
@@ -16,7 +19,7 @@ function AuthProvider(props: CommonChildrenOnlyProps) {
     const doLogin = useCallback(
         (username: string, password: string): Promise<UserDetails> => {
             if (!username || !password) {
-                throw new Error("Hiányos felhasználónév vagy jelszó.");
+                throw new Error(t("error.auth.missing_username_or_pass"));
             }
 
             return login(username as UserRole, password).then(user => {
@@ -24,7 +27,7 @@ function AuthProvider(props: CommonChildrenOnlyProps) {
                 sessionStorage.setItem(AUTH_DATA_KEY, JSON.stringify(user));
                 return user;
             });
-        }, []
+        }, [t]
     );
 
     const doLogout = useCallback((): Promise<void> => {

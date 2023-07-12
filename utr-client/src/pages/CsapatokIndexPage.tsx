@@ -12,12 +12,14 @@ import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {createCsapat} from "../api/csapatok";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../components/inputs/buttons/IconButton";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export function CsapatokIndexPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();
     const [searchParams, setSearchParams] = useSearchParams();
+    const t = useTranslation();
 
-    useSetAdminLayoutTitle("Csapatok");
+    useSetAdminLayoutTitle(t("title.admin_layout.csapatok")!);
 
     return csapatokLoading ? (
         <div className="w-full h-full grid place-content-center">
@@ -27,15 +29,15 @@ export function CsapatokIndexPage() {
         <Fragment>
             <div className="w-full flex flex-col gap-4 items-start">
                 <DataTable dataList={csapatok} propertyNameOverride={{
-                    nev: "név",
-                    varos: "város",
-                    id: "azonosító"
+                    nev: t("generic_label.name"),
+                    varos: t("generic_label.city"),
+                    id: t("generic_label.id")
                 }} excludedProperties={["id"]} actionColumn={entry => (
                     <Link to={String(entry.id)}>
                         <IconButton iconName="edit"/>
                     </Link>
                 )}/>
-                <SecondaryButton text="Csapat hozzáadása" onClick={() => {
+                <SecondaryButton text={t("actions.csapat.create")!} onClick={() => {
                     setSearchParams({modal: "newCsapat"});
                 }}/>
             </div>
@@ -47,6 +49,7 @@ export function CsapatokIndexPage() {
 function NewCsapatPopup() {
     const user = useAuthUser();
     const [, setSearchParams] = useSearchParams();
+    const t = useTranslation();
 
     const [nev, setNev] = useState("");
     const [varos, setVaros] = useState("");
@@ -72,21 +75,24 @@ function NewCsapatPopup() {
             <div className="flex flex-row items-center justify-start gap-6 p-6
                     min-w-max max-w-sm">
                 <TitleIcon name="groups"/>
-                <h2>Csapat hozzáadása</h2>
+                <h2>{t("actions.csapat.create")}</h2>
             </div>
             <div className="w-full border border-slate-100"></div>
             <div className="flex flex-col gap-2 p-6">
-                <TextInput value={nev} onValue={setNev} placeholder="Név"/>
-                <TextInput value={varos} onValue={setVaros} placeholder="Város"/>
+                <TextInput value={nev} onValue={setNev}
+                           placeholder={t("generic_label.name")}/>
+                <TextInput value={varos} onValue={setVaros}
+                           placeholder={t("generic_label.city")}/>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text="Inkább nem" onClick={() => {
-                    setSearchParams(prevState => {
-                        prevState.delete("modal");
-                        return prevState;
-                    });
-                }}/>
-                <PrimaryButton text="Mehet!" onClick={doCreate}
+                <SecondaryButton text={t("generic_label.rather_not")!}
+                                 onClick={() => {
+                                     setSearchParams(prevState => {
+                                         prevState.delete("modal");
+                                         return prevState;
+                                     });
+                                 }}/>
+                <PrimaryButton text={t("generic_label.lets_go")!} onClick={doCreate}
                                disabled={!canCreate}/>
             </div>
         </FullPageModal>

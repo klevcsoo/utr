@@ -2,10 +2,12 @@ import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {NevezesCreationData} from "../../types/request/NevezesCreationData";
 import {createNevezes} from "../../api/nevezesek";
+import {useTranslation} from "../translations/useTranslation";
 
 export function useCreateNevezes():
     (data: NevezesCreationData) => Promise<string> {
     const user = useAuthUser();
+    const t = useTranslation();
 
     return useCallback(data => {
         return new Promise((resolve, reject) => {
@@ -14,8 +16,8 @@ export function useCreateNevezes():
                     resolve(message);
                 }).catch(reject);
             } else {
-                reject("Úgy látszik nem vagy bejelentkezve.");
+                reject(t("error.auth.unauthenticated"));
             }
         });
-    }, [user]);
+    }, [t, user]);
 }

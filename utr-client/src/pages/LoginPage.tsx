@@ -3,8 +3,11 @@ import {TextInput} from "../components/inputs/TextInput";
 import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {AuthContext} from "../api/auth";
 import {AppLogo} from "../components/icons/AppLogo";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export function LoginPage() {
+    const t = useTranslation();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const {login} = useContext(AuthContext);
@@ -25,13 +28,13 @@ export function LoginPage() {
             <div className="flex flex-col gap-4 items-center">
                 <AppLogo/>
                 <TextInput value={username} onValue={setUsername}
-                           placeholder="Felhasználónév"
+                           placeholder={t("generic_label.username")}
                            onSubmit={doLogin}/>
                 <TextInput value={password} onValue={setPassword}
-                           placeholder="Jelszó" password
+                           placeholder={t("generic_label.password")} password
                            onSubmit={doLogin}/>
-                <PrimaryButton text="Bejelentkezés" onClick={doLogin}
-                               disabled={!canLogin}/>
+                <PrimaryButton text={t("actions.generic.login")!}
+                               onClick={doLogin} disabled={!canLogin}/>
             </div>
         </div>
     );

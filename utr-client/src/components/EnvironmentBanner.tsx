@@ -1,7 +1,10 @@
 import {useMemo} from "react";
 import {packageVersion} from "../config";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export function EnvironmentBanner() {
+    const t = useTranslation();
+
     const devEnv = useMemo<boolean>(() => {
         return window.location.hostname === "localhost";
     }, []);
@@ -18,13 +21,14 @@ export function EnvironmentBanner() {
             flex flex-row gap-2 justify-center items-center\
             ${devEnv ? "text-white" : "text-black"} text-sm`}>
             {devEnv ? <p className="text-inherit">
-                Fejlesztői környezet
+                {t("generic_label.developer.developer_environment")}
             </p> : null}
             {preRelease ? <p className="text-inherit">
-                Pre-Release
+                {t("generic_label.developer.pre_release")}
             </p> : null}
             <p className="text-inherit">
-                Verzió: {packageVersion ?? "ismeretlen"}
+                {t("generic_label.developer.version")}: {
+                packageVersion ?? t("generic_label.unknown")}
             </p>
         </div>
     );

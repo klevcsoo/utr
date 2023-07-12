@@ -2,6 +2,7 @@ import {NavbarLayout} from "./NavbarLayout";
 import {Link, Outlet} from "react-router-dom";
 import React, {createContext, useCallback, useState} from "react";
 import {RawMaterialIcon} from "../components/icons/RawMaterialIcon";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export const AdminLayoutTitleContext = createContext<
     (title: string, disableNavigation?: boolean) => void
@@ -11,7 +12,8 @@ export const AdminLayoutTitleContext = createContext<
 );
 
 export function AdminLayout() {
-    const [title, setTitle] = useState("Áttekintés");
+    const t = useTranslation();
+    const [title, setTitle] = useState(t("title.admin_layout.overview"));
     const [navigationDisabled, setNavigationDisabled] = useState(false);
 
     const doChange = useCallback((title: string, disableNavigation?: boolean) => {

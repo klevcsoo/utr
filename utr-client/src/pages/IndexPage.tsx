@@ -5,8 +5,10 @@ import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Fragment} from "react";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export function IndexPage() {
+    const t = useTranslation();
     const [uszoverseny, uszoversenyLoading] = useNyitottVerseny();
     const user = useAuthUser();
 
@@ -17,13 +19,13 @@ export function IndexPage() {
     ) : !uszoverseny ? (
         <div className="w-screen h-screen grid place-items-center place-content-center
         gap-4">
-            <p>Úgy látszik, nincs megnyitott úszóverseny.</p>
+            <p>{t("error.page.no_open_uszoverseny")}</p>
             {user?.roles.includes("admin") ? (
                 <Link to="/admin/uszoversenyek">
-                    <PrimaryButton text="Tovább a versenyekhez"/>
+                    <PrimaryButton text={t("actions.uszoverseny.continue_to_uszoversenyek")!}/>
                 </Link>
             ) : (
-                <PrimaryButton text="Nézzük meg újra!"/>
+                <PrimaryButton text={t("actions.generic.lets_load_again")!}/>
             )}
         </div>
     ) : (
@@ -37,9 +39,9 @@ export function IndexPage() {
                 </div>
                 {user?.roles.includes("admin") ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
-                        <PrimaryButton text="Megnyitás"/>
+                        <PrimaryButton text={t("actions.generic.open")!}/>
                         <Link to={`/admin/uszoversenyek/${uszoverseny.id}`}>
-                            <SecondaryButton text="Szerkesztés"/>
+                            <SecondaryButton text={t("actions.generic.edit")!}/>
                         </Link>
                     </div>
                 ) : null}
@@ -49,7 +51,7 @@ export function IndexPage() {
             </div>
             {user?.roles.includes("admin") ? (
                 <NavLink to="/admin" className="bottom-4 right-4 fixed">
-                    <PrimaryButton text="Admin felület"/>
+                    <PrimaryButton text={t("generic_label.admin_layout")!}/>
                 </NavLink>
             ) : null}
         </Fragment>

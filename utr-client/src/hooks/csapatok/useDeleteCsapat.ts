@@ -1,9 +1,11 @@
 import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {deleteCsapat} from "../../api/csapatok";
+import {useTranslation} from "../translations/useTranslation";
 
 export function useDeleteCsapat(): (id: number) => Promise<string> {
     const user = useAuthUser();
+    const t = useTranslation();
 
     return useCallback((id) => {
         return new Promise((resolve, reject) => {
@@ -12,8 +14,8 @@ export function useDeleteCsapat(): (id: number) => Promise<string> {
                     resolve(message);
                 }).catch(reject);
             } else {
-                reject("Úgy látszik nem vagy bejelentkezve.");
+                reject(t("error.auth.unauthenticated"));
             }
         });
-    }, [user]);
+    }, [t, user]);
 }

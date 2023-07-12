@@ -22,8 +22,11 @@ import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton"
 import {Csapat} from "../types/model/Csapat";
 import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
+import {useTranslation} from "../hooks/translations/useTranslation";
 
 export function CsapatokSlugPage() {
+    const t = useTranslation();
+
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 
@@ -45,7 +48,7 @@ export function CsapatokSlugPage() {
         }
     }, [csapat, deleteCsapat]);
 
-    useSetAdminLayoutTitle(!csapat ? "Betöltés..." : csapat.nev);
+    useSetAdminLayoutTitle(!csapat ? t("generic_label.loading")! : csapat.nev);
 
     return csapatLoading ? (
         <div className="w-full h-full grid place-content-center">
@@ -54,9 +57,9 @@ export function CsapatokSlugPage() {
     ) : !csapat ? (
         <div className="h-full grid place-content-center">
             <div className="flex flex-col gap-2 items-center">
-                <p>Csapat nem található</p>
+                <p>{t("csapat.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text="Vissza"/>
+                    <PrimaryButton text={t("actions.generic.back")!}/>
                 </Link>
             </div>
         </div>
@@ -64,19 +67,19 @@ export function CsapatokSlugPage() {
         <Fragment>
             <div className="w-full flex flex-col gap-8">
                 <div className="flex flex-col gap-2">
-                    <h3 className="ml-2">Általános információ:</h3>
+                    <h3 className="ml-2">{t("generic_label.generic_info.with_colon")}</h3>
                     <BorderCard className="grid grid-cols-2">
-                        <p>Város: </p>
+                        <p>{t("generic_label.city")}</p>
                         <p><b>{csapat.varos}</b></p>
                     </BorderCard>
                     <div className="flex flex-row gap-2">
-                        <PrimaryButton text="Csapat adatainak szerkesztése"
+                        <PrimaryButton text={t("actions.csapat.edit_details")!}
                                        onClick={doOpenEditCsapatModal}/>
-                        <WarningButton text="Csapat törlése" onClick={doDelete}/>
+                        <WarningButton text={t("actions.csapat.delete")!} onClick={doDelete}/>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="ml-2 col-span-2">Úszók:</h3>
+                    <h3 className="ml-2 col-span-2">{t("csapat.uszok.with_colon")}</h3>
                     <UszokList csapat={csapat}/>
                 </div>
             </div>
@@ -92,6 +95,8 @@ export function CsapatokSlugPage() {
 function UszokList(props: {
     csapat?: Csapat
 }) {
+    const t = useTranslation();
+
     const [uszok, uszokLoading] = useUszokList(props.csapat?.id);
     const deleteUszo = useDeleteUszo();
     const [, setSearchParams] = useSearchParams();
@@ -123,15 +128,12 @@ function UszokList(props: {
                 </div>
             ) : !uszok || !uszok.length ? (
                 <BorderCard>
-                    <p>
-                        Jelenleg egy úszó sincs felvéve a csapatba.
-                        Adjunk hozzá egyet?
-                    </p>
+                    <p>{t("csapat.no_uszok")}</p>
                 </BorderCard>
             ) : (
                 <DataTable dataList={uszok} propertyNameOverride={{
-                    nev: "név",
-                    szuletesiDatum: "születési év"
+                    nev: t("generic_label.name"),
+                    szuletesiDatum: t("generic_label.year_of_birth")
                 }} excludedProperties={["id", "csapatId"]}
                            actionColumn={({id}) => (
                                <Fragment>
@@ -146,7 +148,7 @@ function UszokList(props: {
                                </Fragment>
                            )}/>
             )}
-            <SecondaryButton text="Úszó hozzáadása"
+            <SecondaryButton text={t("actions.uszo.create")!}
                              onClick={doOpenNewUszoModal}/>
         </Fragment>
     );
@@ -155,6 +157,8 @@ function UszokList(props: {
 function CsapatModal(props: {
     csapat?: Csapat
 }) {
+    const t = useTranslation();
+
     const [, setSearchParams] = useSearchParams();
     const editCsapat = useEditCsapat();
 
@@ -189,18 +193,20 @@ function CsapatModal(props: {
             <div className="flex flex-row items-center justify-start gap-6 p-6
             min-w-max max-w-sm">
                 <TitleIcon name="edit"/>
-                <h2>Csapat szerkesztése</h2>
+                <h2>{t("actions.csapat.edit")}</h2>
             </div>
             <div className="w-full border border-slate-100"></div>
             <div className="flex flex-col gap-2 p-6">
                 <TextInput value={nev} onValue={setNev}
-                           placeholder="Csapat neve"/>
+                           placeholder={t("csapat.name")}/>
                 <TextInput value={varos} onValue={setVaros}
-                           placeholder="Város"/>
+                           placeholder={t("csapat.city")}/>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text="Inkább nem" onClick={doCloseModal}/>
-                <PrimaryButton text="Mehet!" onClick={doEdit}/>
+                <SecondaryButton text={t("generic_label.rather_not")!}
+                                 onClick={doCloseModal}/>
+                <PrimaryButton text={t("generic_label.lets_go")!}
+                               onClick={doEdit}/>
             </div>
         </FullPageModal>
     );
@@ -209,6 +215,8 @@ function CsapatModal(props: {
 function UszoModal(props: {
     csapat?: Csapat
 }) {
+    const t = useTranslation();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const [uszo, uszoLoading] = useUszoDetails(
         parseInt(searchParams.get("uszoId") ?? "-1")
@@ -263,16 +271,17 @@ function UszoModal(props: {
                     justify-start gap-6 p-6 min-w-max max-w-sm">
                         <TitleIcon name="person"/>
                         <h2>
-                            {searchParams.has("uszoId") ? "Úszó szerkesztése" :
-                                "Úszó hozzáadása"}
+                            {searchParams.has("uszoId") ? t("actions.uszo.edit") :
+                                t("actions.uszo.create")}
                         </h2>
                     </div>
                     <div className="w-full border border-slate-100"></div>
                     <div className="flex flex-col gap-2 p-6">
-                        <TextInput value={nev} onValue={setNev} placeholder={"Név"}/>
+                        <TextInput value={nev} onValue={setNev}
+                                   placeholder={t("uszo.name")}/>
                         <div className="grid grid-rows-2 grid-cols-[auto_auto]
                         gap-y-2 gap-x-8 items-center">
-                            <label>Születési év:</label>
+                            <label>{t("uszo.year_of_birth")}</label>
                             <NumberInput value={szuletesiEv}
                                          onValue={setSzuletesiEv}
                                          min={1980}
@@ -284,9 +293,9 @@ function UszoModal(props: {
                         </div>
                     </div>
                     <div className="flex flex-row gap-2 p-6">
-                        <SecondaryButton text="Inkább nem"
+                        <SecondaryButton text={t("generic_label.rather_not")!}
                                          onClick={doCloseModal}/>
-                        <PrimaryButton text="Mehet!"
+                        <PrimaryButton text={t("generic_label.lets_go")!}
                                        onClick={doCreateUszo}
                                        disabled={!canCreateUszo}/>
                     </div>

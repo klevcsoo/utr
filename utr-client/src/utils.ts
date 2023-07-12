@@ -60,3 +60,31 @@ export function formatInterval(milliseconds: number): string {
 
     return `${minutes}:${remainderSeconds}`;
 }
+
+export function hungarianNormalize(input: string): string {
+    const normalizationMap: { [key: string]: string } = {
+        "á": "a",
+        "é": "e",
+        "í": "i",
+        "óöő": "o",
+        "úüű": "u"
+    };
+
+    let output = "";
+    for (let i = 0; i < input.length; i++) {
+        let charDone = false;
+        for (const key of Object.keys(normalizationMap)) {
+            if (key.includes(input[i])) {
+                output += normalizationMap[key];
+                charDone = true;
+                break;
+            }
+        }
+
+        if (!charDone) {
+            output += input[i];
+        }
+    }
+
+    return output;
+}
