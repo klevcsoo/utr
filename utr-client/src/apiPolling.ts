@@ -18,6 +18,7 @@ export function startApiPollEventTimer() {
 export function onApiPollEvent(listener: () => void) {
     if (!apiPollEventListeners.includes(listener)) {
         apiPollEventListeners.push(listener);
+        listener();
     }
 }
 
