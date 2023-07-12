@@ -6,6 +6,9 @@ import {BrowserRouter} from "react-router-dom";
 import AuthProvider from "./components/AuthProvider";
 import {EnvironmentBanner} from "./components/EnvironmentBanner";
 import {TranslationProvider} from "./components/TranslationProvider";
+import {startApiPollEventTimer} from "./apiPolling";
+
+startApiPollEventTimer();
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
