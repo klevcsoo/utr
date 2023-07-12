@@ -181,7 +181,7 @@ export function NevezesekList(props: {
             return {
                 id: value.id,
                 uszoNev: value.uszo.nev,
-                uszoSzuletesiEv: value.uszo.szuletesiDatum,
+                uszoSzuletesiEv: value.uszo.szuletesiEv,
                 csapatNev: value.uszo.csapat.nev,
                 nevezesiIdo: value.nevezesiIdo ? formatInterval(value.nevezesiIdo) : "nincs",
                 idoeredmeny: value.idoeredmeny ? formatInterval(value.idoeredmeny) : "nincs"
