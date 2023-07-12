@@ -76,7 +76,7 @@ export function UszoversenyekSlugPage() {
         }
     }, [closeUszoverseny, t, uszoverseny]);
 
-    useSetAdminLayoutTitle(!uszoverseny ? t("generic_label.loading")! : uszoverseny.nev);
+    useSetAdminLayoutTitle(!uszoverseny ? t("generic_label.loading") : uszoverseny.nev);
 
     return uszoversenyLoading ? (
         <div className="w-full h-full grid place-content-center">
@@ -87,7 +87,7 @@ export function UszoversenyekSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("uszoverseny.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text={t("actions.generic.back")!}/>
+                    <PrimaryButton text={t("actions.generic.back")}/>
                 </Link>
             </div>
         </div>
@@ -103,16 +103,16 @@ export function UszoversenyekSlugPage() {
                         <p><b>{uszoverseny.helyszin}</b></p>
                     </BorderCard>
                     <div className="flex flex-row gap-2 flex-wrap">
-                        <PrimaryButton text={t("actions.uszoverseny.edit_details")!}
+                        <PrimaryButton text={t("actions.uszoverseny.edit_details")}
                                        onClick={doOpenEditUszoversenyModal}/>
                         {uszoverseny.nyitott ? (
-                            <WarningButton text={t("actions.uszoverseny.close")!}
+                            <WarningButton text={t("actions.uszoverseny.close")}
                                            onClick={doCloseUszoverseny}/>
                         ) : (
-                            <SecondaryButton text={t("actions.uszoverseny.open")!}
+                            <SecondaryButton text={t("actions.uszoverseny.open")}
                                              onClick={doOpenUszoverseny}/>
                         )}
-                        <WarningButton text={t("actions.uszoverseny.delete")!}
+                        <WarningButton text={t("actions.uszoverseny.delete")}
                                        onClick={doDeleteUszoverseny}/>
                     </div>
                 </div>
@@ -175,7 +175,7 @@ function VersenyszamokList(props: {
     ) : (
         <Fragment>
             <DataTable dataList={displayedVersenyszamok} propertyNameOverride={{
-                valto: t("generic_label.valto")!,
+                valto: t("generic_label.valto"),
                 uszasnem: t("generic_label.uszasnem")
             }} excludedProperties={["id"]}
                        actionColumn={({id}) => (
@@ -189,7 +189,7 @@ function VersenyszamokList(props: {
                                                   }}/>
                            </Fragment>
                        )}/>
-            <SecondaryButton text={t("actions.versenyszam.create")!}
+            <SecondaryButton text={t("actions.versenyszam.create")}
                              onClick={doOpenNewVersenyszamModal}/>
         </Fragment>
     );
@@ -249,8 +249,8 @@ function UszoversenyModal(props: {
                 ) : null}
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")!} onClick={doCloseModal}/>
-                <PrimaryButton text={t("actions.generic.lets_load_again")!} onClick={doEdit}/>
+                <SecondaryButton text={t("generic_label.rather_not")} onClick={doCloseModal}/>
+                <PrimaryButton text={t("actions.generic.lets_load_again")} onClick={doEdit}/>
             </div>
         </FullPageModal>
     );
@@ -337,9 +337,9 @@ function VersenyszamModal(props: {
                 </div>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")!}
+                <SecondaryButton text={t("generic_label.rather_not")}
                                  onClick={doCloseModal}/>
-                <PrimaryButton text={t("generic_label.lets_go")!}
+                <PrimaryButton text={t("generic_label.lets_go")}
                                onClick={doCommitChanges} disabled={!canCreate}/>
             </div>
         </FullPageModal>

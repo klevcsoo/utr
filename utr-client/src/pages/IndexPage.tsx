@@ -22,10 +22,10 @@ export function IndexPage() {
             <p>{t("error.page.no_open_uszoverseny")}</p>
             {user?.roles.includes("admin") ? (
                 <Link to="/admin/uszoversenyek">
-                    <PrimaryButton text={t("actions.uszoverseny.continue_to_uszoversenyek")!}/>
+                    <PrimaryButton text={t("actions.uszoverseny.continue_to_uszoversenyek")}/>
                 </Link>
             ) : (
-                <PrimaryButton text={t("actions.generic.lets_load_again")!}/>
+                <PrimaryButton text={t("actions.generic.lets_load_again")}/>
             )}
         </div>
     ) : (
@@ -39,9 +39,9 @@ export function IndexPage() {
                 </div>
                 {user?.roles.includes("admin") ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
-                        <PrimaryButton text={t("actions.generic.open")!}/>
+                        <PrimaryButton text={t("actions.generic.open")}/>
                         <Link to={`/admin/uszoversenyek/${uszoverseny.id}`}>
-                            <SecondaryButton text={t("actions.generic.edit")!}/>
+                            <SecondaryButton text={t("actions.generic.edit")}/>
                         </Link>
                     </div>
                 ) : null}
@@ -51,7 +51,7 @@ export function IndexPage() {
             </div>
             {user?.roles.includes("admin") ? (
                 <NavLink to="/admin" className="bottom-4 right-4 fixed">
-                    <PrimaryButton text={t("generic_label.admin_layout")!}/>
+                    <PrimaryButton text={t("generic_label.admin_layout")}/>
                 </NavLink>
             ) : null}
         </Fragment>

@@ -27,10 +27,14 @@ export function TranslationProvider(props: CommonChildrenOnlyProps) {
 
     const doGetText = useCallback((key: string, ...args: string[]) => {
         if (!translationMap) {
-            return undefined;
+            return key;
         }
 
         let text = translationMap[key];
+        if (!text) {
+            return key;
+        }
+
         for (let i = 0; i < args.length; i++) {
             text = text.replaceAll(`{${i}}`, args[i]);
         }

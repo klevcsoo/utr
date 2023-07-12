@@ -48,7 +48,7 @@ export function CsapatokSlugPage() {
         }
     }, [csapat, deleteCsapat]);
 
-    useSetAdminLayoutTitle(!csapat ? t("generic_label.loading")! : csapat.nev);
+    useSetAdminLayoutTitle(!csapat ? t("generic_label.loading") : csapat.nev);
 
     return csapatLoading ? (
         <div className="w-full h-full grid place-content-center">
@@ -59,7 +59,7 @@ export function CsapatokSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("csapat.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text={t("actions.generic.back")!}/>
+                    <PrimaryButton text={t("actions.generic.back")}/>
                 </Link>
             </div>
         </div>
@@ -73,9 +73,9 @@ export function CsapatokSlugPage() {
                         <p><b>{csapat.varos}</b></p>
                     </BorderCard>
                     <div className="flex flex-row gap-2">
-                        <PrimaryButton text={t("actions.csapat.edit_details")!}
+                        <PrimaryButton text={t("actions.csapat.edit_details")}
                                        onClick={doOpenEditCsapatModal}/>
-                        <WarningButton text={t("actions.csapat.delete")!} onClick={doDelete}/>
+                        <WarningButton text={t("actions.csapat.delete")} onClick={doDelete}/>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -148,7 +148,7 @@ function UszokList(props: {
                                </Fragment>
                            )}/>
             )}
-            <SecondaryButton text={t("actions.uszo.create")!}
+            <SecondaryButton text={t("actions.uszo.create")}
                              onClick={doOpenNewUszoModal}/>
         </Fragment>
     );
@@ -203,9 +203,9 @@ function CsapatModal(props: {
                            placeholder={t("csapat.city")}/>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")!}
+                <SecondaryButton text={t("generic_label.rather_not")}
                                  onClick={doCloseModal}/>
-                <PrimaryButton text={t("generic_label.lets_go")!}
+                <PrimaryButton text={t("generic_label.lets_go")}
                                onClick={doEdit}/>
             </div>
         </FullPageModal>
@@ -293,9 +293,9 @@ function UszoModal(props: {
                         </div>
                     </div>
                     <div className="flex flex-row gap-2 p-6">
-                        <SecondaryButton text={t("generic_label.rather_not")!}
+                        <SecondaryButton text={t("generic_label.rather_not")}
                                          onClick={doCloseModal}/>
-                        <PrimaryButton text={t("generic_label.lets_go")!}
+                        <PrimaryButton text={t("generic_label.lets_go")}
                                        onClick={doCreateUszo}
                                        disabled={!canCreateUszo}/>
                     </div>

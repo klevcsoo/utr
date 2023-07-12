@@ -9,8 +9,8 @@ export function EmberiNemDropdown(props: CommonDropdownProps<EmberiNem>) {
 
     const options = useMemo<{ [key in EmberiNem]: string }>(() => {
         return {
-            F: t("generic_label.male.emberi")!,
-            N: t("generic_label.female.emberi")!
+            F: t("generic_label.male.emberi"),
+            N: t("generic_label.female.emberi")
         };
     }, [t]);
 

@@ -17,13 +17,13 @@ export function SupportPage() {
     const t = useTranslation();
     const [searchParams] = useSearchParams();
 
-    useSetAdminLayoutTitle(t("title.admin_layout.support")!);
+    useSetAdminLayoutTitle(t("title.admin_layout.support"));
 
     return (
         <div className="flex flex-col gap-8 items-center w-full">
             <TabSelector tabs={[
-                {name: t("support.environment_variables")!, key: ENV_TAB_KEY},
-                {name: t("support.log")!, key: LOG_TAB_KEY}
+                {name: t("support.environment_variables"), key: ENV_TAB_KEY},
+                {name: t("support.log"), key: LOG_TAB_KEY}
             ]} defaultTabKey="env"/>
             {!searchParams.has("tab") || searchParams.get("tab") === ENV_TAB_KEY ? (
                 <EnvironmentVariables/>
@@ -74,7 +74,7 @@ function ServerLog() {
                     <code key={index}>{value}</code>
                 ))}
             </BorderCard>
-            <PrimaryButton text={t("actions.generic.refresh")!}
+            <PrimaryButton text={t("actions.generic.refresh")}
                            onClick={refreshServerLog} disabled={loadingServerLog}/>
         </div>
     );

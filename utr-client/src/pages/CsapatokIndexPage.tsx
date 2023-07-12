@@ -19,7 +19,7 @@ export function CsapatokIndexPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const t = useTranslation();
 
-    useSetAdminLayoutTitle(t("title.admin_layout.csapatok")!);
+    useSetAdminLayoutTitle(t("title.admin_layout.csapatok"));
 
     return csapatokLoading ? (
         <div className="w-full h-full grid place-content-center">
@@ -37,7 +37,7 @@ export function CsapatokIndexPage() {
                         <IconButton iconName="edit"/>
                     </Link>
                 )}/>
-                <SecondaryButton text={t("actions.csapat.create")!} onClick={() => {
+                <SecondaryButton text={t("actions.csapat.create")} onClick={() => {
                     setSearchParams({modal: "newCsapat"});
                 }}/>
             </div>
@@ -85,14 +85,14 @@ function NewCsapatPopup() {
                            placeholder={t("generic_label.city")}/>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")!}
+                <SecondaryButton text={t("generic_label.rather_not")}
                                  onClick={() => {
                                      setSearchParams(prevState => {
                                          prevState.delete("modal");
                                          return prevState;
                                      });
                                  }}/>
-                <PrimaryButton text={t("generic_label.lets_go")!} onClick={doCreate}
+                <PrimaryButton text={t("generic_label.lets_go")} onClick={doCreate}
                                disabled={!canCreate}/>
             </div>
         </FullPageModal>

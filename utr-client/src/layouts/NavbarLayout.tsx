@@ -24,17 +24,17 @@ export function NavbarLayout() {
         flex flex-col items-start gap-4 p-4 justify-between">
             <div className="flex flex-col items-start gap-2 w-full">
                 <AppLogo className="m-4"/>
-                <NavbarNavButton icon="event" text={t("navbar.uszoversenyek")!}
+                <NavbarNavButton icon="event" text={t("navbar.uszoversenyek")}
                                  to="/admin/uszoversenyek"/>
-                <NavbarNavButton icon="groups" text={t("navbar.csapatok")!}
+                <NavbarNavButton icon="groups" text={t("navbar.csapatok")}
                                  to="/admin/csapatok"/>
-                <NavbarNavButton icon="print" text={t("navbar.print")!}
+                <NavbarNavButton icon="print" text={t("navbar.print")}
                                  to="/admin/nyomtatas"/>
-                <NavbarNavButton icon="settings" text={t("navbar.settings")!}
+                <NavbarNavButton icon="settings" text={t("navbar.settings")}
                                  to="/admin/settings"/>
             </div>
             <div className="flex flex-col items-start gap-2 w-full">
-                <NavbarNavButton icon="support" text={t("navbar.support")!}
+                <NavbarNavButton icon="support" text={t("navbar.support")}
                                  to="/admin/support"/>
                 <div className="w-full border-t-2 border-slate-300 my-2"></div>
                 <div className="w-full flex flex-row gap-4

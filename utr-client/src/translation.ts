@@ -2,11 +2,11 @@ import {Locale} from "./types/Locale";
 import {createContext} from "react";
 
 export const TranslationContext = createContext<{
-    getTranslation(key: string, ...args: string[]): string | undefined
+    getTranslation(key: string, ...args: string[]): string
     setLocale(locale: Locale): void
 }>({
     getTranslation() {
-        return undefined;
+        return "";
     },
     setLocale(): void {
     }

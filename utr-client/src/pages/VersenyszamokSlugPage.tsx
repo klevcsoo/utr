@@ -48,7 +48,7 @@ export function VersenyszamokSlugPage() {
 
     const elnevezes = useMemo(() => {
         if (!versenyszam) {
-            return t("generic_label.loading")!;
+            return t("generic_label.loading");
         }
 
         const valto = versenyszam.valto ? `${versenyszam.valto}x` : "";
@@ -80,7 +80,7 @@ export function VersenyszamokSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("versenyszam.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text={t("actions.generic.back")!}/>
+                    <PrimaryButton text={t("actions.generic.back")}/>
                 </Link>
             </div>
         </div>
@@ -91,7 +91,7 @@ export function VersenyszamokSlugPage() {
                 <div className="flex flex-col gap-2">
                     <h3 className="ml-2">{t("generic_label.generic_info.with_colon")}</h3>
                     <VersenyszamDetails versenyszam={versenyszam}/>
-                    <WarningButton text={t("actions.versenyszam.delete")!}
+                    <WarningButton text={t("actions.versenyszam.delete")}
                                    onClick={doDeleteVersenyszam}/>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -160,7 +160,7 @@ export function VersenyszamDetails(props: {
             <p>{t("versenyszam.uszasnem")}</p>
             <UszasnemDropdown selected={uszasnem} onSelect={setUszasnem}/>
             {unsavedChanges ? (
-                <SecondaryButton text={t("actions.generic.save_changes")!}
+                <SecondaryButton text={t("actions.generic.save_changes")}
                                  onClick={doCommitChanges}/>
             ) : null}
         </BorderCard>
@@ -222,7 +222,7 @@ export function NevezesekList(props: {
                                        onClick={() => doDeleteNevezes(id)}/>
                 </Fragment>
             )}/>
-            <SecondaryButton text={t("actions.versenyszam.add_uszo")!}
+            <SecondaryButton text={t("actions.versenyszam.add_uszo")}
                              onClick={doOpenNewNevezesModal}/>
         </Fragment>
     );
@@ -309,9 +309,9 @@ function NevezesModal(props: {
                 ) : null}
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")!}
+                <SecondaryButton text={t("generic_label.rather_not")}
                                  onClick={doCloseModal}/>
-                <PrimaryButton text={t("generic_label.lets_go")!}
+                <PrimaryButton text={t("generic_label.lets_go")}
                                onClick={doAddNevezes} disabled={!canAdd}/>
             </div>
         </FullPageModal>

@@ -43,9 +43,9 @@ export function UszoversenyekIndexPage() {
                     .catch(console.error);
             }
         }
-    }, [closeUszoverseny, openUszoverseny]);
+    }, [closeUszoverseny, openUszoverseny, t]);
 
-    useSetAdminLayoutTitle(t("title.admin_layout.uszoversenyek")!);
+    useSetAdminLayoutTitle(t("title.admin_layout.uszoversenyek"));
 
     return uszoversenyekLoading ? (
         <div className="w-full h-full grid place-content-center">
@@ -66,12 +66,12 @@ export function UszoversenyekIndexPage() {
                                 {nyitottVerseny.datum.toLocaleDateString()}
                             </p>
                             <div className="flex flex-row gap-2 items-start">
-                                <WarningButton text={t("actions.uszoverseny.close")!}
+                                <WarningButton text={t("actions.uszoverseny.close")}
                                                onClick={() => {
                                                    doChangeVersenyNyitottState(nyitottVerseny);
                                                }}/>
                                 <Link to={String(nyitottVerseny.id)} className="w-full">
-                                    <SecondaryButton text={t("actions.generic.view_details")!}/>
+                                    <SecondaryButton text={t("actions.generic.view_details")}/>
                                 </Link>
                             </div>
                         </BorderCard>
@@ -92,7 +92,7 @@ export function UszoversenyekIndexPage() {
                             </Link>
                         </Fragment>
                     )}/>
-                    <SecondaryButton text={t("actions.uszoverseny.create")!} onClick={() => {
+                    <SecondaryButton text={t("actions.uszoverseny.create")} onClick={() => {
                         setSearchParams({modal: "create"});
                     }}/>
                 </div>
@@ -148,14 +148,14 @@ function NewUszoversenyModal() {
                 <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")!}
+                <SecondaryButton text={t("generic_label.rather_not")}
                                  onClick={() => {
                                      setSearchParams(prevState => {
                                          prevState.delete("modal");
                                          return prevState;
                                      });
                                  }}/>
-                <PrimaryButton text={t("generic_label.lets_go")!} onClick={doCreate}
+                <PrimaryButton text={t("generic_label.lets_go")} onClick={doCreate}
                                disabled={!canCreate}/>
             </div>
         </FullPageModal>

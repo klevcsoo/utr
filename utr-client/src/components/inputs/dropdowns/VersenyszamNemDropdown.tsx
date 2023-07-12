@@ -9,8 +9,8 @@ export function VersenyszamNemDropdown(props: CommonDropdownProps<EmberiNem>) {
 
     const options = useMemo<{ [key in EmberiNem]: string }>(() => {
         return {
-            F: t("generic_label.male.versenyszam")!,
-            N: t("generic_label.female.versenyszam")!
+            F: t("generic_label.male.versenyszam"),
+            N: t("generic_label.female.versenyszam")
         };
     }, [t]);
 

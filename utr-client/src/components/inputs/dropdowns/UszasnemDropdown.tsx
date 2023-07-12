@@ -10,10 +10,10 @@ export function UszasnemDropdown(props: CommonDropdownProps<UszasnemElnevezes>) 
     const options = useMemo<UszasnemElnevezes[]>(() => {
         // noinspection SpellCheckingInspection
         return [
-            t("generic_label.uszasnem.gyorsuszas")! as UszasnemElnevezes,
-            t("generic_label.uszasnem.melluszas")! as UszasnemElnevezes,
-            t("generic_label.uszasnem.hatuszas")! as UszasnemElnevezes,
-            t("generic_label.uszasnem.pillangouszas")! as UszasnemElnevezes
+            t("generic_label.uszasnem.gyorsuszas") as UszasnemElnevezes,
+            t("generic_label.uszasnem.melluszas") as UszasnemElnevezes,
+            t("generic_label.uszasnem.hatuszas") as UszasnemElnevezes,
+            t("generic_label.uszasnem.pillangouszas") as UszasnemElnevezes
         ];
     }, [t]);
 
