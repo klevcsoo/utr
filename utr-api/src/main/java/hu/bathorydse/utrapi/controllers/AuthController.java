@@ -9,6 +9,7 @@ import hu.bathorydse.utrapi.payload.request.LoginRequest;
 import hu.bathorydse.utrapi.payload.request.NewUserRequest;
 import hu.bathorydse.utrapi.payload.response.JwtResponse;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
+import hu.bathorydse.utrapi.payload.response.UserPublicResponse;
 import hu.bathorydse.utrapi.repository.RoleRepository;
 import hu.bathorydse.utrapi.repository.UserRepository;
 import hu.bathorydse.utrapi.security.jwt.JwtUtils;
@@ -87,15 +88,17 @@ public class AuthController {
 
     @GetMapping("/users/")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<List<UserPublicResponse>> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll().stream().map(UserPublicResponse::new)
+            .collect(Collectors.toList()));
     }
 
     @GetMapping("/users/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getUser(@PathVariable Long userId) {
+    public ResponseEntity<UserPublicResponse> getUser(@PathVariable Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return user.map(value -> ResponseEntity.ok(new UserPublicResponse(value)))
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/users/")

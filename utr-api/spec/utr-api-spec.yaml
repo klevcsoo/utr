@@ -53,7 +53,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: "#/components/schemas/UserPublicResponse"
       tags:
         - "Hitelesítés"
     put:
@@ -91,7 +91,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserPublicResponse"
       tags:
         - "Hitelesítés"
     delete:
@@ -1190,7 +1190,7 @@ components:
             - "ROLE_IDOROGZITO"
             - "ROLE_ALLITOBIRO"
             - "ROLE_SPEAKER"
-    User:
+    UserPublicResponse:
       type: "object"
       properties:
         id:
@@ -1200,12 +1200,15 @@ components:
           type: "string"
         displayName:
           type: "string"
-        password:
-          type: "string"
         roles:
           type: "array"
           items:
-            $ref: "#/components/schemas/Role"
+            type: "string"
+            enum:
+              - "ROLE_ADMIN"
+              - "ROLE_IDOROGZITO"
+              - "ROLE_ALLITOBIRO"
+              - "ROLE_SPEAKER"
     NewUserRequest:
       type: "object"
       properties:

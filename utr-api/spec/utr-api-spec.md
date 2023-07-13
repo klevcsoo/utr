@@ -134,23 +134,11 @@ Status Code **200**
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|*anonymous*|[[User](#schemauser)]|false|none|none|
+|*anonymous*|[[UserPublicResponse](#schemauserpublicresponse)]|false|none|none|
 |» id|integer(int64)|false|none|none|
 |» username|string|false|none|none|
 |» displayName|string|false|none|none|
-|» password|string|false|none|none|
-|» roles|[[Role](#schemarole)]|false|none|none|
-|»» id|integer(int32)|false|none|none|
-|»» name|string|false|none|none|
-
-#### Enumerated Values
-
-|Property|Value|
-|---|---|
-|name|ROLE_ADMIN|
-|name|ROLE_IDOROGZITO|
-|name|ROLE_ALLITOBIRO|
-|name|ROLE_SPEAKER|
+|» roles|[string]|false|none|none|
 
 <aside class="success">
 This operation does not require authentication
@@ -223,7 +211,7 @@ This operation does not require authentication
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[User](#schemauser)|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[UserPublicResponse](#schemauserpublicresponse)|
 
 <aside class="success">
 This operation does not require authentication
@@ -1943,24 +1931,20 @@ This operation does not require authentication
 |name|ROLE_ALLITOBIRO|
 |name|ROLE_SPEAKER|
 
-<h2 id="tocS_User">User</h2>
+<h2 id="tocS_UserPublicResponse">UserPublicResponse</h2>
 <!-- backwards compatibility -->
-<a id="schemauser"></a>
-<a id="schema_User"></a>
-<a id="tocSuser"></a>
-<a id="tocsuser"></a>
+<a id="schemauserpublicresponse"></a>
+<a id="schema_UserPublicResponse"></a>
+<a id="tocSuserpublicresponse"></a>
+<a id="tocsuserpublicresponse"></a>
 
 ```json
 {
   "id": 0,
   "username": "string",
   "displayName": "string",
-  "password": "string",
   "roles": [
-    {
-      "id": 0,
-      "name": "ROLE_ADMIN"
-    }
+    "ROLE_ADMIN"
   ]
 }
 
@@ -1973,8 +1957,7 @@ This operation does not require authentication
 |id|integer(int64)|false|none|none|
 |username|string|false|none|none|
 |displayName|string|false|none|none|
-|password|string|false|none|none|
-|roles|[[Role](#schemarole)]|false|none|none|
+|roles|[string]|false|none|none|
 
 <h2 id="tocS_NewUserRequest">NewUserRequest</h2>
 <!-- backwards compatibility -->
