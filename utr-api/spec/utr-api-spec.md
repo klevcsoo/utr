@@ -26,6 +26,97 @@ Base URLs:
 
 <h1 id="utr-api-default">Default</h1>
 
+## listRoles
+
+<a id="opIdlistRoles"></a>
+
+> Code samples
+
+`GET /api/auth/list-roles`
+
+*GET api/auth/list-roles*
+
+> Example responses
+
+> 200 Response
+
+<h3 id="listroles-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
+
+<h3 id="listroles-responseschema">Response Schema</h3>
+
+Status Code **200**
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|*anonymous*|[[Role](#schemarole)]|false|none|none|
+|» id|integer(int32)|false|none|none|
+|» name|string|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|name|ROLE_ADMIN|
+|name|ROLE_IDOROGZITO|
+|name|ROLE_ALLITOBIRO|
+|name|ROLE_SPEAKER|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## listUsers
+
+<a id="opIdlistUsers"></a>
+
+> Code samples
+
+`GET /api/auth/list-users`
+
+*GET api/auth/list-users*
+
+> Example responses
+
+> 200 Response
+
+<h3 id="listusers-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
+
+<h3 id="listusers-responseschema">Response Schema</h3>
+
+Status Code **200**
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|*anonymous*|[[User](#schemauser)]|false|none|none|
+|» id|integer(int64)|false|none|none|
+|» username|string|false|none|none|
+|» displayName|string|false|none|none|
+|» password|string|false|none|none|
+|» roles|[[Role](#schemarole)]|false|none|none|
+|»» id|integer(int32)|false|none|none|
+|»» name|string|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|name|ROLE_ADMIN|
+|name|ROLE_IDOROGZITO|
+|name|ROLE_ALLITOBIRO|
+|name|ROLE_SPEAKER|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
 ## changeUserDisplayName
 
 <a id="opIdchangeUserDisplayName"></a>
@@ -1820,6 +1911,70 @@ This operation does not require authentication
 |displayName|string|false|none|none|
 |role|[string]|false|none|none|
 |password|string|false|none|none|
+
+<h2 id="tocS_Role">Role</h2>
+<!-- backwards compatibility -->
+<a id="schemarole"></a>
+<a id="schema_Role"></a>
+<a id="tocSrole"></a>
+<a id="tocsrole"></a>
+
+```json
+{
+  "id": 0,
+  "name": "ROLE_ADMIN"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id|integer(int32)|false|none|none|
+|name|string|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|name|ROLE_ADMIN|
+|name|ROLE_IDOROGZITO|
+|name|ROLE_ALLITOBIRO|
+|name|ROLE_SPEAKER|
+
+<h2 id="tocS_User">User</h2>
+<!-- backwards compatibility -->
+<a id="schemauser"></a>
+<a id="schema_User"></a>
+<a id="tocSuser"></a>
+<a id="tocsuser"></a>
+
+```json
+{
+  "id": 0,
+  "username": "string",
+  "displayName": "string",
+  "password": "string",
+  "roles": [
+    {
+      "id": 0,
+      "name": "ROLE_ADMIN"
+    }
+  ]
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id|integer(int64)|false|none|none|
+|username|string|false|none|none|
+|displayName|string|false|none|none|
+|password|string|false|none|none|
+|roles|[[Role](#schemarole)]|false|none|none|
 
 <h2 id="tocS_ChangePasswordRequest">ChangePasswordRequest</h2>
 <!-- backwards compatibility -->

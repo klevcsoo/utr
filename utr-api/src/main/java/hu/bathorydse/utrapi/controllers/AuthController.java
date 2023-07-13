@@ -33,6 +33,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -163,6 +164,18 @@ public class AuthController {
         userRepository.delete(user.get());
         return ResponseEntity.ok(
             new MessageResponse(messageSource.get(locale, "auth.user_deleted")));
+    }
+
+    @GetMapping("/list-users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<User>> listUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
+    }
+
+    @GetMapping("/list-roles")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Role>> listRoles() {
+        return ResponseEntity.ok(roleRepository.findAll());
     }
 
     @PostMapping("/change-password")

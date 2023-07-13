@@ -45,6 +45,32 @@ paths:
                 $ref: "#/components/schemas/MessageResponse"
       tags:
         - "Hitelesítés"
+  /api/auth/list-roles:
+    get:
+      summary: "GET api/auth/list-roles"
+      operationId: "listRoles"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Role"
+  /api/auth/list-users:
+    get:
+      summary: "GET api/auth/list-users"
+      operationId: "listUsers"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
   /api/auth/change-display-name:
     post:
       summary: "POST api/auth/change-display-name"
@@ -1127,6 +1153,35 @@ components:
             type: "string"
         password:
           type: "string"
+    Role:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
+          enum:
+            - "ROLE_ADMIN"
+            - "ROLE_IDOROGZITO"
+            - "ROLE_ALLITOBIRO"
+            - "ROLE_SPEAKER"
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        displayName:
+          type: "string"
+        password:
+          type: "string"
+        roles:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Role"
     ChangePasswordRequest:
       type: "object"
       properties:
