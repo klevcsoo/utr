@@ -9,7 +9,7 @@ servers:
 paths:
   /api/auth/login:
     post:
-      summary: "Felhasználói bejelentkezés"
+      summary: "Bejelentkezés"
       operationId: "authenticateUser"
       requestBody:
         content:
@@ -26,10 +26,39 @@ paths:
                 $ref: "#/components/schemas/JwtResponse"
       tags:
         - "Hitelesítés"
-  /api/auth/new-user:
-    post:
+  /api/auth/roles/:
+    get:
+      summary: "Elérhető szerepkörök"
+      operationId: "listRoles"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Role"
+      tags:
+        - "Hitelesítés"
+  /api/auth/users/:
+    get:
+      summary: "Összes felhasználó"
+      operationId: "getAllUsers"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+      tags:
+        - "Hitelesítés"
+    put:
       summary: "Új felhasználó létrehozása"
-      operationId: "registerUser"
+      operationId: "createUser"
       requestBody:
         content:
           application/json:
@@ -45,39 +74,52 @@ paths:
                 $ref: "#/components/schemas/MessageResponse"
       tags:
         - "Hitelesítés"
-  /api/auth/list-roles:
+  /api/auth/users/{userId}:
     get:
-      summary: "GET api/auth/list-roles"
-      operationId: "listRoles"
+      summary: "Felhasználó publikus adatai"
+      operationId: "getUser"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
       responses:
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Role"
-  /api/auth/list-users:
-    get:
-      summary: "GET api/auth/list-users"
-      operationId: "listUsers"
+                $ref: "#/components/schemas/User"
+      tags:
+        - "Hitelesítés"
+    delete:
+      summary: "Felhasználó törlése"
+      operationId: "deleteUser"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
       responses:
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/User"
-  /api/auth/change-display-name:
-    post:
-      summary: "POST api/auth/change-display-name"
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Hitelesítés"
+  /api/auth/users/{userId}/display-name:
+    patch:
+      summary: "Felhasználó nevének módosítása"
       operationId: "changeUserDisplayName"
       parameters:
         - name: "userId"
-          in: "query"
+          in: "path"
           required: true
           schema:
             type: "integer"
@@ -94,10 +136,19 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MessageResponse"
-  /api/auth/change-password:
-    post:
-      summary: "POST api/auth/change-password"
+      tags:
+        - "Hitelesítés"
+  /api/auth/users/{userId}/password:
+    patch:
+      summary: "Felhasználó jelszavának módosítása"
       operationId: "changeUserPassword"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
       requestBody:
         content:
           application/json:
@@ -111,13 +162,15 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MessageResponse"
-  /api/auth/change-roles:
-    post:
-      summary: "POST api/auth/change-roles"
+      tags:
+        - "Hitelesítés"
+  /api/auth/users/{userId}/roles:
+    patch:
+      summary: "Felhasználó szerepköreinek módosítása"
       operationId: "changeUserRoles"
       parameters:
         - name: "userId"
-          in: "query"
+          in: "path"
           required: true
           schema:
             type: "integer"
@@ -136,24 +189,8 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MessageResponse"
-  /api/auth/delete-user:
-    post:
-      summary: "POST api/auth/delete-user"
-      operationId: "deleteUser"
-      parameters:
-        - name: "userId"
-          in: "query"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Hitelesítés"
   /api/test/admin:
     get:
       summary: "Admin hitelesítési teszt"
@@ -1140,19 +1177,6 @@ components:
           type: "array"
           items:
             type: "string"
-    NewUserRequest:
-      type: "object"
-      properties:
-        username:
-          type: "string"
-        displayName:
-          type: "string"
-        role:
-          type: "array"
-          items:
-            type: "string"
-        password:
-          type: "string"
     Role:
       type: "object"
       properties:
@@ -1182,12 +1206,22 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Role"
+    NewUserRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        displayName:
+          type: "string"
+        role:
+          type: "array"
+          items:
+            type: "string"
+        password:
+          type: "string"
     ChangePasswordRequest:
       type: "object"
       properties:
-        userId:
-          type: "integer"
-          format: "int64"
         oldPassword:
           type: "string"
         newPassword:

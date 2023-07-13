@@ -24,7 +24,46 @@ Base URLs:
 
 * <a href="http://localhost:8080">http://localhost:8080</a>
 
-<h1 id="utr-api-default">Default</h1>
+<h1 id="utr-api-hiteles-t-s">Hitelesítés</h1>
+
+## authenticateUser
+
+<a id="opIdauthenticateUser"></a>
+
+> Code samples
+
+`POST /api/auth/login`
+
+*Bejelentkezés*
+
+> Body parameter
+
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+<h3 id="authenticateuser-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|[LoginRequest](#schemaloginrequest)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="authenticateuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[JwtResponse](#schemajwtresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
 
 ## listRoles
 
@@ -32,9 +71,9 @@ Base URLs:
 
 > Code samples
 
-`GET /api/auth/list-roles`
+`GET /api/auth/roles/`
 
-*GET api/auth/list-roles*
+*Elérhető szerepkörök*
 
 > Example responses
 
@@ -69,27 +108,27 @@ Status Code **200**
 This operation does not require authentication
 </aside>
 
-## listUsers
+## getAllUsers
 
-<a id="opIdlistUsers"></a>
+<a id="opIdgetAllUsers"></a>
 
 > Code samples
 
-`GET /api/auth/list-users`
+`GET /api/auth/users/`
 
-*GET api/auth/list-users*
+*Összes felhasználó*
 
 > Example responses
 
 > 200 Response
 
-<h3 id="listusers-responses">Responses</h3>
+<h3 id="getallusers-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
 
-<h3 id="listusers-responseschema">Response Schema</h3>
+<h3 id="getallusers-responseschema">Response Schema</h3>
 
 Status Code **200**
 
@@ -117,21 +156,124 @@ Status Code **200**
 This operation does not require authentication
 </aside>
 
+## createUser
+
+<a id="opIdcreateUser"></a>
+
+> Code samples
+
+`PUT /api/auth/users/`
+
+*Új felhasználó létrehozása*
+
+> Body parameter
+
+```json
+{
+  "username": "string",
+  "displayName": "string",
+  "role": [
+    "string"
+  ],
+  "password": "string"
+}
+```
+
+<h3 id="createuser-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|[NewUserRequest](#schemanewuserrequest)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="createuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## getUser
+
+<a id="opIdgetUser"></a>
+
+> Code samples
+
+`GET /api/auth/users/{userId}`
+
+*Felhasználó publikus adatai*
+
+<h3 id="getuser-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="getuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[User](#schemauser)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## deleteUser
+
+<a id="opIddeleteUser"></a>
+
+> Code samples
+
+`DELETE /api/auth/users/{userId}`
+
+*Felhasználó törlése*
+
+<h3 id="deleteuser-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="deleteuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
 ## changeUserDisplayName
 
 <a id="opIdchangeUserDisplayName"></a>
 
 > Code samples
 
-`POST /api/auth/change-display-name`
+`PATCH /api/auth/users/{userId}/display-name`
 
-*POST api/auth/change-display-name*
+*Felhasználó nevének módosítása*
 
 <h3 id="changeuserdisplayname-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|userId|query|integer(int64)|true|none|
+|userId|path|integer(int64)|true|none|
 |displayName|query|string|true|none|
 
 > Example responses
@@ -154,15 +296,14 @@ This operation does not require authentication
 
 > Code samples
 
-`POST /api/auth/change-password`
+`PATCH /api/auth/users/{userId}/password`
 
-*POST api/auth/change-password*
+*Felhasználó jelszavának módosítása*
 
 > Body parameter
 
 ```json
 {
-  "userId": 0,
   "oldPassword": "string",
   "newPassword": "string"
 }
@@ -172,6 +313,7 @@ This operation does not require authentication
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
 |body|body|[ChangePasswordRequest](#schemachangepasswordrequest)|true|none|
 
 > Example responses
@@ -194,15 +336,15 @@ This operation does not require authentication
 
 > Code samples
 
-`POST /api/auth/change-roles`
+`PATCH /api/auth/users/{userId}/roles`
 
-*POST api/auth/change-roles*
+*Felhasználó szerepköreinek módosítása*
 
 <h3 id="changeuserroles-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|userId|query|integer(int64)|true|none|
+|userId|path|integer(int64)|true|none|
 |role|query|array[string]|true|none|
 
 > Example responses
@@ -210,120 +352,6 @@ This operation does not require authentication
 > 200 Response
 
 <h3 id="changeuserroles-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## deleteUser
-
-<a id="opIddeleteUser"></a>
-
-> Code samples
-
-`POST /api/auth/delete-user`
-
-*POST api/auth/delete-user*
-
-<h3 id="deleteuser-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|userId|query|integer(int64)|true|none|
-
-> Example responses
-
-> 200 Response
-
-<h3 id="deleteuser-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-<h1 id="utr-api-hiteles-t-s">Hitelesítés</h1>
-
-## authenticateUser
-
-<a id="opIdauthenticateUser"></a>
-
-> Code samples
-
-`POST /api/auth/login`
-
-*Felhasználói bejelentkezés*
-
-> Body parameter
-
-```json
-{
-  "username": "string",
-  "password": "string"
-}
-```
-
-<h3 id="authenticateuser-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|[LoginRequest](#schemaloginrequest)|true|none|
-
-> Example responses
-
-> 200 Response
-
-<h3 id="authenticateuser-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[JwtResponse](#schemajwtresponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## registerUser
-
-<a id="opIdregisterUser"></a>
-
-> Code samples
-
-`POST /api/auth/new-user`
-
-*Új felhasználó létrehozása*
-
-> Body parameter
-
-```json
-{
-  "username": "string",
-  "displayName": "string",
-  "role": [
-    "string"
-  ],
-  "password": "string"
-}
-```
-
-<h3 id="registeruser-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|[NewUserRequest](#schemanewuserrequest)|true|none|
-
-> Example responses
-
-> 200 Response
-
-<h3 id="registeruser-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
@@ -1884,34 +1912,6 @@ This operation does not require authentication
 |displayName|string|false|none|none|
 |roles|[string]|false|none|none|
 
-<h2 id="tocS_NewUserRequest">NewUserRequest</h2>
-<!-- backwards compatibility -->
-<a id="schemanewuserrequest"></a>
-<a id="schema_NewUserRequest"></a>
-<a id="tocSnewuserrequest"></a>
-<a id="tocsnewuserrequest"></a>
-
-```json
-{
-  "username": "string",
-  "displayName": "string",
-  "role": [
-    "string"
-  ],
-  "password": "string"
-}
-
-```
-
-### Properties
-
-|Name|Type|Required|Restrictions|Description|
-|---|---|---|---|---|
-|username|string|false|none|none|
-|displayName|string|false|none|none|
-|role|[string]|false|none|none|
-|password|string|false|none|none|
-
 <h2 id="tocS_Role">Role</h2>
 <!-- backwards compatibility -->
 <a id="schemarole"></a>
@@ -1976,6 +1976,34 @@ This operation does not require authentication
 |password|string|false|none|none|
 |roles|[[Role](#schemarole)]|false|none|none|
 
+<h2 id="tocS_NewUserRequest">NewUserRequest</h2>
+<!-- backwards compatibility -->
+<a id="schemanewuserrequest"></a>
+<a id="schema_NewUserRequest"></a>
+<a id="tocSnewuserrequest"></a>
+<a id="tocsnewuserrequest"></a>
+
+```json
+{
+  "username": "string",
+  "displayName": "string",
+  "role": [
+    "string"
+  ],
+  "password": "string"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|username|string|false|none|none|
+|displayName|string|false|none|none|
+|role|[string]|false|none|none|
+|password|string|false|none|none|
+
 <h2 id="tocS_ChangePasswordRequest">ChangePasswordRequest</h2>
 <!-- backwards compatibility -->
 <a id="schemachangepasswordrequest"></a>
@@ -1985,7 +2013,6 @@ This operation does not require authentication
 
 ```json
 {
-  "userId": 0,
   "oldPassword": "string",
   "newPassword": "string"
 }
@@ -1996,7 +2023,6 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|userId|integer(int64)|false|none|none|
 |oldPassword|string|false|none|none|
 |newPassword|string|false|none|none|
 
