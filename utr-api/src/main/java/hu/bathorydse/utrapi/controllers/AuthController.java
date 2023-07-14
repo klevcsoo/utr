@@ -14,6 +14,7 @@ import hu.bathorydse.utrapi.repository.RoleRepository;
 import hu.bathorydse.utrapi.repository.UserRepository;
 import hu.bathorydse.utrapi.security.jwt.JwtUtils;
 import hu.bathorydse.utrapi.security.services.UserDetailsImpl;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -216,6 +217,18 @@ public class AuthController {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
             return ResponseEntity.notFound().build();
+        }
+
+        // Because of the perfection of React, we have to abort the request,
+        // if the new roles are the same as the current ones to avoid
+        // false audit reports. More info in issue #65.
+        List<String> userRoles = new ArrayList<>(user.get().getRoles())
+            .stream().map(role -> role.getName().name())
+            .collect(Collectors.toList());
+        int diff = (int) roles.stream().filter(s -> !userRoles.contains(s)).count();
+        if (diff == 0) {
+            return ResponseEntity.ok(
+                new MessageResponse(messageSource.get(locale, "auth.roles_not_changed")));
         }
 
         Map<String, Role> roleMap = new HashMap<>();
