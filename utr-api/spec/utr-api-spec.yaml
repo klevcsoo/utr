@@ -26,21 +26,6 @@ paths:
                 $ref: "#/components/schemas/JwtResponse"
       tags:
         - "Hitelesítés"
-  /api/auth/roles/:
-    get:
-      summary: "Elérhető szerepkörök"
-      operationId: "listRoles"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Role"
-      tags:
-        - "Hitelesítés"
   /api/auth/users/:
     get:
       summary: "Összes felhasználó"

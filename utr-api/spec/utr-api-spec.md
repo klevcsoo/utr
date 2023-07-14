@@ -65,49 +65,6 @@ Base URLs:
 This operation does not require authentication
 </aside>
 
-## listRoles
-
-<a id="opIdlistRoles"></a>
-
-> Code samples
-
-`GET /api/auth/roles/`
-
-*Elérhető szerepkörök*
-
-> Example responses
-
-> 200 Response
-
-<h3 id="listroles-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
-
-<h3 id="listroles-responseschema">Response Schema</h3>
-
-Status Code **200**
-
-|Name|Type|Required|Restrictions|Description|
-|---|---|---|---|---|
-|*anonymous*|[[Role](#schemarole)]|false|none|none|
-|» id|integer(int32)|false|none|none|
-|» name|string|false|none|none|
-
-#### Enumerated Values
-
-|Property|Value|
-|---|---|
-|name|ROLE_ADMIN|
-|name|ROLE_IDOROGZITO|
-|name|ROLE_ALLITOBIRO|
-|name|ROLE_SPEAKER|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
 ## getAllUsers
 
 <a id="opIdgetAllUsers"></a>

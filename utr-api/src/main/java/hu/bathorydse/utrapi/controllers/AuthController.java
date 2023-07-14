@@ -255,10 +255,4 @@ public class AuthController {
         return ResponseEntity.ok(
             new MessageResponse(messageSource.get(locale, "auth.display_name_changed")));
     }
-
-    @GetMapping("/roles/")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Role>> listRoles() {
-        return ResponseEntity.ok(roleRepository.findAll());
-    }
 }
