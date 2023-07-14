@@ -13,6 +13,7 @@ import {UszoversenyekSlugPage} from "./pages/UszoversenyekSlugPage";
 import {VersenyszamokSlugPage} from "./pages/VersenyszamokSlugPage";
 import {Error404Page} from "./pages/Error404Page";
 import {SupportPage} from "./pages/SupportPage";
+import {SettingsPage} from "./pages/SettingsPage";
 
 function App() {
     return (
@@ -40,11 +41,12 @@ function App() {
                             </Route>
                         </Route>
                     </Route>
-                    <Route path="support/*" element={<SupportPage/>}/>
                     <Route path="csapatok">
                         <Route path="" element={<CsapatokIndexPage/>}/>
                         <Route path=":id" element={<CsapatokSlugPage/>}/>
                     </Route>
+                    <Route path="settings/*" element={<SettingsPage/>}/>
+                    <Route path="support/*" element={<SupportPage/>}/>
                 </Route>
             </Route>
             <Route path="/login" element={
