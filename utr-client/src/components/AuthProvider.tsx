@@ -1,5 +1,5 @@
 import {useCallback, useState} from "react";
-import {UserDetails} from "../types/UserDetails";
+import {AuthUser} from "../types/AuthUser";
 import {AuthContext, login} from "../api/auth";
 import {UserRole} from "../types/UserRole";
 import {CommonChildrenOnlyProps} from "../types/componentProps/common/CommonChildrenOnlyProps";
@@ -10,14 +10,14 @@ const AUTH_DATA_KEY = "auth_data";
 function AuthProvider(props: CommonChildrenOnlyProps) {
     const t = useTranslation();
 
-    const [user, setUser] = useState<UserDetails | undefined>(
+    const [user, setUser] = useState<AuthUser | undefined>(
         !!sessionStorage.getItem(AUTH_DATA_KEY) ? (
             JSON.parse(sessionStorage.getItem(AUTH_DATA_KEY)!)
         ) : undefined
     );
 
     const doLogin = useCallback(
-        (username: string, password: string): Promise<UserDetails> => {
+        (username: string, password: string): Promise<AuthUser> => {
             if (!username || !password) {
                 throw new Error(t("error.auth.missing_username_or_pass"));
             }

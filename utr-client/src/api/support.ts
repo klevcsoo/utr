@@ -1,10 +1,10 @@
 import {apiRequest} from "../utils";
-import {UserDetails} from "../types/UserDetails";
+import {AuthUser} from "../types/AuthUser";
 
-export async function getApiServerEnvVars(user: UserDetails) {
+export async function getApiServerEnvVars(user: AuthUser) {
     return apiRequest<{ [key: string]: string }>(user, "/support/env", "GET");
 }
 
-export async function getApiServerLog(user: UserDetails) {
+export async function getApiServerLog(user: AuthUser) {
     return apiRequest<string[]>(user, "/support/log", "GET");
 }

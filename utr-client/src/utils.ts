@@ -1,4 +1,4 @@
-import {UserDetails} from "./types/UserDetails";
+import {AuthUser} from "./types/AuthUser";
 import {artificialAPIDelay, serverURL} from "./config";
 import {MessageResponse} from "./types/response/MessageResponse";
 
@@ -21,7 +21,7 @@ export function createAllStringObject<T extends object>(
 }
 
 export async function apiRequest<T extends object = MessageResponse>(
-    user: UserDetails,
+    user: AuthUser,
     path: string,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 ): Promise<T> {

@@ -1,6 +1,6 @@
 import {UserRole} from "./UserRole";
 
-export type UserDetails = {
+export type AuthUser = {
     roles: UserRole[]
     displayName: string
     id: number

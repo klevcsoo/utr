@@ -1,7 +1,7 @@
 import {serverURL} from "../config";
 import {UserRole} from "../types/UserRole";
 import {LoginResponse} from "../types/response/LoginResponse";
-import {UserDetails} from "../types/UserDetails";
+import {AuthUser} from "../types/AuthUser";
 import {createContext} from "react";
 import {apiRequest} from "../utils";
 import {DisplayedUser} from "../types/DisplayedUser";
@@ -16,14 +16,14 @@ const userRoleMap: { [key: string]: UserRole } = {
     "ROLE_SPEAKER": "speaker",
 };
 
-let userDetails: UserDetails;
+let userDetails: AuthUser;
 export const AuthContext = createContext<{
-    user: UserDetails | undefined
-    login(username: string, password: string): Promise<UserDetails>
+    user: AuthUser | undefined
+    login(username: string, password: string): Promise<AuthUser>
     logout(): Promise<void>
 }>({user: undefined, login: login, logout: logout});
 
-export async function login(role: UserRole, password: string): Promise<UserDetails> {
+export async function login(role: UserRole, password: string): Promise<AuthUser> {
     const response: LoginResponse = await fetch(`${serverURL}/api/auth/login`, {
         method: "POST",
         headers: {
@@ -49,15 +49,15 @@ export async function logout() {
     sessionStorage.removeItem("auth_data");
 }
 
-export async function getAllUsers(user: UserDetails) {
+export async function getAllUsers(user: AuthUser) {
     return apiRequest<DisplayedUser[]>(user, "/auth/users/", "GET");
 }
 
-export async function getUser(user: UserDetails, id: number) {
+export async function getUser(user: AuthUser, id: number) {
     return apiRequest<DisplayedUser>(user, `/auth/users/${id}`, "GET");
 }
 
-export async function createUser(user: UserDetails, data: UserCreationData) {
+export async function createUser(user: AuthUser, data: UserCreationData) {
     const locale = window.localStorage.getItem("locale") ?? "hu";
 
     const response: MessageResponse = await fetch(`${serverURL}/api/auth/users/`, {
@@ -73,11 +73,11 @@ export async function createUser(user: UserDetails, data: UserCreationData) {
     return response;
 }
 
-export async function deleteUser(user: UserDetails, id: number) {
+export async function deleteUser(user: AuthUser, id: number) {
     return apiRequest(user, `/auth/users/${id}`, "DELETE");
 }
 
-export async function editUser(user: UserDetails, id: number, options: UserEditData) {
+export async function editUser(user: AuthUser, id: number, options: UserEditData) {
     const messages: MessageResponse[] = [];
 
     if (!!options.roles) {
