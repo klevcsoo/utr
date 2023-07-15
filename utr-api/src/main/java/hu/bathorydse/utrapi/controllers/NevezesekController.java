@@ -1,10 +1,10 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.Nevezes;
-import hu.bathorydse.utrapi.models.NevezesNotFoundException;
-import hu.bathorydse.utrapi.models.UszoDetailed;
-import hu.bathorydse.utrapi.models.UszoNotFoundException;
+import hu.bathorydse.utrapi.models.rajtlista.Nevezes;
+import hu.bathorydse.utrapi.models.rajtlista.NevezesNotFoundException;
+import hu.bathorydse.utrapi.models.uszo.UszoDetailed;
+import hu.bathorydse.utrapi.models.uszo.UszoNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.NevezesRepository;
 import hu.bathorydse.utrapi.repository.UszoDetailedRepository;

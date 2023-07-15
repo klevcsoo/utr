@@ -1,10 +1,10 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.ENem;
-import hu.bathorydse.utrapi.models.EUszasnem;
-import hu.bathorydse.utrapi.models.Versenyszam;
-import hu.bathorydse.utrapi.models.VersenyszamNotFoundException;
+import hu.bathorydse.utrapi.models.uszo.ENem;
+import hu.bathorydse.utrapi.models.versenyszam.EUszasnem;
+import hu.bathorydse.utrapi.models.versenyszam.Versenyszam;
+import hu.bathorydse.utrapi.models.versenyszam.VersenyszamNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.VersenyszamRepository;
 import java.util.List;

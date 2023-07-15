@@ -1,4 +1,4 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.rajtlista;
 
 import java.util.HashSet;
 import java.util.Set;

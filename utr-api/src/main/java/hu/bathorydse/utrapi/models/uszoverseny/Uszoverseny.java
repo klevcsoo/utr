@@ -1,4 +1,4 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.uszoverseny;
 
 import java.io.Serializable;
 import java.util.Date;

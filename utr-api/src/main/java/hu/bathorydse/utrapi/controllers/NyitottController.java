@@ -1,13 +1,13 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.Futam;
-import hu.bathorydse.utrapi.models.Nevezes;
-import hu.bathorydse.utrapi.models.NevezesNotFoundException;
-import hu.bathorydse.utrapi.models.NoNyitottUszoversenyException;
-import hu.bathorydse.utrapi.models.Uszoverseny;
-import hu.bathorydse.utrapi.models.Versenyszam;
-import hu.bathorydse.utrapi.models.VersenyszamNotFoundException;
+import hu.bathorydse.utrapi.models.rajtlista.Futam;
+import hu.bathorydse.utrapi.models.rajtlista.Nevezes;
+import hu.bathorydse.utrapi.models.rajtlista.NevezesNotFoundException;
+import hu.bathorydse.utrapi.models.uszoverseny.NoNyitottUszoversenyException;
+import hu.bathorydse.utrapi.models.uszoverseny.Uszoverseny;
+import hu.bathorydse.utrapi.models.versenyszam.Versenyszam;
+import hu.bathorydse.utrapi.models.versenyszam.VersenyszamNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.FutamRepository;
 import hu.bathorydse.utrapi.repository.NevezesRepository;

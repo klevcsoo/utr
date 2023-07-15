@@ -1,5 +1,6 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.uszo;
 
+import hu.bathorydse.utrapi.models.csapat.Csapat;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

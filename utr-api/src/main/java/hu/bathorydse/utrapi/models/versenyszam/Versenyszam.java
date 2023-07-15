@@ -1,5 +1,6 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.versenyszam;
 
+import hu.bathorydse.utrapi.models.uszo.ENem;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;

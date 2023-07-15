@@ -1,9 +1,9 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.Futam;
-import hu.bathorydse.utrapi.models.FutamNotFoundException;
-import hu.bathorydse.utrapi.models.NevezesDetailed;
+import hu.bathorydse.utrapi.models.rajtlista.Futam;
+import hu.bathorydse.utrapi.models.rajtlista.FutamNotFoundException;
+import hu.bathorydse.utrapi.models.rajtlista.NevezesDetailed;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.FutamRepository;
 import java.util.List;

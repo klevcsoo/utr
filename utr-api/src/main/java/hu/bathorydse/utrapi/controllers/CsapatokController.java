@@ -1,8 +1,8 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.Csapat;
-import hu.bathorydse.utrapi.models.CsapatNotFoundException;
+import hu.bathorydse.utrapi.models.csapat.Csapat;
+import hu.bathorydse.utrapi.models.csapat.CsapatNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.CsapatRepository;
 import java.util.List;

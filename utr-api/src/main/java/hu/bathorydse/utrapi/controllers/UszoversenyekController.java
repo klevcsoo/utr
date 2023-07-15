@@ -1,9 +1,9 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.UszoNotFoundException;
-import hu.bathorydse.utrapi.models.Uszoverseny;
-import hu.bathorydse.utrapi.models.UszoversenyNotFoundException;
+import hu.bathorydse.utrapi.models.uszo.UszoNotFoundException;
+import hu.bathorydse.utrapi.models.uszoverseny.Uszoverseny;
+import hu.bathorydse.utrapi.models.uszoverseny.UszoversenyNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.UszoversenyRepository;
 import java.util.Date;

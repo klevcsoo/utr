@@ -1,4 +1,4 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.versenyszam;
 
 public class InvalidUszasnemException extends RuntimeException {
 

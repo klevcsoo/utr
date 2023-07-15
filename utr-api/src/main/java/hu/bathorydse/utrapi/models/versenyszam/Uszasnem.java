@@ -1,4 +1,4 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.versenyszam;
 
 import java.io.Serializable;
 import javax.persistence.Column;

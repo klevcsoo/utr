@@ -1,4 +1,4 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.uszo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
