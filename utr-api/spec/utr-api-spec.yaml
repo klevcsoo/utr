@@ -1230,6 +1230,9 @@ components:
           format: "int64"
         nem:
           type: "string"
+          enum:
+            - "NEM_FERFI"
+            - "NEM_NO"
     MessageResponse:
       type: "object"
       properties:
@@ -1271,9 +1274,17 @@ components:
           type: "integer"
           format: "int32"
         uszasnem:
-          $ref: "#/components/schemas/Uszasnem"
+          type: "string"
+          enum:
+            - "USZASNEM_GYORS"
+            - "USZASNEM_MELL"
+            - "USZASNEM_HAT"
+            - "USZASNEM_PILLANGO"
         nem:
           type: "string"
+          enum:
+            - "NEM_FERFI"
+            - "NEM_NO"
         valto:
           type: "integer"
           format: "int32"

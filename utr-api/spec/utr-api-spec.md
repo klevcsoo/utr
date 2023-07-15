@@ -629,6 +629,13 @@ Status Code **200**
 |» csapatId|integer(int64)|false|none|none|
 |» nem|string|false|none|none|
 
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
+
 <aside class="success">
 This operation does not require authentication
 </aside>
@@ -994,11 +1001,20 @@ Status Code **200**
 |» id|integer(int64)|false|none|none|
 |» versenyId|integer(int64)|false|none|none|
 |» hossz|integer(int32)|false|none|none|
-|» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»» id|integer(int32)|false|none|none|
-|»» elnevezes|string|false|none|none|
+|» uszasnem|string|false|none|none|
 |» nem|string|false|none|none|
 |» valto|integer(int32)|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1363,14 +1379,23 @@ Status Code **200**
 |»»» id|integer(int64)|false|none|none|
 |»»» versenyId|integer(int64)|false|none|none|
 |»»» hossz|integer(int32)|false|none|none|
-|»»» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»»»» id|integer(int32)|false|none|none|
-|»»»» elnevezes|string|false|none|none|
+|»»» uszasnem|string|false|none|none|
 |»»» nem|string|false|none|none|
 |»»» valto|integer(int32)|false|none|none|
 |»» nevezesiIdo|integer(int32)|false|none|none|
 |»» idoeredmeny|integer(int32)|false|none|none|
 |»» megjelent|boolean|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1455,14 +1480,23 @@ Status Code **200**
 |»» id|integer(int64)|false|none|none|
 |»» versenyId|integer(int64)|false|none|none|
 |»» hossz|integer(int32)|false|none|none|
-|»» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»»» id|integer(int32)|false|none|none|
-|»»» elnevezes|string|false|none|none|
+|»» uszasnem|string|false|none|none|
 |»» nem|string|false|none|none|
 |»» valto|integer(int32)|false|none|none|
 |» nevezesiIdo|integer(int32)|false|none|none|
 |» idoeredmeny|integer(int32)|false|none|none|
 |» megjelent|boolean|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1644,14 +1678,23 @@ Status Code **200**
 |»»» id|integer(int64)|false|none|none|
 |»»» versenyId|integer(int64)|false|none|none|
 |»»» hossz|integer(int32)|false|none|none|
-|»»» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»»»» id|integer(int32)|false|none|none|
-|»»»» elnevezes|string|false|none|none|
+|»»» uszasnem|string|false|none|none|
 |»»» nem|string|false|none|none|
 |»»» valto|integer(int32)|false|none|none|
 |»» nevezesiIdo|integer(int32)|false|none|none|
 |»» idoeredmeny|integer(int32)|false|none|none|
 |»» megjelent|boolean|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1739,11 +1782,20 @@ Status Code **200**
 |» id|integer(int64)|false|none|none|
 |» versenyId|integer(int64)|false|none|none|
 |» hossz|integer(int32)|false|none|none|
-|» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»» id|integer(int32)|false|none|none|
-|»» elnevezes|string|false|none|none|
+|» uszasnem|string|false|none|none|
 |» nem|string|false|none|none|
 |» valto|integer(int32)|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1979,7 +2031,7 @@ This operation does not require authentication
   "nev": "string",
   "szuletesiEv": 0,
   "csapatId": 0,
-  "nem": "string"
+  "nem": "NEM_FERFI"
 }
 
 ```
@@ -1993,6 +2045,13 @@ This operation does not require authentication
 |szuletesiEv|integer(int32)|false|none|none|
 |csapatId|integer(int64)|false|none|none|
 |nem|string|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <h2 id="tocS_MessageResponse">MessageResponse</h2>
 <!-- backwards compatibility -->
@@ -2076,11 +2135,8 @@ This operation does not require authentication
   "id": 0,
   "versenyId": 0,
   "hossz": 0,
-  "uszasnem": {
-    "id": 0,
-    "elnevezes": "string"
-  },
-  "nem": "string",
+  "uszasnem": "USZASNEM_GYORS",
+  "nem": "NEM_FERFI",
   "valto": 0
 }
 
@@ -2093,9 +2149,20 @@ This operation does not require authentication
 |id|integer(int64)|false|none|none|
 |versenyId|integer(int64)|false|none|none|
 |hossz|integer(int32)|false|none|none|
-|uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
+|uszasnem|string|false|none|none|
 |nem|string|false|none|none|
 |valto|integer(int32)|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <h2 id="tocS_Csapat">Csapat</h2>
 <!-- backwards compatibility -->
@@ -2218,11 +2285,8 @@ This operation does not require authentication
     "id": 0,
     "versenyId": 0,
     "hossz": 0,
-    "uszasnem": {
-      "id": 0,
-      "elnevezes": "string"
-    },
-    "nem": "string",
+    "uszasnem": "USZASNEM_GYORS",
+    "nem": "NEM_FERFI",
     "valto": 0
   },
   "nevezesiIdo": 0,
@@ -2272,11 +2336,8 @@ This operation does not require authentication
         "id": 0,
         "versenyId": 0,
         "hossz": 0,
-        "uszasnem": {
-          "id": 0,
-          "elnevezes": "string"
-        },
-        "nem": "string",
+        "uszasnem": "USZASNEM_GYORS",
+        "nem": "NEM_FERFI",
         "valto": 0
       },
       "nevezesiIdo": 0,
