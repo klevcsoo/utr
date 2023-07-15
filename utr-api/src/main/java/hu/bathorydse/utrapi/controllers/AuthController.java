@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = {"http://localhost:3000", "https://utr.hu"}, maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:3000", "https://utr.hu"}, maxAge = 43200)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -222,9 +222,8 @@ public class AuthController {
         // Because of the perfection of React, we have to abort the request,
         // if the new roles are the same as the current ones to avoid
         // false audit reports. More info in issue #65.
-        List<String> userRoles = new ArrayList<>(user.get().getRoles())
-            .stream().map(role -> role.getName().name())
-            .collect(Collectors.toList());
+        List<String> userRoles = new ArrayList<>(user.get().getRoles()).stream()
+            .map(role -> role.getName().name()).collect(Collectors.toList());
         int diff = (int) roles.stream().filter(s -> !userRoles.contains(s)).count();
         if (diff == 0) {
             return ResponseEntity.ok(
