@@ -2,10 +2,11 @@ package hu.bathorydse.utrapi.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,10 +29,10 @@ public class Uszo {
     private Long csapatId;
 
     @Column(name = "nem")
-    @Size(min = 1, max = 1)
-    private String nem;
+    @Enumerated(EnumType.STRING)
+    private ENem nem;
 
-    public Uszo(String nev, Short szuletesiEv, Long csapatId, String nem) {
+    public Uszo(String nev, Short szuletesiEv, Long csapatId, ENem nem) {
         this.nev = nev;
         this.szuletesiEv = szuletesiEv;
         this.csapatId = csapatId;
