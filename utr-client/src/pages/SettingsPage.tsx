@@ -60,7 +60,9 @@ function UsersList() {
 
     const doDeleteUser = useCallback((userId: number) => {
         if (window.confirm(t("confirm.generic.delete"))) {
-            deleteUser(userId);
+            deleteUser(userId).then(({message}) => {
+                console.log(message);
+            }).catch(console.error);
         }
     }, [deleteUser, t]);
 
