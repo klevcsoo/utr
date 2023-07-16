@@ -1,6 +1,6 @@
 package hu.bathorydse.utrapi.repository;
 
-import hu.bathorydse.utrapi.models.Versenyszam;
+import hu.bathorydse.utrapi.models.versenyszam.Versenyszam;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -27,8 +27,7 @@ export function EnvironmentBanner() {
                 {t("generic_label.developer.pre_release")}
             </p> : null}
             <p className="text-inherit">
-                {t("generic_label.developer.version")}: {
-                packageVersion ?? t("generic_label.unknown")}
+                {packageVersion ?? t("generic_label.unknown")}
             </p>
         </div>
     );

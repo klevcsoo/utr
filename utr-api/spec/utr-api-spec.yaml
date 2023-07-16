@@ -9,7 +9,7 @@ servers:
 paths:
   /api/auth/login:
     post:
-      summary: "Felhasználói bejelentkezés"
+      summary: "Bejelentkezés"
       operationId: "authenticateUser"
       requestBody:
         content:
@@ -26,10 +26,24 @@ paths:
                 $ref: "#/components/schemas/JwtResponse"
       tags:
         - "Hitelesítés"
-  /api/auth/new-user:
-    post:
+  /api/auth/users/:
+    get:
+      summary: "Összes felhasználó"
+      operationId: "getAllUsers"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserPublicResponse"
+      tags:
+        - "Hitelesítés"
+    put:
       summary: "Új felhasználó létrehozása"
-      operationId: "registerUser"
+      operationId: "createUser"
       requestBody:
         content:
           application/json:
@@ -45,13 +59,52 @@ paths:
                 $ref: "#/components/schemas/MessageResponse"
       tags:
         - "Hitelesítés"
-  /api/auth/change-display-name:
-    post:
-      summary: "POST api/auth/change-display-name"
+  /api/auth/users/{userId}:
+    get:
+      summary: "Felhasználó publikus adatai"
+      operationId: "getUser"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserPublicResponse"
+      tags:
+        - "Hitelesítés"
+    delete:
+      summary: "Felhasználó törlése"
+      operationId: "deleteUser"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Hitelesítés"
+  /api/auth/users/{userId}/display-name:
+    patch:
+      summary: "Felhasználó nevének módosítása"
       operationId: "changeUserDisplayName"
       parameters:
         - name: "userId"
-          in: "query"
+          in: "path"
           required: true
           schema:
             type: "integer"
@@ -68,10 +121,19 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MessageResponse"
-  /api/auth/change-password:
-    post:
-      summary: "POST api/auth/change-password"
+      tags:
+        - "Hitelesítés"
+  /api/auth/users/{userId}/password:
+    patch:
+      summary: "Felhasználó jelszavának módosítása"
       operationId: "changeUserPassword"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
       requestBody:
         content:
           application/json:
@@ -85,13 +147,15 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MessageResponse"
-  /api/auth/change-roles:
-    post:
-      summary: "POST api/auth/change-roles"
+      tags:
+        - "Hitelesítés"
+  /api/auth/users/{userId}/roles:
+    patch:
+      summary: "Felhasználó szerepköreinek módosítása"
       operationId: "changeUserRoles"
       parameters:
         - name: "userId"
-          in: "query"
+          in: "path"
           required: true
           schema:
             type: "integer"
@@ -110,24 +174,8 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/MessageResponse"
-  /api/auth/delete-user:
-    post:
-      summary: "POST api/auth/delete-user"
-      operationId: "deleteUser"
-      parameters:
-        - name: "userId"
-          in: "query"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/MessageResponse"
+      tags:
+        - "Hitelesítés"
   /api/test/admin:
     get:
       summary: "Admin hitelesítési teszt"
@@ -1114,6 +1162,38 @@ components:
           type: "array"
           items:
             type: "string"
+    Role:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
+          enum:
+            - "ROLE_ADMIN"
+            - "ROLE_IDOROGZITO"
+            - "ROLE_ALLITOBIRO"
+            - "ROLE_SPEAKER"
+    UserPublicResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        displayName:
+          type: "string"
+        roles:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+              - "ROLE_ADMIN"
+              - "ROLE_IDOROGZITO"
+              - "ROLE_ALLITOBIRO"
+              - "ROLE_SPEAKER"
     NewUserRequest:
       type: "object"
       properties:
@@ -1130,9 +1210,6 @@ components:
     ChangePasswordRequest:
       type: "object"
       properties:
-        userId:
-          type: "integer"
-          format: "int64"
         oldPassword:
           type: "string"
         newPassword:
@@ -1153,6 +1230,9 @@ components:
           format: "int64"
         nem:
           type: "string"
+          enum:
+            - "NEM_FERFI"
+            - "NEM_NO"
     MessageResponse:
       type: "object"
       properties:
@@ -1194,9 +1274,17 @@ components:
           type: "integer"
           format: "int32"
         uszasnem:
-          $ref: "#/components/schemas/Uszasnem"
+          type: "string"
+          enum:
+            - "USZASNEM_GYORS"
+            - "USZASNEM_MELL"
+            - "USZASNEM_HAT"
+            - "USZASNEM_PILLANGO"
         nem:
           type: "string"
+          enum:
+            - "NEM_FERFI"
+            - "NEM_NO"
         valto:
           type: "integer"
           format: "int32"

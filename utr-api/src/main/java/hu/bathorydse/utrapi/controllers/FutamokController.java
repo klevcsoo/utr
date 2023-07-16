@@ -1,9 +1,9 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.Futam;
-import hu.bathorydse.utrapi.models.FutamNotFoundException;
-import hu.bathorydse.utrapi.models.NevezesDetailed;
+import hu.bathorydse.utrapi.models.rajtlista.Futam;
+import hu.bathorydse.utrapi.models.rajtlista.FutamNotFoundException;
+import hu.bathorydse.utrapi.models.rajtlista.NevezesDetailed;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.FutamRepository;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = {"http://localhost:3000", "https://utr.hu"}, maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:3000", "https://utr.hu"}, maxAge = 43200)
 @RestController
 @RequestMapping("/api/futamok")
 @PreAuthorize("hasRole('ADMIN')")

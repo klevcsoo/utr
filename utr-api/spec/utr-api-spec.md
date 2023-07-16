@@ -24,140 +24,6 @@ Base URLs:
 
 * <a href="http://localhost:8080">http://localhost:8080</a>
 
-<h1 id="utr-api-default">Default</h1>
-
-## changeUserDisplayName
-
-<a id="opIdchangeUserDisplayName"></a>
-
-> Code samples
-
-`POST /api/auth/change-display-name`
-
-*POST api/auth/change-display-name*
-
-<h3 id="changeuserdisplayname-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|userId|query|integer(int64)|true|none|
-|displayName|query|string|true|none|
-
-> Example responses
-
-> 200 Response
-
-<h3 id="changeuserdisplayname-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## changeUserPassword
-
-<a id="opIdchangeUserPassword"></a>
-
-> Code samples
-
-`POST /api/auth/change-password`
-
-*POST api/auth/change-password*
-
-> Body parameter
-
-```json
-{
-  "userId": 0,
-  "oldPassword": "string",
-  "newPassword": "string"
-}
-```
-
-<h3 id="changeuserpassword-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|[ChangePasswordRequest](#schemachangepasswordrequest)|true|none|
-
-> Example responses
-
-> 200 Response
-
-<h3 id="changeuserpassword-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## changeUserRoles
-
-<a id="opIdchangeUserRoles"></a>
-
-> Code samples
-
-`POST /api/auth/change-roles`
-
-*POST api/auth/change-roles*
-
-<h3 id="changeuserroles-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|userId|query|integer(int64)|true|none|
-|role|query|array[string]|true|none|
-
-> Example responses
-
-> 200 Response
-
-<h3 id="changeuserroles-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## deleteUser
-
-<a id="opIddeleteUser"></a>
-
-> Code samples
-
-`POST /api/auth/delete-user`
-
-*POST api/auth/delete-user*
-
-<h3 id="deleteuser-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|userId|query|integer(int64)|true|none|
-
-> Example responses
-
-> 200 Response
-
-<h3 id="deleteuser-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
 <h1 id="utr-api-hiteles-t-s">Hitelesítés</h1>
 
 ## authenticateUser
@@ -168,7 +34,7 @@ This operation does not require authentication
 
 `POST /api/auth/login`
 
-*Felhasználói bejelentkezés*
+*Bejelentkezés*
 
 > Body parameter
 
@@ -199,13 +65,49 @@ This operation does not require authentication
 This operation does not require authentication
 </aside>
 
-## registerUser
+## getAllUsers
 
-<a id="opIdregisterUser"></a>
+<a id="opIdgetAllUsers"></a>
 
 > Code samples
 
-`POST /api/auth/new-user`
+`GET /api/auth/users/`
+
+*Összes felhasználó*
+
+> Example responses
+
+> 200 Response
+
+<h3 id="getallusers-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
+
+<h3 id="getallusers-responseschema">Response Schema</h3>
+
+Status Code **200**
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|*anonymous*|[[UserPublicResponse](#schemauserpublicresponse)]|false|none|none|
+|» id|integer(int64)|false|none|none|
+|» username|string|false|none|none|
+|» displayName|string|false|none|none|
+|» roles|[string]|false|none|none|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## createUser
+
+<a id="opIdcreateUser"></a>
+
+> Code samples
+
+`PUT /api/auth/users/`
 
 *Új felhasználó létrehozása*
 
@@ -222,7 +124,7 @@ This operation does not require authentication
 }
 ```
 
-<h3 id="registeruser-parameters">Parameters</h3>
+<h3 id="createuser-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
@@ -232,7 +134,169 @@ This operation does not require authentication
 
 > 200 Response
 
-<h3 id="registeruser-responses">Responses</h3>
+<h3 id="createuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## getUser
+
+<a id="opIdgetUser"></a>
+
+> Code samples
+
+`GET /api/auth/users/{userId}`
+
+*Felhasználó publikus adatai*
+
+<h3 id="getuser-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="getuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[UserPublicResponse](#schemauserpublicresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## deleteUser
+
+<a id="opIddeleteUser"></a>
+
+> Code samples
+
+`DELETE /api/auth/users/{userId}`
+
+*Felhasználó törlése*
+
+<h3 id="deleteuser-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="deleteuser-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## changeUserDisplayName
+
+<a id="opIdchangeUserDisplayName"></a>
+
+> Code samples
+
+`PATCH /api/auth/users/{userId}/display-name`
+
+*Felhasználó nevének módosítása*
+
+<h3 id="changeuserdisplayname-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
+|displayName|query|string|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="changeuserdisplayname-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## changeUserPassword
+
+<a id="opIdchangeUserPassword"></a>
+
+> Code samples
+
+`PATCH /api/auth/users/{userId}/password`
+
+*Felhasználó jelszavának módosítása*
+
+> Body parameter
+
+```json
+{
+  "oldPassword": "string",
+  "newPassword": "string"
+}
+```
+
+<h3 id="changeuserpassword-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
+|body|body|[ChangePasswordRequest](#schemachangepasswordrequest)|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="changeuserpassword-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[MessageResponse](#schemamessageresponse)|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## changeUserRoles
+
+<a id="opIdchangeUserRoles"></a>
+
+> Code samples
+
+`PATCH /api/auth/users/{userId}/roles`
+
+*Felhasználó szerepköreinek módosítása*
+
+<h3 id="changeuserroles-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|userId|path|integer(int64)|true|none|
+|role|query|array[string]|true|none|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="changeuserroles-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
@@ -564,6 +628,13 @@ Status Code **200**
 |» szuletesiEv|integer(int32)|false|none|none|
 |» csapatId|integer(int64)|false|none|none|
 |» nem|string|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -930,11 +1001,20 @@ Status Code **200**
 |» id|integer(int64)|false|none|none|
 |» versenyId|integer(int64)|false|none|none|
 |» hossz|integer(int32)|false|none|none|
-|» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»» id|integer(int32)|false|none|none|
-|»» elnevezes|string|false|none|none|
+|» uszasnem|string|false|none|none|
 |» nem|string|false|none|none|
 |» valto|integer(int32)|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1299,14 +1379,23 @@ Status Code **200**
 |»»» id|integer(int64)|false|none|none|
 |»»» versenyId|integer(int64)|false|none|none|
 |»»» hossz|integer(int32)|false|none|none|
-|»»» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»»»» id|integer(int32)|false|none|none|
-|»»»» elnevezes|string|false|none|none|
+|»»» uszasnem|string|false|none|none|
 |»»» nem|string|false|none|none|
 |»»» valto|integer(int32)|false|none|none|
 |»» nevezesiIdo|integer(int32)|false|none|none|
 |»» idoeredmeny|integer(int32)|false|none|none|
 |»» megjelent|boolean|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1391,14 +1480,23 @@ Status Code **200**
 |»» id|integer(int64)|false|none|none|
 |»» versenyId|integer(int64)|false|none|none|
 |»» hossz|integer(int32)|false|none|none|
-|»» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»»» id|integer(int32)|false|none|none|
-|»»» elnevezes|string|false|none|none|
+|»» uszasnem|string|false|none|none|
 |»» nem|string|false|none|none|
 |»» valto|integer(int32)|false|none|none|
 |» nevezesiIdo|integer(int32)|false|none|none|
 |» idoeredmeny|integer(int32)|false|none|none|
 |» megjelent|boolean|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1580,14 +1678,23 @@ Status Code **200**
 |»»» id|integer(int64)|false|none|none|
 |»»» versenyId|integer(int64)|false|none|none|
 |»»» hossz|integer(int32)|false|none|none|
-|»»» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»»»» id|integer(int32)|false|none|none|
-|»»»» elnevezes|string|false|none|none|
+|»»» uszasnem|string|false|none|none|
 |»»» nem|string|false|none|none|
 |»»» valto|integer(int32)|false|none|none|
 |»» nevezesiIdo|integer(int32)|false|none|none|
 |»» idoeredmeny|integer(int32)|false|none|none|
 |»» megjelent|boolean|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1675,11 +1782,20 @@ Status Code **200**
 |» id|integer(int64)|false|none|none|
 |» versenyId|integer(int64)|false|none|none|
 |» hossz|integer(int32)|false|none|none|
-|» uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
-|»» id|integer(int32)|false|none|none|
-|»» elnevezes|string|false|none|none|
+|» uszasnem|string|false|none|none|
 |» nem|string|false|none|none|
 |» valto|integer(int32)|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <aside class="success">
 This operation does not require authentication
@@ -1793,6 +1909,65 @@ This operation does not require authentication
 |displayName|string|false|none|none|
 |roles|[string]|false|none|none|
 
+<h2 id="tocS_Role">Role</h2>
+<!-- backwards compatibility -->
+<a id="schemarole"></a>
+<a id="schema_Role"></a>
+<a id="tocSrole"></a>
+<a id="tocsrole"></a>
+
+```json
+{
+  "id": 0,
+  "name": "ROLE_ADMIN"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id|integer(int32)|false|none|none|
+|name|string|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|name|ROLE_ADMIN|
+|name|ROLE_IDOROGZITO|
+|name|ROLE_ALLITOBIRO|
+|name|ROLE_SPEAKER|
+
+<h2 id="tocS_UserPublicResponse">UserPublicResponse</h2>
+<!-- backwards compatibility -->
+<a id="schemauserpublicresponse"></a>
+<a id="schema_UserPublicResponse"></a>
+<a id="tocSuserpublicresponse"></a>
+<a id="tocsuserpublicresponse"></a>
+
+```json
+{
+  "id": 0,
+  "username": "string",
+  "displayName": "string",
+  "roles": [
+    "ROLE_ADMIN"
+  ]
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id|integer(int64)|false|none|none|
+|username|string|false|none|none|
+|displayName|string|false|none|none|
+|roles|[string]|false|none|none|
+
 <h2 id="tocS_NewUserRequest">NewUserRequest</h2>
 <!-- backwards compatibility -->
 <a id="schemanewuserrequest"></a>
@@ -1830,7 +2005,6 @@ This operation does not require authentication
 
 ```json
 {
-  "userId": 0,
   "oldPassword": "string",
   "newPassword": "string"
 }
@@ -1841,7 +2015,6 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|userId|integer(int64)|false|none|none|
 |oldPassword|string|false|none|none|
 |newPassword|string|false|none|none|
 
@@ -1858,7 +2031,7 @@ This operation does not require authentication
   "nev": "string",
   "szuletesiEv": 0,
   "csapatId": 0,
-  "nem": "string"
+  "nem": "NEM_FERFI"
 }
 
 ```
@@ -1872,6 +2045,13 @@ This operation does not require authentication
 |szuletesiEv|integer(int32)|false|none|none|
 |csapatId|integer(int64)|false|none|none|
 |nem|string|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <h2 id="tocS_MessageResponse">MessageResponse</h2>
 <!-- backwards compatibility -->
@@ -1955,11 +2135,8 @@ This operation does not require authentication
   "id": 0,
   "versenyId": 0,
   "hossz": 0,
-  "uszasnem": {
-    "id": 0,
-    "elnevezes": "string"
-  },
-  "nem": "string",
+  "uszasnem": "USZASNEM_GYORS",
+  "nem": "NEM_FERFI",
   "valto": 0
 }
 
@@ -1972,9 +2149,20 @@ This operation does not require authentication
 |id|integer(int64)|false|none|none|
 |versenyId|integer(int64)|false|none|none|
 |hossz|integer(int32)|false|none|none|
-|uszasnem|[Uszasnem](#schemauszasnem)|false|none|none|
+|uszasnem|string|false|none|none|
 |nem|string|false|none|none|
 |valto|integer(int32)|false|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|uszasnem|USZASNEM_GYORS|
+|uszasnem|USZASNEM_MELL|
+|uszasnem|USZASNEM_HAT|
+|uszasnem|USZASNEM_PILLANGO|
+|nem|NEM_FERFI|
+|nem|NEM_NO|
 
 <h2 id="tocS_Csapat">Csapat</h2>
 <!-- backwards compatibility -->
@@ -2097,11 +2285,8 @@ This operation does not require authentication
     "id": 0,
     "versenyId": 0,
     "hossz": 0,
-    "uszasnem": {
-      "id": 0,
-      "elnevezes": "string"
-    },
-    "nem": "string",
+    "uszasnem": "USZASNEM_GYORS",
+    "nem": "NEM_FERFI",
     "valto": 0
   },
   "nevezesiIdo": 0,
@@ -2151,11 +2336,8 @@ This operation does not require authentication
         "id": 0,
         "versenyId": 0,
         "hossz": 0,
-        "uszasnem": {
-          "id": 0,
-          "elnevezes": "string"
-        },
-        "nem": "string",
+        "uszasnem": "USZASNEM_GYORS",
+        "nem": "NEM_FERFI",
         "valto": 0
       },
       "nevezesiIdo": 0,

@@ -1,9 +1,9 @@
 package hu.bathorydse.utrapi.controllers;
 
 import hu.bathorydse.utrapi.language.UtrMessageSource;
-import hu.bathorydse.utrapi.models.UszoNotFoundException;
-import hu.bathorydse.utrapi.models.Uszoverseny;
-import hu.bathorydse.utrapi.models.UszoversenyNotFoundException;
+import hu.bathorydse.utrapi.models.uszo.UszoNotFoundException;
+import hu.bathorydse.utrapi.models.uszoverseny.Uszoverseny;
+import hu.bathorydse.utrapi.models.uszoverseny.UszoversenyNotFoundException;
 import hu.bathorydse.utrapi.payload.response.MessageResponse;
 import hu.bathorydse.utrapi.repository.UszoversenyRepository;
 import java.util.Date;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = {"http://localhost:3000", "https://utr.hu"}, maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:3000", "https://utr.hu"}, maxAge = 43200)
 @RestController
 @RequestMapping("/api/uszoversenyek")
 @PreAuthorize("hasRole('ADMIN')")

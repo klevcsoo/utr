@@ -10,7 +10,7 @@ import {FullPageModal} from "../components/modals/FullPageModal";
 import {TextInput} from "../components/inputs/TextInput";
 import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {TitleIcon} from "../components/icons/TitleIcon";
-import {EmberiNem} from "../types/EmberiNem";
+import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../components/inputs/buttons/IconButton";
@@ -23,6 +23,7 @@ import {Csapat} from "../types/model/Csapat";
 import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 
 export function CsapatokSlugPage() {
     const t = useTranslation();
@@ -96,10 +97,21 @@ function UszokList(props: {
     csapat?: Csapat
 }) {
     const t = useTranslation();
+    const getEmberiNemElnevezes = useGetEmberiNemElnevezes();
 
     const [uszok, uszokLoading] = useUszokList(props.csapat?.id);
     const deleteUszo = useDeleteUszo();
     const [, setSearchParams] = useSearchParams();
+
+    const displayedUszok = useMemo(() => {
+        if (!uszok) {
+            return [];
+        }
+
+        return uszok.map(value => {
+            return {...value, nem: getEmberiNemElnevezes(value.nem)};
+        });
+    }, [getEmberiNemElnevezes, uszok]);
 
     const doOpenEditUszoModal = useCallback((id: number) => {
         setSearchParams(prevState => {
@@ -131,9 +143,9 @@ function UszokList(props: {
                     <p>{t("csapat.no_uszok")}</p>
                 </BorderCard>
             ) : (
-                <DataTable dataList={uszok} propertyNameOverride={{
+                <DataTable dataList={displayedUszok} propertyNameOverride={{
                     nev: t("generic_label.name"),
-                    szuletesiDatum: t("generic_label.year_of_birth")
+                    szuletesiEv: t("generic_label.year_of_birth")
                 }} excludedProperties={["id", "csapatId"]}
                            actionColumn={({id}) => (
                                <Fragment>
@@ -225,7 +237,7 @@ function UszoModal(props: {
 
     const [nev, setNev] = useState("");
     const [szuletesiEv, setSzuletesiEv] = useState((new Date()).getFullYear());
-    const [nem, setNem] = useState<EmberiNem>("N");
+    const [nem, setNem] = useState<EmberiNemId>("NEM_NO");
 
     const canCreateUszo = useMemo(() => {
         return !!nev && !!szuletesiEv && !!nem;
@@ -243,7 +255,7 @@ function UszoModal(props: {
         if (!!props.csapat && !!nev && !!szuletesiEv && !!nem) {
             createUszo({
                 nev: nev,
-                szuletesiDatum: szuletesiEv,
+                szuletesiEv: szuletesiEv,
                 nem: nem,
                 csapatId: props.csapat.id
             }).then(message => {
@@ -256,8 +268,8 @@ function UszoModal(props: {
     useEffect(() => {
         if (!!uszo) {
             setNev(uszo.nev);
-            setSzuletesiEv(uszo.szuletesiDatum);
-            setNem(uszo.nem as EmberiNem);
+            setSzuletesiEv(uszo.szuletesiEv);
+            setNem(uszo.nem as EmberiNemId);
         }
     }, [uszo]);
 

@@ -1,4 +1,4 @@
-package hu.bathorydse.utrapi.models;
+package hu.bathorydse.utrapi.models.csapat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

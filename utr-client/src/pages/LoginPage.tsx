@@ -13,8 +13,7 @@ export function LoginPage() {
     const {login} = useContext(AuthContext);
 
     const canLogin = useMemo(() => {
-        const usernames = ["admin", "allitobiro", "idorogzito", "speaker"];
-        return usernames.includes(username) && !!password;
+        return !!username && !!password;
     }, [username, password]);
 
     const doLogin = useCallback(() => {
