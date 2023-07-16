@@ -1,10 +1,13 @@
 import {NavLink} from "react-router-dom";
 import {AppLogo} from "../components/icons/AppLogo";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
-import {useCallback} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {RawMaterialIcon} from "../components/icons/RawMaterialIcon";
 import {useAuthLogout} from "../hooks/auth/useAuthLogout";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {useSetLocale} from "../hooks/translations/useSetLocale";
+import {Locale} from "../types/Locale";
+import {GenericDropdown} from "../components/inputs/dropdowns/GenericDropdown";
 
 export function NavbarLayout() {
     const user = useAuthUser();
@@ -36,6 +39,7 @@ export function NavbarLayout() {
             <div className="flex flex-col items-start gap-2 w-full">
                 <NavbarNavButton icon="support" text={t("navbar.support")}
                                  to="/admin/support"/>
+                <LanguageSelector/>
                 <div className="w-full border-t-2 border-slate-300 my-2"></div>
                 <div className="w-full flex flex-row gap-4
                 items-center justify-between">
@@ -65,5 +69,44 @@ function NavbarNavButton(props: {
             <RawMaterialIcon name={props.icon}/>
             {props.text}
         </NavLink>
+    );
+}
+
+function LanguageSelector() {
+    const t = useTranslation();
+    const setLocale = useSetLocale();
+
+    const [selectedLocale, setSelectedLocale] = useState<Locale>(
+        window.localStorage.getItem("locale") as Locale ?? "hu"
+    );
+
+    const languageOptions = useMemo<{ [key in Locale]: string }>(() => {
+        return {
+            hu: "🇭🇺",
+            en: "🇬🇧"
+        };
+    }, []);
+
+    useEffect(() => {
+        setLocale(selectedLocale);
+    }, [selectedLocale, setLocale]);
+
+    return (
+        <div className={`
+            w-full h-10 px-4 py-1 rounded-md text-center
+            flex flex-row items-center gap-4 text-inherit
+            justify-between
+            `}>
+            <div className="flex flex-row gap-4 items-center">
+                <RawMaterialIcon name="language"/>
+                {t("generic_label.language")}
+            </div>
+            <div>
+                <GenericDropdown options={languageOptions} selected={selectedLocale}
+                                 onSelect={id => {
+                                     setSelectedLocale(id as Locale);
+                                 }}/>
+            </div>
+        </div>
     );
 }
