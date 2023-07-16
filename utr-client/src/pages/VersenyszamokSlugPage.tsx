@@ -111,8 +111,6 @@ export function VersenyszamDetails(props: {
     versenyszam: Versenyszam
 }) {
     const t = useTranslation();
-    const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
-    const getUszasnemElnevezes = useGetUszasnemElnevezes();
 
     const [valtoEnabled, setValtoEnabled] = useState(!!props.versenyszam.valto);
     const [valto, setValto] = useState<number>(props.versenyszam.valto ?? 4);
