@@ -29,6 +29,9 @@ import {CheckBox} from "../components/inputs/CheckBox";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useUszasnemDropdownList} from "../hooks/useUszasnemDropdownList";
 import {useEmberiNemDropdownList} from "../hooks/useEmberiNemDropdownList";
+import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
+import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
+import {EmberiNemId} from "../types/EmberiNemId";
 
 export function UszoversenyekSlugPage() {
     const t = useTranslation();
@@ -134,6 +137,8 @@ function VersenyszamokList(props: {
     uszoverseny?: Uszoverseny
 }) {
     const t = useTranslation();
+    const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
+    const getUszasnemElnevezes = useGetUszasnemElnevezes();
 
     const [versenyszamok, versenyszamokLoading] = useVersenyszamokList(props.uszoverseny?.id);
     const deleteVersenyszam = useDeleteVersenyszam();
@@ -145,13 +150,11 @@ function VersenyszamokList(props: {
                 id: value.id,
                 valto: !!value.valto ? `${value.valto}x` : "",
                 hossz: `${value.hossz}m`,
-                nem: value.nem === "F" ?
-                    t("generic_label.female.versenyszam") as "fiú" :
-                    t("generic_label.male.versenyszam") as "lány",
-                uszasnem: value.uszasnem.elnevezes
+                nem: getVersenyszamNemElnevezes(value.nem),
+                uszasnem: getUszasnemElnevezes(value.uszasnem)
             };
         });
-    }, [t, versenyszamok]);
+    }, [getUszasnemElnevezes, getVersenyszamNemElnevezes, versenyszamok]);
 
     const doOpenNewVersenyszamModal = useCallback(() => {
         setSearchParams(prevState => {
@@ -290,7 +293,7 @@ function VersenyszamModal(props: {
             createVersenyszam({
                 hossz: hossz,
                 valto: valtoEnabled ? valto : undefined,
-                emberiNemId: emberiNem === "fiú" ? "F" : "N",
+                emberiNemId: emberiNem as EmberiNemId,
                 uszasnemId: uszasnemList.indexOf(uszasnem),
                 versenyId: props.uszoverseny.id
             }).then(message => {

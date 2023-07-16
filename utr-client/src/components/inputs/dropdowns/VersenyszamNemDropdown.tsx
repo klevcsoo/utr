@@ -1,18 +1,18 @@
-import {EmberiNem} from "../../../types/EmberiNem";
+import {EmberiNemId} from "../../../types/EmberiNemId";
 import {useMemo} from "react";
 import {GenericDropdown} from "./GenericDropdown";
 import {CommonDropdownProps} from "../../../types/componentProps/common/CommonDropdownProps";
-import {useTranslation} from "../../../hooks/translations/useTranslation";
+import {useGetVersenyszamNemElnevezes} from "../../../hooks/useGetVersenyszamNemElnevezes";
 
-export function VersenyszamNemDropdown(props: CommonDropdownProps<EmberiNem>) {
-    const t = useTranslation();
+export function VersenyszamNemDropdown(props: CommonDropdownProps<EmberiNemId>) {
+    const getElnevezes = useGetVersenyszamNemElnevezes();
 
-    const options = useMemo<{ [key in EmberiNem]: string }>(() => {
+    const options = useMemo<{ [key in EmberiNemId]: string }>(() => {
         return {
-            F: t("generic_label.male.versenyszam"),
-            N: t("generic_label.female.versenyszam")
+            NEM_FERFI: getElnevezes("NEM_FERFI"),
+            NEM_NO: getElnevezes("NEM_NO")
         };
-    }, [t]);
+    }, [getElnevezes]);
 
     return (
         <GenericDropdown options={options}

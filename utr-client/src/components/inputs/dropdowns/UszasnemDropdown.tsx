@@ -1,21 +1,20 @@
 import {useMemo} from "react";
 import {GenericDropdown} from "./GenericDropdown";
-import {UszasnemElnevezes} from "../../../types/UszasnemElnevezes";
+import {UszasnemId} from "../../../types/UszasnemId";
 import {CommonDropdownProps} from "../../../types/componentProps/common/CommonDropdownProps";
-import {useTranslation} from "../../../hooks/translations/useTranslation";
+import {useGetUszasnemElnevezes} from "../../../hooks/useGetUszasnemElnevezes";
 
-export function UszasnemDropdown(props: CommonDropdownProps<UszasnemElnevezes>) {
-    const t = useTranslation();
+export function UszasnemDropdown(props: CommonDropdownProps<UszasnemId>) {
+    const getElnevezes = useGetUszasnemElnevezes();
 
-    const options = useMemo<UszasnemElnevezes[]>(() => {
-        // noinspection SpellCheckingInspection
-        return [
-            t("generic_label.uszasnem.gyorsuszas") as UszasnemElnevezes,
-            t("generic_label.uszasnem.melluszas") as UszasnemElnevezes,
-            t("generic_label.uszasnem.hatuszas") as UszasnemElnevezes,
-            t("generic_label.uszasnem.pillangouszas") as UszasnemElnevezes
-        ];
-    }, [t]);
+    const options = useMemo<{ [key in UszasnemId]: string }>(() => {
+        return {
+            USZASNEM_GYORS: getElnevezes("USZASNEM_GYORS"),
+            USZASNEM_MELL: getElnevezes("USZASNEM_MELL"),
+            USZASNEM_HAT: getElnevezes("USZASNEM_HAT"),
+            USZASNEM_PILLANGO: getElnevezes("USZASNEM_PILLANGO")
+        };
+    }, [getElnevezes]);
 
     return (
         <GenericDropdown options={options}

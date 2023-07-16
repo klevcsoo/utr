@@ -1,11 +1,11 @@
-import {Uszasnem} from "./Uszasnem";
 import {Identifiable} from "../Identifiable";
-import {EmberiNem} from "../EmberiNem";
+import {EmberiNemId} from "../EmberiNemId";
+import {UszasnemId} from "../UszasnemId";
 
 export type Versenyszam = Identifiable<{
     versenyId: number
     hossz: number
-    uszasnem: Uszasnem
-    nem: EmberiNem
+    uszasnem: UszasnemId
+    nem: EmberiNemId
     valto?: number
 }>

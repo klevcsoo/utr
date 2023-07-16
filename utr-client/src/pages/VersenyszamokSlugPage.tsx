@@ -9,8 +9,8 @@ import {BorderCard} from "../components/containers/BorderCard";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {Versenyszam} from "../types/model/Versenyszam";
-import {EmberiNem} from "../types/EmberiNem";
-import {UszasnemElnevezes} from "../types/UszasnemElnevezes";
+import {EmberiNemId} from "../types/EmberiNemId";
+import {UszasnemId} from "../types/UszasnemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {CheckBox} from "../components/inputs/CheckBox";
 import {VersenyszamNemDropdown} from "../components/inputs/dropdowns/VersenyszamNemDropdown";
@@ -21,7 +21,7 @@ import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
-import {formatInterval, hungarianNormalize} from "../utils";
+import {formatInterval} from "../utils";
 import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
 import {FullPageModal} from "../components/modals/FullPageModal";
 import {CsapatDropdown} from "../components/inputs/dropdowns/CsapatDropdown";
@@ -30,9 +30,13 @@ import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
 import {UszoDropdown} from "../components/inputs/dropdowns/UszoDropdown";
 import {IntervalMaskedInput} from "../components/inputs/numeric/IntervalMaskedInput";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
+import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 
 export function VersenyszamokSlugPage() {
     const t = useTranslation();
+    const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
+    const getUszasnemElnevezes = useGetUszasnemElnevezes();
 
     const navigate = useNavigate();
     const {id} = useParams();
@@ -52,13 +56,10 @@ export function VersenyszamokSlugPage() {
         }
 
         const valto = versenyszam.valto ? `${versenyszam.valto}x` : "";
-        const nem = versenyszam.nem === "F" ?
-            t("generic_label.male.versenyszam") :
-            t("generic_label.female.versenyszam");
-        const uszasnem = hungarianNormalize(versenyszam.uszasnem.elnevezes);
-        const translatedUszasnem = t(`generic_label.uszasnem.${uszasnem}`);
-        return `${valto}${versenyszam.hossz} ${nem} ${translatedUszasnem}`;
-    }, [t, versenyszam]);
+        const nem = getVersenyszamNemElnevezes(versenyszam.nem);
+        const uszasnem = getUszasnemElnevezes(versenyszam.uszasnem);
+        return `${valto}${versenyszam.hossz} ${nem} ${uszasnem}`;
+    }, [getUszasnemElnevezes, getVersenyszamNemElnevezes, t, versenyszam]);
 
     const doDeleteVersenyszam = useCallback(() => {
         if (!!versenyszam && window.confirm(t("confirm.generic.delete"))) {
@@ -110,13 +111,15 @@ export function VersenyszamDetails(props: {
     versenyszam: Versenyszam
 }) {
     const t = useTranslation();
+    const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
+    const getUszasnemElnevezes = useGetUszasnemElnevezes();
 
     const [valtoEnabled, setValtoEnabled] = useState(!!props.versenyszam.valto);
     const [valto, setValto] = useState<number>(props.versenyszam.valto ?? 4);
     const [hossz, setHossz] = useState<number>(props.versenyszam.hossz);
-    const [nem, setNem] = useState<EmberiNem>(props.versenyszam.nem);
-    const [uszasnem, setUszasnem] = useState<UszasnemElnevezes>(
-        props.versenyszam.uszasnem.elnevezes
+    const [nem, setNem] = useState<EmberiNemId>(props.versenyszam.nem);
+    const [uszasnem, setUszasnem] = useState<UszasnemId>(
+        props.versenyszam.uszasnem
     );
 
     const unsavedChanges = useMemo(() => {
@@ -124,7 +127,7 @@ export function VersenyszamDetails(props: {
             props.versenyszam.valto !== valto ||
             props.versenyszam.hossz !== hossz ||
             props.versenyszam.nem !== nem ||
-            props.versenyszam.uszasnem.elnevezes !== uszasnem
+            props.versenyszam.uszasnem !== uszasnem
         );
     }, [hossz, nem, props.versenyszam, uszasnem, valto]);
 
@@ -181,7 +184,7 @@ export function NevezesekList(props: {
             return {
                 id: value.id,
                 uszoNev: value.uszo.nev,
-                uszoSzuletesiEv: value.uszo.szuletesiEv,
+                uszoSzuletesiEv: (value.uszo as any)["szuletesiDatum"],
                 csapatNev: value.uszo.csapat.nev,
                 nevezesiIdo: value.nevezesiIdo ? formatInterval(value.nevezesiIdo) : "nincs",
                 idoeredmeny: value.idoeredmeny ? formatInterval(value.idoeredmeny) : "nincs"
