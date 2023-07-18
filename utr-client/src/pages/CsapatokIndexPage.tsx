@@ -2,10 +2,7 @@ import {useCsapatokList} from "../hooks/csapatok/useCsapatokList";
 import {DataTable} from "../components/tables/DataTable";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Link, useSearchParams} from "react-router-dom";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {FullPageModal} from "../components/modals/FullPageModal";
-import {TitleIcon} from "../components/icons/TitleIcon";
 import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {TextInput} from "../components/inputs/TextInput";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
@@ -13,6 +10,7 @@ import {createCsapat} from "../api/csapatok";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {IconButton} from "../components/inputs/buttons/IconButton";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 
 export function CsapatokIndexPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();
@@ -54,11 +52,11 @@ function NewCsapatPopup() {
     const [nev, setNev] = useState("");
     const [varos, setVaros] = useState("");
 
-    const canCreate = useMemo<boolean>(() => {
+    const canComplete = useMemo<boolean>(() => {
         return !!nev && !!varos;
     }, [nev, varos]);
 
-    const doCreate = useCallback(() => {
+    const doComplete = useCallback(() => {
         if (!!user && !!nev && !!varos) {
             createCsapat(user, {nev: nev, varos: varos}).then(({message}) => {
                 console.log(message);
@@ -70,31 +68,23 @@ function NewCsapatPopup() {
         }
     }, [user, nev, varos, setSearchParams]);
 
+    const doDismiss = useCallback(() => {
+        setSearchParams(prevState => {
+            prevState.delete("modal");
+            return prevState;
+        });
+    }, [setSearchParams]);
+
     return (
-        <FullPageModal className="flex flex-col">
-            <div className="flex flex-row items-center justify-start gap-6 p-6
-                    min-w-max max-w-sm">
-                <TitleIcon name="groups"/>
-                <h2>{t("actions.csapat.create")}</h2>
-            </div>
-            <div className="w-full border border-slate-100"></div>
-            <div className="flex flex-col gap-2 p-6">
-                <TextInput value={nev} onValue={setNev}
-                           placeholder={t("generic_label.name")}/>
-                <TextInput value={varos} onValue={setVaros}
-                           placeholder={t("generic_label.city")}/>
-            </div>
-            <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")}
-                                 onClick={() => {
-                                     setSearchParams(prevState => {
-                                         prevState.delete("modal");
-                                         return prevState;
-                                     });
-                                 }}/>
-                <PrimaryButton text={t("generic_label.lets_go")} onClick={doCreate}
-                               disabled={!canCreate}/>
-            </div>
-        </FullPageModal>
+        <FullPageModalWithActions icon="groups"
+                                  title={t("actions.csapat.create")}
+                                  onComplete={doComplete} onDismiss={doDismiss}
+                                  canComplete={canComplete}
+                                  className="flex flex-col gap-2 p-6">
+            <TextInput value={nev} onValue={setNev}
+                       placeholder={t("generic_label.name")}/>
+            <TextInput value={varos} onValue={setVaros}
+                       placeholder={t("generic_label.city")}/>
+        </FullPageModalWithActions>
     );
 }

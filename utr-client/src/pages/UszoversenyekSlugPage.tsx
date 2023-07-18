@@ -18,9 +18,7 @@ import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton"
 import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {DisplayedVersenyszam} from "../types/DisplayedVersenyszam";
 import {useEditUszoverseny} from "../hooks/uszoversenyek/useEditUszoverseny";
-import {TitleIcon} from "../components/icons/TitleIcon";
 import {TextInput} from "../components/inputs/TextInput";
-import {FullPageModal} from "../components/modals/FullPageModal";
 import {DateInput} from "../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
@@ -32,6 +30,7 @@ import {useEmberiNemDropdownList} from "../hooks/useEmberiNemDropdownList";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {EmberiNemId} from "../types/EmberiNemId";
+import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 
 export function UszoversenyekSlugPage() {
     const t = useTranslation();
@@ -210,21 +209,21 @@ function UszoversenyModal(props: {
     const [datum, setDatum] = useState(props.uszoverseny?.datum.getTime() ?? Date.now());
     const [helyszin, setHelyszin] = useState(props.uszoverseny?.helyszin);
 
-    const doCloseModal = useCallback(() => {
+    const doDismiss = useCallback(() => {
         setSearchParams(prevState => {
             prevState.delete("modal");
             return prevState;
         });
     }, [setSearchParams]);
 
-    const doEdit = useCallback(() => {
+    const doComplete = useCallback(() => {
         if (!!props.uszoverseny) {
             editUszoverseny(props.uszoverseny.id, {
                 nev, datum: new Date(datum), helyszin
             }).then(console.log);
-            doCloseModal();
+            doDismiss();
         }
-    }, [props.uszoverseny, editUszoverseny, nev, datum, helyszin, doCloseModal]);
+    }, [props.uszoverseny, editUszoverseny, nev, datum, helyszin, doDismiss]);
 
     useEffect(() => {
         if (!!props.uszoverseny) {
@@ -235,27 +234,17 @@ function UszoversenyModal(props: {
     }, [props.uszoverseny]);
 
     return (
-        <FullPageModal className="flex flex-col">
-            <div className="flex flex-row items-center justify-start gap-6 p-6
-            min-w-max max-w-sm">
-                <TitleIcon name="edit"/>
-                <h2>{t("actions.uszoverseny.edit")}</h2>
-            </div>
-            <div className="w-full border border-slate-100"></div>
-            <div className="flex flex-col gap-2 p-6">
-                <TextInput value={nev} onValue={setNev}
-                           placeholder={t("csapat.name")}/>
-                <DateInput value={datum} onValue={setDatum}/>
-                {!!helyszin ? (
-                    <TextInput value={helyszin} onValue={setHelyszin}
-                               placeholder={t("csapat.city")}/>
-                ) : null}
-            </div>
-            <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")} onClick={doCloseModal}/>
-                <PrimaryButton text={t("actions.generic.lets_load_again")} onClick={doEdit}/>
-            </div>
-        </FullPageModal>
+        <FullPageModalWithActions icon="edit" title={t("actions.uszoverseny.edit")}
+                                  onComplete={doComplete} onDismiss={doDismiss}
+                                  className="flex flex-col gap-2 p-6">
+            <TextInput value={nev} onValue={setNev}
+                       placeholder={t("csapat.name")}/>
+            <DateInput value={datum} onValue={setDatum}/>
+            {!!helyszin ? (
+                <TextInput value={helyszin} onValue={setHelyszin}
+                           placeholder={t("csapat.city")}/>
+            ) : null}
+        </FullPageModalWithActions>
     );
 }
 
@@ -276,11 +265,17 @@ function VersenyszamModal(props: {
     const [valto, setValto] = useState<number>(4);
     const [valtoEnabled, setValtoEnabled] = useState(false);
 
-    const canCreate = useMemo(() => {
+    const modalTitle = useMemo(() => {
+        return searchParams.has("versenyszamId") ?
+            t("actions.versenyszam.edit") :
+            t("actions.versenyszam.create");
+    }, [searchParams]);
+
+    const canComplete = useMemo(() => {
         return !!hossz && uszasnem !== "-" && emberiNem !== "-";
     }, [emberiNem, hossz, uszasnem]);
 
-    const doCloseModal = useCallback(() => {
+    const doDismiss = useCallback(() => {
         setSearchParams(prevState => {
             prevState.delete("modal");
             prevState.delete("versenyszamId");
@@ -288,8 +283,8 @@ function VersenyszamModal(props: {
         });
     }, [setSearchParams]);
 
-    const doCommitChanges = useCallback(() => {
-        if (!!props.uszoverseny && canCreate) {
+    const doComplete = useCallback(() => {
+        if (!!props.uszoverseny && canComplete) {
             createVersenyszam({
                 hossz: hossz,
                 valto: valtoEnabled ? valto : undefined,
@@ -298,53 +293,37 @@ function VersenyszamModal(props: {
                 versenyId: props.uszoverseny.id
             }).then(message => {
                 console.log(message);
-                doCloseModal();
+                doDismiss();
             }).catch(console.error);
         }
     }, [
-        canCreate, createVersenyszam, doCloseModal, emberiNem,
+        canComplete, createVersenyszam, doDismiss, emberiNem,
         hossz, props.uszoverseny, uszasnem, uszasnemList, valto, valtoEnabled
     ]);
 
     return (
-        <FullPageModal className="flex flex-col">
-            <div className="flex flex-row items-center
-                    justify-start gap-6 p-6 min-w-max max-w-sm">
-                <TitleIcon name="person"/>
-                <h2>
-                    {searchParams.has("versenyszamId") ?
-                        t("actions.versenyszam.edit") :
-                        t("actions.versenyszam.create")}
-                </h2>
-            </div>
-            <div className="w-full border border-slate-100"></div>
-            <div className="flex flex-col gap-2 p-6">
-                <div className="grid grid-rows-2 grid-cols-[auto_auto]
+        <FullPageModalWithActions icon="person" title={modalTitle}
+                                  onComplete={doComplete} onDismiss={doDismiss}
+                                  className="flex flex-col gap-2 p-6">
+            <div className="grid grid-rows-2 grid-cols-[auto_auto]
                         gap-y-2 gap-x-8 items-center">
-                    <label>{t("versenyszam.valto")}</label>
-                    <div className="flex flex-row gap-2 justify-items-start">
-                        <CheckBox value={valtoEnabled} onValue={setValtoEnabled}/>
-                        <NumberInput value={valto} onValue={setValto} min={1} max={8}
-                                     disabled={!valtoEnabled}/>
-                    </div>
-                    <label>{t("versenyszam.hossz")}</label>
-                    <NumberInput value={hossz} onValue={setHossz} min={25} max={200}/>
-                    <label>{t("versenyszam.nem")}</label>
-                    <GenericDropdown options={emberiNemList} onSelect={value => {
-                        setEmberiNem(value);
-                    }} selected={emberiNem}/>
-                    <label>{t("versenyszam.uszasnem")}</label>
-                    <GenericDropdown options={uszasnemList} onSelect={value => {
-                        setUszasnem(value);
-                    }} selected={uszasnem}/>
+                <label>{t("versenyszam.valto")}</label>
+                <div className="flex flex-row gap-2 justify-items-start">
+                    <CheckBox value={valtoEnabled} onValue={setValtoEnabled}/>
+                    <NumberInput value={valto} onValue={setValto} min={1} max={8}
+                                 disabled={!valtoEnabled}/>
                 </div>
+                <label>{t("versenyszam.hossz")}</label>
+                <NumberInput value={hossz} onValue={setHossz} min={25} max={200}/>
+                <label>{t("versenyszam.nem")}</label>
+                <GenericDropdown options={emberiNemList} onSelect={value => {
+                    setEmberiNem(value);
+                }} selected={emberiNem}/>
+                <label>{t("versenyszam.uszasnem")}</label>
+                <GenericDropdown options={uszasnemList} onSelect={value => {
+                    setUszasnem(value);
+                }} selected={uszasnem}/>
             </div>
-            <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")}
-                                 onClick={doCloseModal}/>
-                <PrimaryButton text={t("generic_label.lets_go")}
-                               onClick={doCommitChanges} disabled={!canCreate}/>
-            </div>
-        </FullPageModal>
+        </FullPageModalWithActions>
     );
 }

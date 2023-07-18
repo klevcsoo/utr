@@ -8,9 +8,6 @@ import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton"
 import {useSearchParams} from "react-router-dom";
 import {useDeleteUser} from "../hooks/auth/useDeleteUser";
 import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
-import {FullPageModal} from "../components/modals/FullPageModal";
-import {TitleIcon} from "../components/icons/TitleIcon";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {useUserDetails} from "../hooks/auth/useUserDetails";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {TextInput} from "../components/inputs/TextInput";
@@ -19,6 +16,7 @@ import {useRolesList} from "../hooks/auth/useRolesList";
 import {CheckBox} from "../components/inputs/CheckBox";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useEditUser} from "../hooks/auth/useEditUser";
+import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 
 export function SettingsPage() {
     const t = useTranslation();
@@ -98,6 +96,14 @@ function UserModal() {
     const editUser = useEditUser();
     const [displayName, setDisplayName] = useState("");
 
+    const modalIcon = useMemo(() => {
+        return !user ? "person" : "edit";
+    }, [user]);
+
+    const modalTitle = useMemo(() => {
+        return !user ? t("actions.user.create") : t("actions.user.edit");
+    }, [t, user]);
+
     const doOpenPasswordModal = useCallback(() => {
         setSearchParams(state => {
             state.set("modal", "user_password");
@@ -105,7 +111,7 @@ function UserModal() {
         });
     }, [setSearchParams]);
 
-    const doCloseModal = useCallback(() => {
+    const doDismiss = useCallback(() => {
         setSearchParams(state => {
             state.delete("modal");
             state.has("id") && state.delete("id");
@@ -113,50 +119,38 @@ function UserModal() {
         });
     }, [setSearchParams]);
 
-    const doCommitChanges = useCallback(() => {
+    const doComplete = useCallback(() => {
         if (!!user && displayName.length > 6) {
             editUser(user.id, {displayName: displayName}).then(messages => {
                 messages.forEach(console.log);
-                doCloseModal();
+                doDismiss();
             });
         }
-    }, [displayName, doCloseModal, editUser, user]);
+    }, [displayName, doDismiss, editUser, user]);
 
     useEffect(() => {
         setDisplayName(user?.displayName ?? "");
     }, [user]);
 
     return (
-        <FullPageModal className="flex flex-col">
+        <FullPageModalWithActions icon={modalIcon} title={modalTitle}
+                                  onComplete={doComplete} onDismiss={doDismiss}
+                                  className="flex flex-col gap-8 p-6 items-center">
             {loadingUser || !user ? (
                 <LoadingSpinner/>
             ) : (
                 <Fragment>
-                    <div className="flex flex-row items-center justify-start gap-6 p-6
-                    min-w-max max-w-sm">
-                        <TitleIcon name={!user ? "person" : "edit"}/>
-                        <h2>{t(`actions.user.${!user ? "create" : "edit"}`)}</h2>
+                    <div className="flex flex-row gap-8 items-center">
+                        <label>{t("generic_label.username")}</label>
+                        <TextInput value={displayName} onValue={setDisplayName}
+                                   placeholder={t("generic_label.username")}/>
                     </div>
-                    <div className="w-full border border-slate-100"></div>
-                    <div className="flex flex-col gap-8 p-6 items-center">
-                        <div className="flex flex-row gap-8 items-center">
-                            <label>{t("generic_label.username")}</label>
-                            <TextInput value={displayName} onValue={setDisplayName}
-                                       placeholder={t("generic_label.username")}/>
-                        </div>
-                        <UserRoleSelector user={user}/>
-                        <SecondaryButton text={t("actions.user.change_password")}
-                                         onClick={doOpenPasswordModal}/>
-                    </div>
-                    <div className="flex flex-row gap-2 p-6">
-                        <SecondaryButton text={t("generic_label.rather_not")}
-                                         onClick={doCloseModal}/>
-                        <PrimaryButton text={t("generic_label.lets_go")}
-                                       onClick={doCommitChanges}/>
-                    </div>
+                    <UserRoleSelector user={user}/>
+                    <SecondaryButton text={t("actions.user.change_password")}
+                                     onClick={doOpenPasswordModal}/>
                 </Fragment>
             )}
-        </FullPageModal>
+        </FullPageModalWithActions>
     );
 }
 
@@ -217,19 +211,19 @@ function UserPasswordChangeModal() {
     const [newPass, setNewPass] = useState("");
     const [newPass2, setNewPass2] = useState("");
 
-    const canCommit = useMemo<boolean>(() => {
+    const canComplete = useMemo<boolean>(() => {
         return !!oldPass && !!newPass && newPass === newPass2;
     }, [oldPass, newPass, newPass2]);
 
-    const doCloseModal = useCallback(() => {
+    const doDismiss = useCallback(() => {
         setSearchParams(state => {
             state.set("modal", "user");
             return state;
         });
     }, [setSearchParams]);
 
-    const doCommitChanges = useCallback(() => {
-        if (!!user && canCommit) {
+    const doComplete = useCallback(() => {
+        if (!!user && canComplete) {
             editUser(user.id, {
                 password: {
                     oldPassword: oldPass,
@@ -237,43 +231,26 @@ function UserPasswordChangeModal() {
                 }
             }).then(messages => {
                 messages.forEach(console.log);
-                doCloseModal();
+                doDismiss();
             });
         }
-    }, [canCommit, doCloseModal, editUser, newPass, oldPass, user]);
+    }, [canComplete, doDismiss, editUser, newPass, oldPass, user]);
 
     return (
-        <FullPageModal className="flex flex-col">
-            {loadingUser || !user ? (
-                <LoadingSpinner/>
-            ) : (
-                <Fragment>
-                    <div className="flex flex-row items-center justify-start gap-6 p-6
-                    min-w-max max-w-sm">
-                        <TitleIcon name="lock"/>
-                        <h2>{t(`actions.user.change_password`)}</h2>
-                    </div>
-                    <div className="w-full border border-slate-100"></div>
-                    <form className="grid grid-cols-2 gap-2 p-6">
-                        <label>{t("settings.user.password.old")}</label>
-                        <TextInput value={oldPass} onValue={setOldPass}
-                                   password/>
-                        <label>{t("settings.user.password.new")}</label>
-                        <TextInput value={newPass} onValue={setNewPass}
-                                   password/>
-                        <label>{t("settings.user.password.new_again")}</label>
-                        <TextInput value={newPass2} onValue={setNewPass2}
-                                   password/>
-                    </form>
-                    <div className="flex flex-row gap-2 p-6">
-                        <SecondaryButton text={t("generic_label.rather_not")}
-                                         onClick={doCloseModal}/>
-                        <PrimaryButton text={t("generic_label.lets_go")}
-                                       onClick={doCommitChanges}
-                                       disabled={!canCommit}/>
-                    </div>
-                </Fragment>
-            )}
-        </FullPageModal>
+        <FullPageModalWithActions icon="lock"
+                                  title={t(`actions.user.change_password`)}
+                                  onComplete={doComplete} onDismiss={doDismiss}>
+            <form className="grid grid-cols-2 gap-2 p-6">
+                <label>{t("settings.user.password.old")}</label>
+                <TextInput value={oldPass} onValue={setOldPass}
+                           password/>
+                <label>{t("settings.user.password.new")}</label>
+                <TextInput value={newPass} onValue={setNewPass}
+                           password/>
+                <label>{t("settings.user.password.new_again")}</label>
+                <TextInput value={newPass2} onValue={setNewPass2}
+                           password/>
+            </form>
+        </FullPageModalWithActions>
     );
 }

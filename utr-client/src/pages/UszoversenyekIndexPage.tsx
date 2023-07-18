@@ -6,10 +6,7 @@ import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable} from "../components/tables/DataTable";
 import {IconButton} from "../components/inputs/buttons/IconButton";
 import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
-import {FullPageModal} from "../components/modals/FullPageModal";
-import {TitleIcon} from "../components/icons/TitleIcon";
 import {TextInput} from "../components/inputs/TextInput";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {DateInput} from "../components/inputs/DateInput";
 import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
 import {BorderCard} from "../components/containers/BorderCard";
@@ -19,6 +16,7 @@ import {Uszoverseny} from "../types/model/Uszoverseny";
 import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
@@ -111,11 +109,11 @@ function NewUszoversenyModal() {
     const [helyszin, setHelyszin] = useState("");
     const [datum, setDatum] = useState(Date.now());
 
-    const canCreate = useMemo<boolean>(() => {
+    const canComplete = useMemo<boolean>(() => {
         return !!nev && !!helyszin && !!datum;
     }, [nev, helyszin, datum]);
 
-    const doCreate = useCallback(() => {
+    const doComplete = useCallback(() => {
         if (!!nev && !!helyszin) {
             createUszoverseny({
                 nev: nev,
@@ -132,32 +130,24 @@ function NewUszoversenyModal() {
         }
     }, [nev, helyszin, createUszoverseny, datum, setSearchParams]);
 
+    const doDismiss = useCallback(() => {
+        setSearchParams(prevState => {
+            prevState.delete("modal");
+            return prevState;
+        });
+    }, [setSearchParams]);
+
     return (
-        <FullPageModal className="flex flex-col">
-            <div className="flex flex-row items-center justify-start gap-6 p-6
-                    min-w-max max-w-sm">
-                <TitleIcon name="groups"/>
-                <h2>{t("actions.uszoverseny.create")}</h2>
-            </div>
-            <div className="w-full border border-slate-100"></div>
-            <div className="flex flex-col gap-2 p-6">
-                <TextInput value={nev} onValue={setNev}
-                           placeholder={t("generic_label.name")}/>
-                <TextInput value={helyszin} onValue={setHelyszin}
-                           placeholder={t("generic_label.city")}/>
-                <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
-            </div>
-            <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")}
-                                 onClick={() => {
-                                     setSearchParams(prevState => {
-                                         prevState.delete("modal");
-                                         return prevState;
-                                     });
-                                 }}/>
-                <PrimaryButton text={t("generic_label.lets_go")} onClick={doCreate}
-                               disabled={!canCreate}/>
-            </div>
-        </FullPageModal>
+        <FullPageModalWithActions icon="groups"
+                                  title={t("actions.uszoverseny.create")}
+                                  onComplete={doComplete} onDismiss={doDismiss}
+                                  className="flex flex-col gap-2 p-6"
+                                  canComplete={canComplete}>
+            <TextInput value={nev} onValue={setNev}
+                       placeholder={t("generic_label.name")}/>
+            <TextInput value={helyszin} onValue={setHelyszin}
+                       placeholder={t("generic_label.city")}/>
+            <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
+        </FullPageModalWithActions>
     );
 }

@@ -6,10 +6,8 @@ import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {useUszokList} from "../hooks/uszok/useUszokList";
 import {DataTable} from "../components/tables/DataTable";
-import {FullPageModal} from "../components/modals/FullPageModal";
 import {TextInput} from "../components/inputs/TextInput";
 import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
-import {TitleIcon} from "../components/icons/TitleIcon";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
@@ -24,6 +22,8 @@ import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
+import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
+import {EmberiNemDropdown} from "../components/inputs/dropdowns/EmberiNemDropdown";
 
 export function CsapatokSlugPage() {
     const t = useTranslation();
@@ -201,26 +201,15 @@ function CsapatModal(props: {
     }, [props.csapat]);
 
     return (
-        <FullPageModal className="flex flex-col">
-            <div className="flex flex-row items-center justify-start gap-6 p-6
-            min-w-max max-w-sm">
-                <TitleIcon name="edit"/>
-                <h2>{t("actions.csapat.edit")}</h2>
-            </div>
-            <div className="w-full border border-slate-100"></div>
-            <div className="flex flex-col gap-2 p-6">
-                <TextInput value={nev} onValue={setNev}
-                           placeholder={t("csapat.name")}/>
-                <TextInput value={varos} onValue={setVaros}
-                           placeholder={t("csapat.city")}/>
-            </div>
-            <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")}
-                                 onClick={doCloseModal}/>
-                <PrimaryButton text={t("generic_label.lets_go")}
-                               onClick={doEdit}/>
-            </div>
-        </FullPageModal>
+        <FullPageModalWithActions icon="edit"
+                                  title={t("actions.csapat.edit")}
+                                  onComplete={doEdit} onDismiss={doCloseModal}
+                                  className="flex flex-col gap-2 p-6">
+            <TextInput value={nev} onValue={setNev}
+                       placeholder={t("csapat.name")}/>
+            <TextInput value={varos} onValue={setVaros}
+                       placeholder={t("csapat.city")}/>
+        </FullPageModalWithActions>
     );
 }
 
@@ -243,7 +232,13 @@ function UszoModal(props: {
         return !!nev && !!szuletesiEv && !!nem;
     }, [nem, nev, szuletesiEv]);
 
-    const doCloseModal = useCallback(() => {
+    const modalTitle = useMemo(() => {
+        return searchParams.has("uszoId") ?
+            t("actions.uszo.edit") :
+            t("actions.uszo.create");
+    }, [searchParams, t]);
+
+    const doDismiss = useCallback(() => {
         setSearchParams(prevState => {
             prevState.delete("modal");
             prevState.delete("uszoId");
@@ -251,7 +246,7 @@ function UszoModal(props: {
         });
     }, [setSearchParams]);
 
-    const doCreateUszo = useCallback(() => {
+    const doComplete = useCallback(() => {
         if (!!props.csapat && !!nev && !!szuletesiEv && !!nem) {
             createUszo({
                 nev: nev,
@@ -260,10 +255,10 @@ function UszoModal(props: {
                 csapatId: props.csapat.id
             }).then(message => {
                 console.log(message);
-                doCloseModal();
+                doDismiss();
             }).catch(console.log);
         }
-    }, [createUszo, doCloseModal, nem, nev, props.csapat, szuletesiEv]);
+    }, [createUszo, doDismiss, nem, nev, props.csapat, szuletesiEv]);
 
     useEffect(() => {
         if (!!uszo) {
@@ -274,45 +269,22 @@ function UszoModal(props: {
     }, [uszo]);
 
     return (
-        <FullPageModal className="flex flex-col">
-            {searchParams.has("uszoId") && uszoLoading ? (
-                <LoadingSpinner/>
-            ) : (
-                <Fragment>
-                    <div className="flex flex-row items-center
-                    justify-start gap-6 p-6 min-w-max max-w-sm">
-                        <TitleIcon name="person"/>
-                        <h2>
-                            {searchParams.has("uszoId") ? t("actions.uszo.edit") :
-                                t("actions.uszo.create")}
-                        </h2>
-                    </div>
-                    <div className="w-full border border-slate-100"></div>
-                    <div className="flex flex-col gap-2 p-6">
-                        <TextInput value={nev} onValue={setNev}
-                                   placeholder={t("uszo.name")}/>
-                        <div className="grid grid-rows-2 grid-cols-[auto_auto]
+        <FullPageModalWithActions icon="person" title={modalTitle}
+                                  onComplete={doComplete} onDismiss={doDismiss}
+                                  className="flex flex-col gap-2 p-6"
+                                  canComplete={canCreateUszo}>
+            <TextInput value={nev} onValue={setNev}
+                       placeholder={t("uszo.name")}/>
+            <div className="grid grid-rows-2 grid-cols-[auto_auto]
                         gap-y-2 gap-x-8 items-center">
-                            <label>{t("uszo.year_of_birth")}</label>
-                            <NumberInput value={szuletesiEv}
-                                         onValue={setSzuletesiEv}
-                                         min={1980}
-                                         max={(new Date()).getFullYear()}/>
-                            <label>Nem:</label>
-                            {/*<GenericDropdown options={{"N": "Nő", "F": "Férfi"}}*/}
-                            {/*          onSelect={() => {*/}
-                            {/*          }}/>*/}
-                        </div>
-                    </div>
-                    <div className="flex flex-row gap-2 p-6">
-                        <SecondaryButton text={t("generic_label.rather_not")}
-                                         onClick={doCloseModal}/>
-                        <PrimaryButton text={t("generic_label.lets_go")}
-                                       onClick={doCreateUszo}
-                                       disabled={!canCreateUszo}/>
-                    </div>
-                </Fragment>
-            )}
-        </FullPageModal>
+                <label>{t("uszo.year_of_birth")}</label>
+                <NumberInput value={szuletesiEv}
+                             onValue={setSzuletesiEv}
+                             min={1980}
+                             max={(new Date()).getFullYear()}/>
+                <label>Nem:</label>
+                <EmberiNemDropdown selected={nem} onSelect={setNem}/>
+            </div>
+        </FullPageModalWithActions>
     );
 }

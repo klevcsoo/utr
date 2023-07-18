@@ -23,15 +23,14 @@ import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../utils";
 import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
-import {FullPageModal} from "../components/modals/FullPageModal";
 import {CsapatDropdown} from "../components/inputs/dropdowns/CsapatDropdown";
-import {TitleIcon} from "../components/icons/TitleIcon";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
 import {UszoDropdown} from "../components/inputs/dropdowns/UszoDropdown";
 import {IntervalMaskedInput} from "../components/inputs/numeric/IntervalMaskedInput";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
+import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 
 export function VersenyszamokSlugPage() {
     const t = useTranslation();
@@ -242,14 +241,14 @@ function NevezesModal(props: {
     const [nevezesiIdo, setNevezesiIdo] = useState<string>();
     const [nevezesiIdoEnabled, setNevezesiIdoEnabled] = useState(false);
 
-    const canAdd = useMemo(() => {
+    const canComplete = useMemo(() => {
         return !!uszo &&
             (nevezesiIdoEnabled ?
                 (!!nevezesiIdo && !nevezesiIdo.includes("_")) :
                 true);
     }, [nevezesiIdo, nevezesiIdoEnabled, uszo]);
 
-    const doCloseModal = useCallback(() => {
+    const doDismiss = useCallback(() => {
         setSearchParams(prevState => {
             prevState.delete("modal");
             prevState.delete("versenyszamId");
@@ -257,8 +256,8 @@ function NevezesModal(props: {
         });
     }, [setSearchParams]);
 
-    const doAddNevezes = useCallback(() => {
-        if (!canAdd) {
+    const doComplete = useCallback(() => {
+        if (!canComplete) {
             return;
         }
 
@@ -269,52 +268,43 @@ function NevezesModal(props: {
             uszoId: uszo
         }).then(message => {
             console.log(message);
-            doCloseModal();
+            doDismiss();
         }).catch(console.error);
-    }, [canAdd, createNevezes, doCloseModal, nevezesiIdo, props.versenyszam, uszo]);
+    }, [canComplete, createNevezes, doDismiss, nevezesiIdo, props.versenyszam, uszo]);
 
     useEffect(() => {
         setUszo(NaN);
     }, [csapat]);
 
     return (
-        <FullPageModal className="flex flex-col">
-            <div className="flex flex-row items-center
-                    justify-start gap-6 p-6 min-w-max max-w-sm">
-                <TitleIcon name="person"/>
-                <h2>{t("actions.versenyszam.add_uszo")}</h2>
-            </div>
-            <div className="w-full border border-slate-100"></div>
-            <div className="grid grid-rows-[auto_auto] grid-cols-[auto_auto]
-                        gap-y-2 gap-x-8 items-center p-6">
-                <label>{t("generic_label.csapat.with_colon")}</label>
-                <CsapatDropdown selected={csapat} onSelect={setCsapat}/>
-                {csapat ? (
-                    <Fragment>
-                        <label>{t("csapat.uszok.with_colon")}</label>
-                        <UszoDropdown csapatId={csapat} selected={uszo}
-                                      onSelect={setUszo}/>
-                    </Fragment>
-                ) : null}
-                {uszo ? (
-                    <Fragment>
-                        <label>{t("generic_label.nevezesi_ido.with_colon")}</label>
-                        <div className="flex flex-row gap-2 justify-items-start">
-                            <CheckBox value={nevezesiIdoEnabled}
-                                      onValue={setNevezesiIdoEnabled}/>
-                            <IntervalMaskedInput value={nevezesiIdo}
-                                                 onValue={setNevezesiIdo}
-                                                 disabled={!nevezesiIdoEnabled}/>
-                        </div>
-                    </Fragment>
-                ) : null}
-            </div>
-            <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")}
-                                 onClick={doCloseModal}/>
-                <PrimaryButton text={t("generic_label.lets_go")}
-                               onClick={doAddNevezes} disabled={!canAdd}/>
-            </div>
-        </FullPageModal>
+        <FullPageModalWithActions icon="person"
+                                  title={t("actions.versenyszam.add_uszo")}
+                                  onComplete={doComplete} onDismiss={doDismiss}
+                                  className="grid grid-rows-[auto_auto]
+                                  grid-cols-[auto_auto]
+                                  gap-y-2 gap-x-8 items-center p-6"
+                                  canComplete={canComplete}>
+            <label>{t("generic_label.csapat.with_colon")}</label>
+            <CsapatDropdown selected={csapat} onSelect={setCsapat}/>
+            {csapat ? (
+                <Fragment>
+                    <label>{t("csapat.uszok.with_colon")}</label>
+                    <UszoDropdown csapatId={csapat} selected={uszo}
+                                  onSelect={setUszo}/>
+                </Fragment>
+            ) : null}
+            {uszo ? (
+                <Fragment>
+                    <label>{t("generic_label.nevezesi_ido.with_colon")}</label>
+                    <div className="flex flex-row gap-2 justify-items-start">
+                        <CheckBox value={nevezesiIdoEnabled}
+                                  onValue={setNevezesiIdoEnabled}/>
+                        <IntervalMaskedInput value={nevezesiIdo}
+                                             onValue={setNevezesiIdo}
+                                             disabled={!nevezesiIdoEnabled}/>
+                    </div>
+                </Fragment>
+            ) : null}
+        </FullPageModalWithActions>
     );
 }
