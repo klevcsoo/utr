@@ -6,7 +6,7 @@ import {BrowserRouter} from "react-router-dom";
 import AuthProvider from "./components/AuthProvider";
 import {EnvironmentBanner} from "./components/EnvironmentBanner";
 import {TranslationProvider} from "./components/TranslationProvider";
-import {startApiPollEventTimer} from "./apiPolling";
+import {startApiPollEventTimer} from "./lib/apiPolling";
 
 startApiPollEventTimer();
 

@@ -1,5 +1,5 @@
 import {AuthUser} from "../types/AuthUser";
-import {apiRequest, createAllStringObject} from "../utils";
+import {apiRequest, createAllStringObject} from "../lib/utils";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {VersenyszamCreationData} from "../types/request/VersenyszamCreationData";
 

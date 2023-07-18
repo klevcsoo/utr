@@ -21,7 +21,7 @@ import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
-import {formatInterval} from "../utils";
+import {formatInterval} from "../lib/utils";
 import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
 import {CsapatDropdown} from "../components/inputs/dropdowns/CsapatDropdown";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";

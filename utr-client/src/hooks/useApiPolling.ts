@@ -1,4 +1,4 @@
-import {offApiPollEvent, onApiPollEvent} from "../apiPolling";
+import {offApiPollEvent, onApiPollEvent} from "../lib/apiPolling";
 import {useEffect} from "react";
 
 export function useApiPolling(fetchCallback: () => void) {

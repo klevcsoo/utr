@@ -1,7 +1,7 @@
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {AuthUser} from "../types/AuthUser";
-import {apiRequest} from "../utils";
+import {apiRequest} from "../lib/utils";
 
 export async function getOpenUszoverseny(user: AuthUser): Promise<Uszoverseny> {
     const data = await apiRequest<Uszoverseny>(user, "/nyitott/reszletek", "GET");
