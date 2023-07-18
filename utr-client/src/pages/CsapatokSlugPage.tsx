@@ -219,7 +219,7 @@ function UszoModal(props: {
     const t = useTranslation();
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const [uszo, uszoLoading] = useUszoDetails(
+    const [uszo, loadingUszo] = useUszoDetails(
         parseInt(searchParams.get("uszoId") ?? "-1")
     );
     const createUszo = useCreateUszo();
@@ -273,18 +273,24 @@ function UszoModal(props: {
                                   onComplete={doComplete} onDismiss={doDismiss}
                                   className="flex flex-col gap-2 p-6"
                                   canComplete={canCreateUszo}>
-            <TextInput value={nev} onValue={setNev}
-                       placeholder={t("uszo.name")}/>
-            <div className="grid grid-rows-2 grid-cols-[auto_auto]
+            {loadingUszo ? (
+                <LoadingSpinner/>
+            ) : (
+                <Fragment>
+                    <TextInput value={nev} onValue={setNev}
+                               placeholder={t("uszo.name")}/>
+                    <div className="grid grid-rows-2 grid-cols-[auto_auto]
                         gap-y-2 gap-x-8 items-center">
-                <label>{t("uszo.year_of_birth")}</label>
-                <NumberInput value={szuletesiEv}
-                             onValue={setSzuletesiEv}
-                             min={1980}
-                             max={(new Date()).getFullYear()}/>
-                <label>Nem:</label>
-                <EmberiNemDropdown selected={nem} onSelect={setNem}/>
-            </div>
+                        <label>{t("uszo.year_of_birth")}</label>
+                        <NumberInput value={szuletesiEv}
+                                     onValue={setSzuletesiEv}
+                                     min={1980}
+                                     max={(new Date()).getFullYear()}/>
+                        <label>Nem:</label>
+                        <EmberiNemDropdown selected={nem} onSelect={setNem}/>
+                    </div>
+                </Fragment>
+            )}
         </FullPageModalWithActions>
     );
 }

@@ -240,17 +240,21 @@ function UserPasswordChangeModal() {
         <FullPageModalWithActions icon="lock"
                                   title={t(`actions.user.change_password`)}
                                   onComplete={doComplete} onDismiss={doDismiss}>
-            <form className="grid grid-cols-2 gap-2 p-6">
-                <label>{t("settings.user.password.old")}</label>
-                <TextInput value={oldPass} onValue={setOldPass}
-                           password/>
-                <label>{t("settings.user.password.new")}</label>
-                <TextInput value={newPass} onValue={setNewPass}
-                           password/>
-                <label>{t("settings.user.password.new_again")}</label>
-                <TextInput value={newPass2} onValue={setNewPass2}
-                           password/>
-            </form>
+            {loadingUser ? (
+                <LoadingSpinner/>
+            ) : (
+                <form className="grid grid-cols-2 gap-2 p-6">
+                    <label>{t("settings.user.password.old")}</label>
+                    <TextInput value={oldPass} onValue={setOldPass}
+                               password/>
+                    <label>{t("settings.user.password.new")}</label>
+                    <TextInput value={newPass} onValue={setNewPass}
+                               password/>
+                    <label>{t("settings.user.password.new_again")}</label>
+                    <TextInput value={newPass2} onValue={setNewPass2}
+                               password/>
+                </form>
+            )}
         </FullPageModalWithActions>
     );
 }

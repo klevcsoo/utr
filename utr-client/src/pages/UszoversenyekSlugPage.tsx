@@ -269,7 +269,7 @@ function VersenyszamModal(props: {
         return searchParams.has("versenyszamId") ?
             t("actions.versenyszam.edit") :
             t("actions.versenyszam.create");
-    }, [searchParams]);
+    }, [searchParams, t]);
 
     const canComplete = useMemo(() => {
         return !!hossz && uszasnem !== "-" && emberiNem !== "-";
