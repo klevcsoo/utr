@@ -5,7 +5,6 @@ import {useDeleteUszoverseny} from "../hooks/uszoversenyek/useDeleteUszoverseny"
 import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
 import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {BorderCard} from "../components/containers/BorderCard";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
@@ -26,7 +25,7 @@ import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElneve
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, IconButton} from "@material-tailwind/react";
+import {Button, IconButton, Spinner} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 
@@ -80,7 +79,7 @@ export function UszoversenyekSlugPage() {
 
     return uszoversenyLoading ? (
         <div className="w-full h-full grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : !uszoverseny ? (
         <div className="h-full grid place-content-center">
@@ -172,7 +171,7 @@ function VersenyszamokList(props: {
 
     return versenyszamokLoading ? (
         <div className="grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : !versenyszamok || !versenyszamok.length ? (
         <BorderCard>

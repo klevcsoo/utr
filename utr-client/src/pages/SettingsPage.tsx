@@ -6,7 +6,6 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {useDeleteUser} from "../hooks/auth/useDeleteUser";
 import {useUserDetails} from "../hooks/auth/useUserDetails";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {TextInput} from "../components/inputs/TextInput";
 import {DisplayedUser} from "../types/DisplayedUser";
 import {useRolesList} from "../hooks/auth/useRolesList";
@@ -14,7 +13,7 @@ import {CheckBox} from "../components/inputs/CheckBox";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useEditUser} from "../hooks/auth/useEditUser";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, IconButton} from "@material-tailwind/react";
+import {Button, IconButton, Spinner} from "@material-tailwind/react";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 import {DestructiveIconButton} from "../components/buttons";
 
@@ -139,7 +138,7 @@ function UserModal() {
                                   onComplete={doComplete} onDismiss={doDismiss}
                                   className="flex flex-col gap-8 p-6 items-center">
             {loadingUser || !user ? (
-                <LoadingSpinner/>
+                <Spinner/>
             ) : (
                 <Fragment>
                     <div className="flex flex-row gap-8 items-center">
@@ -244,7 +243,7 @@ function UserPasswordChangeModal() {
                                   title={t(`actions.user.change_password`)}
                                   onComplete={doComplete} onDismiss={doDismiss}>
             {loadingUser ? (
-                <LoadingSpinner/>
+                <Spinner/>
             ) : (
                 <form className="grid grid-cols-2 gap-2 p-6">
                     <label>{t("settings.user.password.old")}</label>

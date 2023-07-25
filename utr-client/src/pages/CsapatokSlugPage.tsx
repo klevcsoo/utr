@@ -1,7 +1,6 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {useCsapatDetails} from "../hooks/csapatok/useCsapatDetails";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {useUszokList} from "../hooks/uszok/useUszokList";
 import {DataTable} from "../components/tables/DataTable";
 import {TextInput} from "../components/inputs/TextInput";
@@ -19,7 +18,7 @@ import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {EmberiNemSelect} from "../components/selects";
-import {Button, IconButton} from "@material-tailwind/react";
+import {Button, IconButton, Spinner} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 
@@ -51,7 +50,7 @@ export function CsapatokSlugPage() {
 
     return csapatLoading ? (
         <div className="w-full h-full grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : !csapat ? (
         <div className="h-full grid place-content-center">
@@ -138,7 +137,7 @@ function UszokList(props: {
         <Fragment>
             {uszokLoading ? (
                 <div className="grid place-content-center">
-                    <LoadingSpinner/>
+                    <Spinner/>
                 </div>
             ) : !uszok || !uszok.length ? (
                 <BorderCard>
@@ -280,7 +279,7 @@ function UszoModal(props: {
                                   className="flex flex-col gap-2 p-6"
                                   canComplete={canCreateUszo}>
             {loadingUszo ? (
-                <LoadingSpinner/>
+                <Spinner/>
             ) : (
                 <Fragment>
                     <TextInput value={nev} onValue={setNev}

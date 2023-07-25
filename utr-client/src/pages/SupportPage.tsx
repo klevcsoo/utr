@@ -2,13 +2,12 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {TabSelector} from "../components/inputs/TabSelector";
 import {useSearchParams} from "react-router-dom";
 import {useServerEnvVars} from "../hooks/support/useServerEnvVars";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {DataTable} from "../components/tables/DataTable";
 import {useEffect, useMemo} from "react";
 import {useServerLog} from "../hooks/support/useServerLog";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {Button} from "@material-tailwind/react";
+import {Button, Spinner} from "@material-tailwind/react";
 
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";
@@ -47,7 +46,7 @@ function EnvironmentVariables() {
     }, [variables]);
 
     return loadingVariables ? (
-        <LoadingSpinner/>
+        <Spinner/>
     ) : (
         <div className="flex flex-col gap-2">
             <h3>{t("support.utr_variables")}</h3>

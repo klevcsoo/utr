@@ -1,7 +1,7 @@
-import {CommonChildrenOnlyProps} from "../types/componentProps/common/CommonChildrenOnlyProps";
+import {CommonChildrenOnlyProps} from "../../types/componentProps/common/CommonChildrenOnlyProps";
 import {useCallback, useEffect, useState} from "react";
-import {loadTranslationMap, TranslationContext} from "../lib/translation";
-import {Locale} from "../types/Locale";
+import {loadTranslationMap, TranslationContext} from "../../lib/translation";
+import {Locale} from "../../types/Locale";
 
 const LOCALE_STORAGE_KEY = "locale";
 {

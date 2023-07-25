@@ -1,9 +1,9 @@
 import {GenericSelect} from "./GenericSelect";
 import {useCsapatokList} from "../../hooks/csapatok/useCsapatokList";
-import {LoadingSpinner} from "../LoadingSpinner";
 import {useMemo} from "react";
 import {CommonSelectProps} from "./CommonSelectProps";
 import {useTranslation} from "../../hooks/translations/useTranslation";
+import {Spinner} from "@material-tailwind/react";
 
 export function CsapatSelect(props: CommonSelectProps<number>) {
     const t = useTranslation();
@@ -22,7 +22,7 @@ export function CsapatSelect(props: CommonSelectProps<number>) {
     }, [csapatok]);
 
     return loadingCsapatok || !csapatok ? (
-        <LoadingSpinner scale={30}/>
+        <Spinner/>
     ) : (
         <GenericSelect options={options}
                        label={t("generic_label.csapat")}

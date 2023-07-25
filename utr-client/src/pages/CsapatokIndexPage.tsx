@@ -1,6 +1,5 @@
 import {useCsapatokList} from "../hooks/csapatok/useCsapatokList";
 import {DataTable} from "../components/tables/DataTable";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
@@ -9,7 +8,7 @@ import {createCsapat} from "../api/csapatok";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, IconButton} from "@material-tailwind/react";
+import {Button, IconButton, Spinner} from "@material-tailwind/react";
 import {PencilIcon} from "@heroicons/react/20/solid";
 
 export function CsapatokIndexPage() {
@@ -21,7 +20,7 @@ export function CsapatokIndexPage() {
 
     return csapatokLoading ? (
         <div className="w-full h-full grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : (
         <Fragment>

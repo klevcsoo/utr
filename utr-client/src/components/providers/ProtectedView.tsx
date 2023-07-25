@@ -1,7 +1,7 @@
 import {Fragment} from "react";
-import {useAuthUser} from "../hooks/auth/useAuthUser";
+import {useAuthUser} from "../../hooks/auth/useAuthUser";
 import {Navigate} from "react-router-dom";
-import {ProtectedViewProps} from "../types/componentProps/ProtectedViewProps";
+import {ProtectedViewProps} from "../../types/componentProps/ProtectedViewProps";
 
 export function ProtectedView(props: ProtectedViewProps) {
     const user = useAuthUser();

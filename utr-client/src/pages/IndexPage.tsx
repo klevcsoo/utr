@@ -1,10 +1,9 @@
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {Link, NavLink} from "react-router-dom";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Fragment} from "react";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {Button} from "@material-tailwind/react";
+import {Button, Spinner} from "@material-tailwind/react";
 
 export function IndexPage() {
     const t = useTranslation();
@@ -13,7 +12,7 @@ export function IndexPage() {
 
     return uszoversenyLoading ? (
         <div className="w-screen h-screen grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : !uszoverseny ? (
         <div className="w-screen h-screen grid place-items-center place-content-center

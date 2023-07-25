@@ -3,7 +3,6 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useVersenyszamDetails} from "../hooks/versenyszamok/useVersenyszamDetails";
 import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {Versenyszam} from "../types/model/Versenyszam";
@@ -29,7 +28,7 @@ import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button} from "@material-tailwind/react";
+import {Button, Spinner} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 
 export function VersenyszamokSlugPage() {
@@ -73,7 +72,7 @@ export function VersenyszamokSlugPage() {
 
     return loadingVersenyszam || loadingUszoverseny ? (
         <div className="w-full h-full grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : !versenyszam || !uszoverseny ? (
         <div className="h-full grid place-content-center">
@@ -205,7 +204,7 @@ export function NevezesekList(props: {
 
     return loadingNevezesek ? (
         <div className="grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : !nevezesek || !nevezesek.length ? (
         <BorderCard>

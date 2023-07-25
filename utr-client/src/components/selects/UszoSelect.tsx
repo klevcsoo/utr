@@ -1,9 +1,9 @@
 import {GenericSelect} from "./GenericSelect";
-import {LoadingSpinner} from "../LoadingSpinner";
 import {useMemo} from "react";
 import {useUszokList} from "../../hooks/uszok/useUszokList";
 import {UszoSelectProps} from "./UszoSelectProps";
 import {useTranslation} from "../../hooks/translations/useTranslation";
+import {Spinner} from "@material-tailwind/react";
 
 export function UszoSelect(props: UszoSelectProps) {
     const t = useTranslation();
@@ -22,7 +22,7 @@ export function UszoSelect(props: UszoSelectProps) {
     }, [uszok]);
 
     return loadingUszok || !uszok ? (
-        <LoadingSpinner scale={30}/>
+        <Spinner/>
     ) : (
         <GenericSelect options={options}
                        label={t("generic_label.uszo")}

@@ -1,7 +1,6 @@
 import {useUszoversenyekList} from "../hooks/uszoversenyek/useUszoversenyekList";
 import {Link, useSearchParams} from "react-router-dom";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable} from "../components/tables/DataTable";
 import {TextInput} from "../components/inputs/TextInput";
@@ -15,7 +14,7 @@ import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny"
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {DestructiveButton} from "../components/buttons";
-import {Button, IconButton} from "@material-tailwind/react";
+import {Button, IconButton, Spinner} from "@material-tailwind/react";
 import {LockClosedIcon, LockOpenIcon, PencilIcon} from "@heroicons/react/24/solid";
 
 export function UszoversenyekIndexPage() {
@@ -47,13 +46,13 @@ export function UszoversenyekIndexPage() {
 
     return uszoversenyekLoading ? (
         <div className="w-full h-full grid place-content-center">
-            <LoadingSpinner/>
+            <Spinner/>
         </div>
     ) : (
         <Fragment>
             <div className="w-full flex flex-col gap-2 items-start">
                 {nyitottVersenyLoading ? (
-                    <LoadingSpinner/>
+                    <Spinner/>
                 ) : !!nyitottVerseny ? (
                     <Fragment>
                         <h3>{t("uszoverseny.opened")}</h3>
