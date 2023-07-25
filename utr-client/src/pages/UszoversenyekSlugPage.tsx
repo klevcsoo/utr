@@ -5,7 +5,6 @@ import {useDeleteUszoverseny} from "../hooks/uszoversenyek/useDeleteUszoverseny"
 import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
 import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {BorderCard} from "../components/containers/BorderCard";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
@@ -25,7 +24,17 @@ import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElneve
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, IconButton, Spinner} from "@material-tailwind/react";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader,
+    IconButton,
+    Input,
+    Spinner,
+    Typography
+} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 
@@ -41,39 +50,6 @@ export function UszoversenyekSlugPage() {
     const deleteUszoverseny = useDeleteUszoverseny();
     const openUszoverseny = useOpenUszoverseny();
     const closeUszoverseny = useCloseUszoverseny();
-
-    const doOpenEditUszoversenyModal = useCallback(() => {
-        setSearchParams(prevState => {
-            prevState.set("modal", "uszoverseny");
-            return prevState;
-        });
-    }, [setSearchParams]);
-
-    const doDeleteUszoverseny = useCallback(() => {
-        if (!!uszoverseny) {
-            deleteUszoverseny(uszoverseny.id)
-                .then(console.log)
-                .catch(console.error);
-        }
-    }, [deleteUszoverseny, uszoverseny]);
-
-    const doOpenUszoverseny = useCallback(() => {
-        if (!!uszoverseny) {
-            openUszoverseny(uszoverseny.id)
-                .then(console.log)
-                .catch(console.error);
-        }
-    }, [openUszoverseny, uszoverseny]);
-
-    const doCloseUszoverseny = useCallback(() => {
-        if (!!uszoverseny && uszoverseny.nyitott) {
-            closeUszoverseny()
-                .then(console.log)
-                .catch(console.error);
-        } else {
-            console.error(t("error.page.cannot_close_uszoverseny"));
-        }
-    }, [closeUszoverseny, t, uszoverseny]);
 
     useSetAdminLayoutTitle(!uszoverseny ? t("generic_label.loading") : uszoverseny.nev);
 
@@ -91,47 +67,104 @@ export function UszoversenyekSlugPage() {
             </div>
         </div>
     ) : (
-        <Fragment>
-            <div className="w-full flex flex-col gap-8">
-                <div className="flex flex-col gap-2">
-                    <h3 className="ml-2">{t("generic_label.generic_info.with_colon")}</h3>
-                    <BorderCard className="grid grid-cols-2">
-                        <p>Dátum: </p>
-                        <p><b>{uszoverseny.datum.toLocaleDateString()}</b></p>
-                        <p>Helyszín: </p>
-                        <p><b>{uszoverseny.helyszin}</b></p>
-                    </BorderCard>
-                    <div className="flex flex-row gap-2 flex-wrap">
-                        <Button onClick={doOpenEditUszoversenyModal}>
-                            {t("actions.uszoverseny.edit_details")}
-                        </Button>
-                        {uszoverseny.nyitott ? (
-                            <DestructiveButton confirmText={t("actions.uszoverseny.close")}
-                                               onConfirm={doCloseUszoverseny}>
-                                {t("actions.uszoverseny.close")}
-                            </DestructiveButton>
-                        ) : (
-                            <Button variant="outlined" onClick={doOpenUszoverseny}>
-                                {t("actions.uszoverseny.open")}
-                            </Button>
-                        )}
-                        <DestructiveButton confirmText={t("actions.uszoverseny.delete")}
-                                           onClick={doDeleteUszoverseny}>
-                            {t("actions.uszoverseny.delete")}
-                        </DestructiveButton>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <h3 className="ml-2 col-span-2">{t("uszoversenyek.versenyszamok")}</h3>
-                    <VersenyszamokList uszoverseny={uszoverseny}/>
-                </div>
-            </div>
+        <div className="p-4 w-full flex flex-col gap-4">
+            <UszoversenyDetailsForm uszoverseny={uszoverseny}/>
+            <VersenyszamokList uszoverseny={uszoverseny}/>
             {searchParams.get("modal") === "uszoverseny" ? (
                 <UszoversenyModal uszoverseny={uszoverseny}/>
             ) : searchParams.get("modal") === "versenyszam" ? (
                 <VersenyszamModal uszoverseny={uszoverseny}/>
             ) : null}
-        </Fragment>
+        </div>
+    );
+}
+
+function UszoversenyDetailsForm(props: {
+    uszoverseny: Uszoverseny
+}) {
+    const t = useTranslation();
+    const editUszoverseny = useEditUszoverseny();
+    const deleteUszoverseny = useDeleteUszoverseny();
+    const openUszoverseny = useOpenUszoverseny();
+    const closeUszoverseny = useCloseUszoverseny();
+
+    const [isDirty, setIsDirty] = useState(false);
+    const [nev, setNev] = useState(props.uszoverseny.nev);
+    const [helyszin, setHelyszin] = useState(props.uszoverseny.helyszin);
+    const [datum, setDatum] = useState(props.uszoverseny.datum.getTime());
+
+    const doCommitChanges = useCallback(() => {
+        editUszoverseny(props.uszoverseny.id, {
+            nev: nev,
+            datum: new Date(datum),
+            helyszin: helyszin
+        }).then(message => {
+            console.log(message);
+            setIsDirty(false);
+        }).catch(console.error);
+    }, [datum, editUszoverseny, helyszin, nev, props.uszoverseny]);
+
+    const doDeleteUszoverseny = useCallback(() => {
+        deleteUszoverseny(props.uszoverseny.id)
+            .then(console.log)
+            .catch(console.error);
+    }, [deleteUszoverseny, props.uszoverseny]);
+
+    const doChangeOpenedState = useCallback(() => {
+        if (props.uszoverseny.nyitott) {
+            closeUszoverseny()
+                .then(console.log)
+                .catch(console.error);
+        } else {
+            openUszoverseny(props.uszoverseny.id)
+                .then(console.log)
+                .catch(console.error);
+        }
+    }, [closeUszoverseny, openUszoverseny, props.uszoverseny]);
+
+    useEffect(() => {
+        setIsDirty(
+            props.uszoverseny.nev !== nev ||
+            props.uszoverseny.helyszin !== helyszin ||
+            props.uszoverseny.datum.getTime() !== datum
+        );
+    }, [datum, helyszin, nev, props.uszoverseny]);
+
+    return (
+        <Card className="w-full">
+            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
+                <Typography variant="h5">
+                    {props.uszoverseny.nev}
+                </Typography>
+            </CardHeader>
+            <CardBody>
+                <form className="flex flex-col gap-4">
+                    <Input label={t("uszoverseny.elnevezes")} value={nev} onChange={event => {
+                        setNev(event.currentTarget.value);
+                    }}/>
+                    <Input label={t("generic_label.location")} value={helyszin} onChange={event => {
+                        setHelyszin(event.currentTarget.value);
+                    }}/>
+                    <DateInput value={datum} onValue={setDatum}/>
+                </form>
+            </CardBody>
+            <CardFooter className="flex flex-row gap-2">
+                <Button disabled={!isDirty} onClick={doCommitChanges}>
+                    {t("actions.generic.save_changes")}
+                </Button>
+                <Button variant={props.uszoverseny.nyitott ? "filled" : "outlined"}
+                        color={props.uszoverseny.nyitott ? "red" : "blue"}
+                        onClick={doChangeOpenedState}>
+                    {props.uszoverseny.nyitott ?
+                        t("actions.uszoverseny.close") :
+                        t("actions.uszoverseny.open")}
+                </Button>
+                <DestructiveButton confirmText={t("confirm.generic.delete")}
+                                   onConfirm={doDeleteUszoverseny}>
+                    {t("actions.uszoverseny.delete")}
+                </DestructiveButton>
+            </CardFooter>
+        </Card>
     );
 }
 
@@ -174,9 +207,9 @@ function VersenyszamokList(props: {
             <Spinner/>
         </div>
     ) : !versenyszamok || !versenyszamok.length ? (
-        <BorderCard>
+        <Card>
             <p>{t("uszoversenyek.no_versenyszam")}</p>
-        </BorderCard>
+        </Card>
     ) : (
         <Fragment>
             <DataTable dataList={displayedVersenyszamok} propertyNameOverride={{
@@ -186,8 +219,8 @@ function VersenyszamokList(props: {
                        actionColumn={({id}) => (
                            <Fragment>
                                <Link to={`versenyszamok/${id}`}>
-                                   <IconButton className="w-5">
-                                       <PencilIcon/>
+                                   <IconButton>
+                                       <PencilIcon className="w-5"/>
                                    </IconButton>
                                </Link>
                                <DestructiveIconButton confirmText={t("actions.versenyszam.delete")}

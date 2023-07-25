@@ -6,7 +6,6 @@ import {DataTable} from "../components/tables/DataTable";
 import {TextInput} from "../components/inputs/TextInput";
 import {DateInput} from "../components/inputs/DateInput";
 import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
-import {BorderCard} from "../components/containers/BorderCard";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
 import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {Uszoverseny} from "../types/model/Uszoverseny";
@@ -14,7 +13,7 @@ import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny"
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {DestructiveButton} from "../components/buttons";
-import {Button, IconButton, Spinner} from "@material-tailwind/react";
+import {Button, Card, IconButton, Spinner} from "@material-tailwind/react";
 import {LockClosedIcon, LockOpenIcon, PencilIcon} from "@heroicons/react/24/solid";
 
 export function UszoversenyekIndexPage() {
@@ -56,7 +55,7 @@ export function UszoversenyekIndexPage() {
                 ) : !!nyitottVerseny ? (
                     <Fragment>
                         <h3>{t("uszoverseny.opened")}</h3>
-                        <BorderCard className="w-full flex flex-col gap-2">
+                        <Card className="w-full flex flex-col gap-2">
                             <p>
                                 <b>{nyitottVerseny.nev}</b> ·&nbsp;
                                 {nyitottVerseny.helyszin} ·&nbsp;
@@ -76,7 +75,7 @@ export function UszoversenyekIndexPage() {
                                     </Button>
                                 </Link>
                             </div>
-                        </BorderCard>
+                        </Card>
                     </Fragment>
                 ) : null}
                 <h3 className="mt-2">{t("uszoversenyek.other_versenyek")}</h3>

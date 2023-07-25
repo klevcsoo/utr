@@ -10,10 +10,9 @@ import {TextInput} from "../components/inputs/TextInput";
 import {DisplayedUser} from "../types/DisplayedUser";
 import {useRolesList} from "../hooks/auth/useRolesList";
 import {CheckBox} from "../components/inputs/CheckBox";
-import {BorderCard} from "../components/containers/BorderCard";
 import {useEditUser} from "../hooks/auth/useEditUser";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, IconButton, Spinner} from "@material-tailwind/react";
+import {Button, Card, IconButton, Spinner} from "@material-tailwind/react";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 import {DestructiveIconButton} from "../components/buttons";
 
@@ -189,7 +188,7 @@ function UserRoleSelector(props: { user: DisplayedUser }) {
     return (
         <div className="flex flex-col gap-2 items-start w-full">
             <h3>{t("settings.user_edit.roles")}</h3>
-            <BorderCard className="flex flex-col items-start w-full">
+            <Card className="flex flex-col items-start w-full">
                 {roles.map((value, index) => (
                     <div key={index} className="flex flex-row gap-2 items-center">
                         <CheckBox value={selectedRoles.includes(value)}
@@ -197,7 +196,7 @@ function UserRoleSelector(props: { user: DisplayedUser }) {
                         <label>{value}</label>
                     </div>
                 ))}
-            </BorderCard>
+            </Card>
         </div>
     );
 }

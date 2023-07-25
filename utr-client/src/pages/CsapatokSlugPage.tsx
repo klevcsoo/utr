@@ -7,7 +7,6 @@ import {TextInput} from "../components/inputs/TextInput";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {BorderCard} from "../components/containers/BorderCard";
 import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";
 import {useEditCsapat} from "../hooks/csapatok/useEditCsapat";
@@ -18,7 +17,17 @@ import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {EmberiNemSelect} from "../components/selects";
-import {Button, IconButton, Spinner} from "@material-tailwind/react";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader,
+    IconButton,
+    Input,
+    Spinner,
+    Typography
+} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 
@@ -28,23 +37,9 @@ export function CsapatokSlugPage() {
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     const [csapat, csapatLoading] = useCsapatDetails(idNumber);
-    const deleteCsapat = useDeleteCsapat();
-
-    const doOpenEditCsapatModal = useCallback(() => {
-        setSearchParams(prevState => {
-            prevState.set("modal", "csapat");
-            return prevState;
-        });
-    }, [setSearchParams]);
-
-    const doDelete = useCallback(() => {
-        if (!!csapat) {
-            deleteCsapat(csapat.id).then(console.log);
-        }
-    }, [csapat, deleteCsapat]);
 
     useSetAdminLayoutTitle(!csapat ? t("generic_label.loading") : csapat.nev);
 
@@ -62,45 +57,84 @@ export function CsapatokSlugPage() {
             </div>
         </div>
     ) : (
-        <Fragment>
-            <div className="w-full flex flex-col gap-8">
-                <div className="flex flex-col gap-2">
-                    <h3 className="ml-2">{t("generic_label.generic_info.with_colon")}</h3>
-                    <BorderCard className="grid grid-cols-2">
-                        <p>{t("generic_label.city")}</p>
-                        <p><b>{csapat.varos}</b></p>
-                    </BorderCard>
-                    <div className="flex flex-row gap-2">
-                        <Button variant="filled" onClick={doOpenEditCsapatModal}>
-                            {t("actions.csapat.edit_details")}
-                        </Button>
-                        <DestructiveButton confirmText={t("actions.csapat.delete")}
-                                           onConfirm={doDelete}>
-                            {t("actions.csapat.delete")}
-                        </DestructiveButton>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <h3 className="ml-2 col-span-2">{t("csapat.uszok.with_colon")}</h3>
-                    <UszokList csapat={csapat}/>
-                </div>
-            </div>
-            {searchParams.get("modal") === "csapat" ? (
-                <CsapatModal csapat={csapat}/>
-            ) : searchParams.get("modal") === "uszo" ? (
+        <div className="p-4 w-full flex flex-col gap-4">
+            <CsapatDetailsForm csapat={csapat}/>
+            <UszokList csapat={csapat}/>
+            {searchParams.get("modal") === "uszo" ? (
                 <UszoModal csapat={csapat}/>
             ) : null}
-        </Fragment>
+        </div>
+    );
+}
+
+function CsapatDetailsForm(props: {
+    csapat: Csapat
+}) {
+    const t = useTranslation();
+    const deleteCsapat = useDeleteCsapat();
+    const editCsapat = useEditCsapat();
+
+    const [isDirty, setIsDirty] = useState(false);
+    const [nev, setNev] = useState(props.csapat.nev);
+    const [varos, setVaros] = useState(props.csapat.varos);
+
+    const doCommitChanges = useCallback(() => {
+        editCsapat(props.csapat.id, {
+            nev: nev,
+            varos: varos
+        }).then(message => {
+            console.log(message);
+            setIsDirty(false);
+        }).catch(console.error);
+    }, [editCsapat, nev, props.csapat, varos]);
+
+    const doDelete = useCallback(() => {
+        if (!!props.csapat) {
+            deleteCsapat(props.csapat.id).then(console.log);
+        }
+    }, [props.csapat, deleteCsapat]);
+
+    useEffect(() => {
+        setIsDirty(props.csapat.nev !== nev || props.csapat.varos !== varos);
+    }, [nev, props.csapat, varos]);
+
+    return (
+        <Card className="w-full">
+            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
+                <Typography variant="h5">
+                    {props.csapat.nev}
+                </Typography>
+            </CardHeader>
+            <CardBody>
+                <form className="flex flex-col gap-4">
+                    <Input label={t("csapat.name")} value={nev} onChange={event => {
+                        setNev(event.currentTarget.value);
+                    }}/>
+                    <Input label={t("csapat.city")} value={varos} onChange={event => {
+                        setVaros(event.currentTarget.value);
+                    }}/>
+                </form>
+            </CardBody>
+            <CardFooter className="flex flex-row gap-2">
+                <Button disabled={!isDirty} onClick={doCommitChanges}>
+                    {t("actions.generic.save_changes")}
+                </Button>
+                <DestructiveButton confirmText={t("confirm.generic.delete")}
+                                   onConfirm={doDelete}>
+                    {t("actions.csapat.delete")}
+                </DestructiveButton>
+            </CardFooter>
+        </Card>
     );
 }
 
 function UszokList(props: {
-    csapat?: Csapat
+    csapat: Csapat
 }) {
     const t = useTranslation();
     const getEmberiNemElnevezes = useGetEmberiNemElnevezes();
 
-    const [uszok, uszokLoading] = useUszokList(props.csapat?.id);
+    const [uszok, uszokLoading] = useUszokList(props.csapat.id);
     const deleteUszo = useDeleteUszo();
     const [, setSearchParams] = useSearchParams();
 
@@ -140,9 +174,9 @@ function UszokList(props: {
                     <Spinner/>
                 </div>
             ) : !uszok || !uszok.length ? (
-                <BorderCard>
+                <Card>
                     <p>{t("csapat.no_uszok")}</p>
-                </BorderCard>
+                </Card>
             ) : (
                 <DataTable dataList={displayedUszok} propertyNameOverride={{
                     nev: t("generic_label.name"),
@@ -168,53 +202,6 @@ function UszokList(props: {
                 {t("actions.uszo.create")}
             </Button>
         </Fragment>
-    );
-}
-
-function CsapatModal(props: {
-    csapat?: Csapat
-}) {
-    const t = useTranslation();
-
-    const [, setSearchParams] = useSearchParams();
-    const editCsapat = useEditCsapat();
-
-    const [nev, setNev] = useState(props.csapat?.nev ?? "");
-    const [varos, setVaros] = useState(props.csapat?.varos ?? "");
-
-    const doCloseModal = useCallback(() => {
-        setSearchParams(prevState => {
-            prevState.delete("modal");
-            return prevState;
-        });
-    }, [setSearchParams]);
-
-    const doEdit = useCallback(() => {
-        if (!!props.csapat) {
-            editCsapat(props.csapat.id, {
-                nev: nev, varos: varos
-            }).then(console.log);
-            doCloseModal();
-        }
-    }, [props.csapat, editCsapat, nev, varos, doCloseModal]);
-
-    useEffect(() => {
-        if (!!props.csapat) {
-            setNev(props.csapat.nev);
-            setVaros(props.csapat.varos);
-        }
-    }, [props.csapat]);
-
-    return (
-        <FullPageModalWithActions icon="edit"
-                                  title={t("actions.csapat.edit")}
-                                  onComplete={doEdit} onDismiss={doCloseModal}
-                                  className="flex flex-col gap-2 p-6">
-            <TextInput value={nev} onValue={setNev}
-                       placeholder={t("csapat.name")}/>
-            <TextInput value={varos} onValue={setVaros}
-                       placeholder={t("csapat.city")}/>
-        </FullPageModalWithActions>
     );
 }
 

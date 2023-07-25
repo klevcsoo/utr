@@ -3,7 +3,6 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useVersenyszamDetails} from "../hooks/versenyszamok/useVersenyszamDetails";
 import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
-import {BorderCard} from "../components/containers/BorderCard";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
@@ -28,7 +27,7 @@ import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, Spinner} from "@material-tailwind/react";
+import {Button, Card, Spinner} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 
 export function VersenyszamokSlugPage() {
@@ -147,7 +146,7 @@ export function VersenyszamDetails(props: {
     }, [editVersenyszam, hossz, nem, props.versenyszam.id, uszasnemId, valto, valtoEnabled]);
 
     return (
-        <BorderCard className="grid grid-cols-2 gap-2">
+        <Card className="grid grid-cols-2 gap-2">
             <p>{t("versenyszam.valto")}</p>
             <div className="flex flex-row gap-2 justify-items-start">
                 <CheckBox value={valtoEnabled} onValue={setValtoEnabled}/>
@@ -165,7 +164,7 @@ export function VersenyszamDetails(props: {
                     {t("actions.generic.save_changes")}
                 </Button>
             ) : null}
-        </BorderCard>
+        </Card>
     );
 }
 
@@ -207,9 +206,9 @@ export function NevezesekList(props: {
             <Spinner/>
         </div>
     ) : !nevezesek || !nevezesek.length ? (
-        <BorderCard>
+        <Card>
             <p>{t("versenyszam.no_uszo")}</p>
-        </BorderCard>
+        </Card>
     ) : (
         <Fragment>
             <DataTable dataList={displayedNevezesek} propertyNameOverride={{

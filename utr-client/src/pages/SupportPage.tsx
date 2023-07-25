@@ -5,9 +5,8 @@ import {useServerEnvVars} from "../hooks/support/useServerEnvVars";
 import {DataTable} from "../components/tables/DataTable";
 import {useEffect, useMemo} from "react";
 import {useServerLog} from "../hooks/support/useServerLog";
-import {BorderCard} from "../components/containers/BorderCard";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {Button, Spinner} from "@material-tailwind/react";
+import {Button, Card, Spinner} from "@material-tailwind/react";
 
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";
@@ -68,11 +67,11 @@ function ServerLog() {
 
     return (
         <div className="flex flex-col gap-8 items-center">
-            <BorderCard className="flex flex-col">
+            <Card className="flex flex-col">
                 {serverLog.map((value, index) => (
                     <code key={index}>{value}</code>
                 ))}
-            </BorderCard>
+            </Card>
             <Button onClick={refreshServerLog} disabled={loadingServerLog}>
                 {t("actions.generic.refresh")}
             </Button>
