@@ -4,8 +4,6 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable} from "../components/tables/DataTable";
-import {IconButton} from "../components/inputs/buttons/IconButton";
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {TextInput} from "../components/inputs/TextInput";
 import {DateInput} from "../components/inputs/DateInput";
 import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
@@ -13,10 +11,12 @@ import {BorderCard} from "../components/containers/BorderCard";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
 import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {Uszoverseny} from "../types/model/Uszoverseny";
-import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
+import {DestructiveButton} from "../components/buttons";
+import {Button, IconButton} from "@material-tailwind/react";
+import {LockClosedIcon, LockOpenIcon, PencilIcon} from "@heroicons/react/24/solid";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
@@ -64,12 +64,17 @@ export function UszoversenyekIndexPage() {
                                 {nyitottVerseny.datum.toLocaleDateString()}
                             </p>
                             <div className="flex flex-row gap-2 items-start">
-                                <WarningButton text={t("actions.uszoverseny.close")}
-                                               onClick={() => {
-                                                   doChangeVersenyNyitottState(nyitottVerseny);
-                                               }}/>
+                                <DestructiveButton
+                                    confirmText={t("actions.uszoverseny.close")}
+                                    onClick={() => {
+                                        doChangeVersenyNyitottState(nyitottVerseny);
+                                    }}>
+                                    {t("actions.uszoverseny.close")}
+                                </DestructiveButton>
                                 <Link to={String(nyitottVerseny.id)} className="w-full">
-                                    <SecondaryButton text={t("actions.generic.view_details")}/>
+                                    <Button variant="outlined">
+                                        {t("actions.generic.view_details")}
+                                    </Button>
                                 </Link>
                             </div>
                         </BorderCard>
@@ -83,16 +88,22 @@ export function UszoversenyekIndexPage() {
                         helyszin: t("generic_label.location")
                     }} excludedProperties={["id", "nyitott"]} actionColumn={entry => (
                         <Fragment>
-                            <IconButton iconName={entry.nyitott ? "stop" : "play_arrow"}
-                                        onClick={() => doChangeVersenyNyitottState(entry)}/>
+                            <IconButton className="w-6"
+                                        onClick={() => doChangeVersenyNyitottState(entry)}>
+                                {entry.nyitott ? <LockClosedIcon/> : <LockOpenIcon/>}
+                            </IconButton>
                             <Link to={String(entry.id)}>
-                                <IconButton iconName="edit"/>
+                                <IconButton className="w-6">
+                                    <PencilIcon/>
+                                </IconButton>
                             </Link>
                         </Fragment>
                     )}/>
-                    <SecondaryButton text={t("actions.uszoverseny.create")} onClick={() => {
+                    <Button variant="outlined" onClick={() => {
                         setSearchParams({modal: "create"});
-                    }}/>
+                    }}>
+                        {t("actions.uszoverseny.create")}
+                    </Button>
                 </div>
             </div>
             {searchParams.get("modal") === "create" ? <NewUszoversenyModal/> : null}

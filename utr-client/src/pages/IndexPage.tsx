@@ -1,11 +1,10 @@
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {Link, NavLink} from "react-router-dom";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Fragment} from "react";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {Button} from "@material-tailwind/react";
 
 export function IndexPage() {
     const t = useTranslation();
@@ -22,10 +21,10 @@ export function IndexPage() {
             <p>{t("error.page.no_open_uszoverseny")}</p>
             {user?.roles.includes("admin") ? (
                 <Link to="/admin/uszoversenyek">
-                    <PrimaryButton text={t("actions.uszoverseny.continue_to_uszoversenyek")}/>
+                    <Button>{t("actions.uszoverseny.continue_to_uszoversenyek")}</Button>
                 </Link>
             ) : (
-                <PrimaryButton text={t("actions.generic.lets_load_again")}/>
+                <Button>{t("actions.generic.lets_load_again")}</Button>
             )}
         </div>
     ) : (
@@ -39,9 +38,9 @@ export function IndexPage() {
                 </div>
                 {user?.roles.includes("admin") ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
-                        <PrimaryButton text={t("actions.generic.open")}/>
+                        <Button>{t("actions.generic.open")}</Button>
                         <Link to={`/admin/uszoversenyek/${uszoverseny.id}`}>
-                            <SecondaryButton text={t("actions.generic.edit")}/>
+                            <Button variant="outlined">{t("actions.generic.edit")}</Button>
                         </Link>
                     </div>
                 ) : null}
@@ -51,7 +50,7 @@ export function IndexPage() {
             </div>
             {user?.roles.includes("admin") ? (
                 <NavLink to="/admin" className="bottom-4 right-4 fixed">
-                    <PrimaryButton text={t("generic_label.admin_layout")}/>
+                    <Button>{t("generic_label.admin_layout")}</Button>
                 </NavLink>
             ) : null}
         </Fragment>

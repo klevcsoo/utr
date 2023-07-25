@@ -6,9 +6,9 @@ import {LoadingSpinner} from "../components/LoadingSpinner";
 import {DataTable} from "../components/tables/DataTable";
 import {useEffect, useMemo} from "react";
 import {useServerLog} from "../hooks/support/useServerLog";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {Button} from "@material-tailwind/react";
 
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";
@@ -74,8 +74,9 @@ function ServerLog() {
                     <code key={index}>{value}</code>
                 ))}
             </BorderCard>
-            <PrimaryButton text={t("actions.generic.refresh")}
-                           onClick={refreshServerLog} disabled={loadingServerLog}/>
+            <Button onClick={refreshServerLog} disabled={loadingServerLog}>
+                {t("actions.generic.refresh")}
+            </Button>
         </div>
     );
 }

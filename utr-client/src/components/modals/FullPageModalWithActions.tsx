@@ -3,8 +3,6 @@ import {TitleIcon} from "../icons/TitleIcon";
 import {
     FullPageModalWithActionsProps
 } from "../../types/componentProps/modals/FullPageModalWithActionsProps";
-import {SecondaryButton} from "../inputs/buttons/SecondaryButton";
-import {PrimaryButton} from "../inputs/buttons/PrimaryButton";
 import {useTranslation} from "../../hooks/translations/useTranslation";
 
 export function FullPageModalWithActions(props: FullPageModalWithActionsProps) {
@@ -22,11 +20,6 @@ export function FullPageModalWithActions(props: FullPageModalWithActionsProps) {
                 {props.children}
             </div>
             <div className="flex flex-row gap-2 p-6">
-                <SecondaryButton text={t("generic_label.rather_not")}
-                                 onClick={props.onDismiss}/>
-                <PrimaryButton text={t("generic_label.lets_go")}
-                               onClick={props.onComplete}
-                               disabled={!props.canComplete}/>
             </div>
         </FullPageModal>
     );

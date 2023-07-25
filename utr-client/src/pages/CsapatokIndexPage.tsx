@@ -3,14 +3,14 @@ import {DataTable} from "../components/tables/DataTable";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {TextInput} from "../components/inputs/TextInput";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {createCsapat} from "../api/csapatok";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {IconButton} from "../components/inputs/buttons/IconButton";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
+import {Button, IconButton} from "@material-tailwind/react";
+import {PencilIcon} from "@heroicons/react/20/solid";
 
 export function CsapatokIndexPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();
@@ -32,12 +32,16 @@ export function CsapatokIndexPage() {
                     id: t("generic_label.id")
                 }} excludedProperties={["id"]} actionColumn={entry => (
                     <Link to={String(entry.id)}>
-                        <IconButton iconName="edit"/>
+                        <IconButton>
+                            <PencilIcon className="w-6"/>
+                        </IconButton>
                     </Link>
                 )}/>
-                <SecondaryButton text={t("actions.csapat.create")} onClick={() => {
+                <Button variant="outlined" onClick={() => {
                     setSearchParams({modal: "newCsapat"});
-                }}/>
+                }}>
+                    {t("actions.csapat.create")}
+                </Button>
             </div>
             {searchParams.get("modal") === "newCsapat" ? <NewCsapatPopup/> : null}
         </Fragment>

@@ -1,6 +1,6 @@
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {Button} from "@material-tailwind/react";
 
 export function Error404Page() {
     const t = useTranslation();
@@ -12,10 +12,9 @@ export function Error404Page() {
                 <h1 className="text-slate-300 text-9xl text-center">404</h1>
                 <h2 className="text-center">{t("error.page.not_found.title")}</h2>
             </div>
-            <SecondaryButton text={t("error.page.not_found.button")}
-                             onClick={() => {
-                                 navigate(-1);
-                             }}/>
+            <Button variant="outlined" onClick={() => navigate(-1)}>
+                {t("error.page.not_found.button")}
+            </Button>
         </div>
     );
 }

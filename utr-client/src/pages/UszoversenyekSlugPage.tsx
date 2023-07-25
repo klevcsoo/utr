@@ -6,16 +6,11 @@ import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
 import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {LoadingSpinner} from "../components/LoadingSpinner";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {BorderCard} from "../components/containers/BorderCard";
-import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {DataTable} from "../components/tables/DataTable";
-import {IconButton} from "../components/inputs/buttons/IconButton";
-import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {DisplayedVersenyszam} from "../types/DisplayedVersenyszam";
 import {useEditUszoverseny} from "../hooks/uszoversenyek/useEditUszoverseny";
 import {TextInput} from "../components/inputs/TextInput";
@@ -31,6 +26,9 @@ import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElneve
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
+import {Button, IconButton} from "@material-tailwind/react";
+import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
+import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 
 export function UszoversenyekSlugPage() {
     const t = useTranslation();
@@ -89,7 +87,7 @@ export function UszoversenyekSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("uszoverseny.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text={t("actions.generic.back")}/>
+                    <Button>{t("actions.generic.back")}</Button>
                 </Link>
             </div>
         </div>
@@ -105,17 +103,23 @@ export function UszoversenyekSlugPage() {
                         <p><b>{uszoverseny.helyszin}</b></p>
                     </BorderCard>
                     <div className="flex flex-row gap-2 flex-wrap">
-                        <PrimaryButton text={t("actions.uszoverseny.edit_details")}
-                                       onClick={doOpenEditUszoversenyModal}/>
+                        <Button onClick={doOpenEditUszoversenyModal}>
+                            {t("actions.uszoverseny.edit_details")}
+                        </Button>
                         {uszoverseny.nyitott ? (
-                            <WarningButton text={t("actions.uszoverseny.close")}
-                                           onClick={doCloseUszoverseny}/>
+                            <DestructiveButton confirmText={t("actions.uszoverseny.close")}
+                                               onConfirm={doCloseUszoverseny}>
+                                {t("actions.uszoverseny.close")}
+                            </DestructiveButton>
                         ) : (
-                            <SecondaryButton text={t("actions.uszoverseny.open")}
-                                             onClick={doOpenUszoverseny}/>
+                            <Button variant="outlined" onClick={doOpenUszoverseny}>
+                                {t("actions.uszoverseny.open")}
+                            </Button>
                         )}
-                        <WarningButton text={t("actions.uszoverseny.delete")}
-                                       onClick={doDeleteUszoverseny}/>
+                        <DestructiveButton confirmText={t("actions.uszoverseny.delete")}
+                                           onClick={doDeleteUszoverseny}>
+                            {t("actions.uszoverseny.delete")}
+                        </DestructiveButton>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -183,16 +187,19 @@ function VersenyszamokList(props: {
                        actionColumn={({id}) => (
                            <Fragment>
                                <Link to={`versenyszamok/${id}`}>
-                                   <IconButton iconName="edit"/>
+                                   <IconButton className="w-6">
+                                       <PencilIcon/>
+                                   </IconButton>
                                </Link>
-                               <IconWarningButton iconName="delete"
-                                                  onClick={() => {
-                                                      doDeleteVersenyszam(id);
-                                                  }}/>
+                               <DestructiveIconButton confirmText={t("actions.versenyszam.delete")}
+                                                      onClick={() => doDeleteVersenyszam(id)}>
+                                   <TrashIcon className="w-6"/>
+                               </DestructiveIconButton>
                            </Fragment>
                        )}/>
-            <SecondaryButton text={t("actions.versenyszam.create")}
-                             onClick={doOpenNewVersenyszamModal}/>
+            <Button variant="outlined" onClick={doOpenNewVersenyszamModal}>
+                {t("actions.versenyszam.create")}
+            </Button>
         </Fragment>
     );
 }

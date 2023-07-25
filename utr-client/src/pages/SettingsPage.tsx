@@ -3,11 +3,8 @@ import {useTranslation} from "../hooks/translations/useTranslation";
 import {useUsersList} from "../hooks/auth/useUsersList";
 import {DataTable} from "../components/tables/DataTable";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {IconButton} from "../components/inputs/buttons/IconButton";
-import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
 import {useSearchParams} from "react-router-dom";
 import {useDeleteUser} from "../hooks/auth/useDeleteUser";
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {useUserDetails} from "../hooks/auth/useUserDetails";
 import {LoadingSpinner} from "../components/LoadingSpinner";
 import {TextInput} from "../components/inputs/TextInput";
@@ -17,6 +14,9 @@ import {CheckBox} from "../components/inputs/CheckBox";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useEditUser} from "../hooks/auth/useEditUser";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
+import {Button, IconButton} from "@material-tailwind/react";
+import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
+import {DestructiveIconButton} from "../components/buttons";
 
 export function SettingsPage() {
     const t = useTranslation();
@@ -74,16 +74,18 @@ function UsersList() {
                 roles: t("settings.roles")
             }} actionColumn={entry => (
                 <Fragment>
-                    <IconButton iconName="edit" onClick={() => {
-                        doOpenUserModal(entry.id);
-                    }}/>
-                    <IconWarningButton iconName="delete" onClick={() => {
-                        doDeleteUser(entry.id);
-                    }}/>
+                    <IconButton onClick={() => doOpenUserModal(entry.id)}>
+                        <PencilIcon className="w-6"/>
+                    </IconButton>
+                    <DestructiveIconButton confirmText={t("actions.generic.delete")}
+                                           onConfirm={() => doDeleteUser(entry.id)}>
+                        <TrashIcon className="w-6"/>
+                    </DestructiveIconButton>
                 </Fragment>
             )}/>
-            <SecondaryButton text={t("actions.user.create")}
-                             onClick={doOpenUserModal}/>
+            <Button variant="outlined" onClick={() => doOpenUserModal()}>
+                {t("actions.user.create")}
+            </Button>
         </div>
     );
 }
@@ -146,8 +148,9 @@ function UserModal() {
                                    placeholder={t("generic_label.username")}/>
                     </div>
                     <UserRoleSelector user={user}/>
-                    <SecondaryButton text={t("actions.user.change_password")}
-                                     onClick={doOpenPasswordModal}/>
+                    <Button onClick={doOpenPasswordModal}>
+                        {t("actions.user.change_password")}
+                    </Button>
                 </Fragment>
             )}
         </FullPageModalWithActions>

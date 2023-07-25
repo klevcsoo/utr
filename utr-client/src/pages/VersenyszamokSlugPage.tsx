@@ -4,10 +4,8 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useVersenyszamDetails} from "../hooks/versenyszamok/useVersenyszamDetails";
 import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
 import {LoadingSpinner} from "../components/LoadingSpinner";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
-import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
@@ -15,14 +13,12 @@ import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {CheckBox} from "../components/inputs/CheckBox";
 import {VersenyszamNemDropdown} from "../components/inputs/dropdowns/VersenyszamNemDropdown";
 import {UszasnemDropdown} from "../components/inputs/dropdowns/UszasnemDropdown";
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
 import {CsapatDropdown} from "../components/inputs/dropdowns/CsapatDropdown";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
 import {UszoDropdown} from "../components/inputs/dropdowns/UszoDropdown";
@@ -31,6 +27,8 @@ import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
+import {Button} from "@material-tailwind/react";
+import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 
 export function VersenyszamokSlugPage() {
     const t = useTranslation();
@@ -80,7 +78,7 @@ export function VersenyszamokSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("versenyszam.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text={t("actions.generic.back")}/>
+                    <Button>{t("actions.generic.back")}</Button>
                 </Link>
             </div>
         </div>
@@ -91,8 +89,10 @@ export function VersenyszamokSlugPage() {
                 <div className="flex flex-col gap-2">
                     <h3 className="ml-2">{t("generic_label.generic_info.with_colon")}</h3>
                     <VersenyszamDetails versenyszam={versenyszam}/>
-                    <WarningButton text={t("actions.versenyszam.delete")}
-                                   onClick={doDeleteVersenyszam}/>
+                    <DestructiveButton confirmText={t("actions.versenyszam.delete")}
+                                       onClick={doDeleteVersenyszam}>
+                        {t("actions.versenyszam.delete")}
+                    </DestructiveButton>
                 </div>
                 <div className="flex flex-col gap-2">
                     <h3 className="ml-2 col-span-2">{t("versenyszam.nevezesek")}</h3>
@@ -160,8 +160,9 @@ export function VersenyszamDetails(props: {
             <p>{t("versenyszam.uszasnem")}</p>
             <UszasnemDropdown selected={uszasnem} onSelect={setUszasnem}/>
             {unsavedChanges ? (
-                <SecondaryButton text={t("actions.generic.save_changes")}
-                                 onClick={doCommitChanges}/>
+                <Button onClick={doCommitChanges}>
+                    {t("actions.generic.save_changes")}
+                </Button>
             ) : null}
         </BorderCard>
     );
@@ -218,12 +219,15 @@ export function NevezesekList(props: {
                 idoeredmeny: t("generic_label.idoeredmeny")
             }} excludedProperties={["id"]} actionColumn={({id}) => (
                 <Fragment>
-                    <IconWarningButton iconName="delete"
-                                       onClick={() => doDeleteNevezes(id)}/>
+                    <DestructiveIconButton confirmText={t("actions.generic.delete")}
+                                           onClick={() => doDeleteNevezes(id)}>
+                        {t("actions.generic.delete")}
+                    </DestructiveIconButton>
                 </Fragment>
             )}/>
-            <SecondaryButton text={t("actions.versenyszam.add_uszo")}
-                             onClick={doOpenNewNevezesModal}/>
+            <Button variant="outlined" onClick={doOpenNewNevezesModal}>
+                {t("actions.versenyszam.add_uszo")}
+            </Button>
         </Fragment>
     );
 }

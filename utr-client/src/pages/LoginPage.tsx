@@ -1,9 +1,9 @@
 import {useCallback, useContext, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
 import {AuthContext} from "../api/auth";
 import {AppLogo} from "../components/icons/AppLogo";
 import {useTranslation} from "../hooks/translations/useTranslation";
+import {Button} from "@material-tailwind/react";
 
 export function LoginPage() {
     const t = useTranslation();
@@ -32,8 +32,9 @@ export function LoginPage() {
                 <TextInput value={password} onValue={setPassword}
                            placeholder={t("generic_label.password")} password
                            onSubmit={doLogin}/>
-                <PrimaryButton text={t("actions.generic.login")}
-                               onClick={doLogin} disabled={!canLogin}/>
+                <Button onClick={doLogin} disabled={!canLogin}>
+                    {t("actions.generic.login")}
+                </Button>
             </div>
         </div>
     );

@@ -2,21 +2,16 @@ import {Link, useParams, useSearchParams} from "react-router-dom";
 import {useCsapatDetails} from "../hooks/csapatok/useCsapatDetails";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {LoadingSpinner} from "../components/LoadingSpinner";
-import {PrimaryButton} from "../components/inputs/buttons/PrimaryButton";
-import {WarningButton} from "../components/inputs/buttons/WarningButton";
 import {useUszokList} from "../hooks/uszok/useUszokList";
 import {DataTable} from "../components/tables/DataTable";
 import {TextInput} from "../components/inputs/TextInput";
-import {SecondaryButton} from "../components/inputs/buttons/SecondaryButton";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {IconButton} from "../components/inputs/buttons/IconButton";
 import {BorderCard} from "../components/containers/BorderCard";
 import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";
 import {useEditCsapat} from "../hooks/csapatok/useEditCsapat";
-import {IconWarningButton} from "../components/inputs/buttons/IconWarningButton";
 import {Csapat} from "../types/model/Csapat";
 import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
@@ -24,6 +19,9 @@ import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {EmberiNemDropdown} from "../components/inputs/dropdowns/EmberiNemDropdown";
+import {Button, IconButton} from "@material-tailwind/react";
+import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
+import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
 
 export function CsapatokSlugPage() {
     const t = useTranslation();
@@ -60,7 +58,7 @@ export function CsapatokSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("csapat.not_found")}</p>
                 <Link to=".." relative="path">
-                    <PrimaryButton text={t("actions.generic.back")}/>
+                    <Button variant="filled">{t("actions.generic.back")}</Button>
                 </Link>
             </div>
         </div>
@@ -74,9 +72,13 @@ export function CsapatokSlugPage() {
                         <p><b>{csapat.varos}</b></p>
                     </BorderCard>
                     <div className="flex flex-row gap-2">
-                        <PrimaryButton text={t("actions.csapat.edit_details")}
-                                       onClick={doOpenEditCsapatModal}/>
-                        <WarningButton text={t("actions.csapat.delete")} onClick={doDelete}/>
+                        <Button variant="filled" onClick={doOpenEditCsapatModal}>
+                            {t("actions.csapat.edit_details")}
+                        </Button>
+                        <DestructiveButton confirmText={t("actions.csapat.delete")}
+                                           onConfirm={doDelete}>
+                            {t("actions.csapat.delete")}
+                        </DestructiveButton>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -149,19 +151,23 @@ function UszokList(props: {
                 }} excludedProperties={["id", "csapatId"]}
                            actionColumn={({id}) => (
                                <Fragment>
-                                   <IconButton iconName="edit"
-                                               onClick={() => {
-                                                   doOpenEditUszoModal(id);
-                                               }}/>
-                                   <IconWarningButton iconName="delete"
-                                                      onClick={() => {
-                                                          doDeleteUszo(id);
-                                                      }}/>
+                                   <IconButton onClick={() => {
+                                       doOpenEditUszoModal(id);
+                                   }}>
+                                       <PencilIcon className="w-6"/>
+                                   </IconButton>
+                                   <DestructiveIconButton confirmText={t("actions.generic.delete")}
+                                                          onClick={() => {
+                                                              doDeleteUszo(id);
+                                                          }}>
+                                       <TrashIcon className="w-6"/>
+                                   </DestructiveIconButton>
                                </Fragment>
                            )}/>
             )}
-            <SecondaryButton text={t("actions.uszo.create")}
-                             onClick={doOpenNewUszoModal}/>
+            <Button variant="outlined" onClick={doOpenNewUszoModal}>
+                {t("actions.uszo.create")}
+            </Button>
         </Fragment>
     );
 }
