@@ -2,24 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-    * {
-        @apply text-slate-800;
-    }
-
-    h1 {
-        @apply text-4xl w-full font-bold;
-    }
-
-    h2 {
-        @apply text-2xl;
-    }
-
-    h3 {
-        @apply text-slate-400 text-lg font-bold;
-    }
-}
-
 .material-symbols-rounded {
     font-variation-settings: 'FILL' 0,
     'wght' 500,
