@@ -7,6 +7,7 @@ import AuthProvider from "./components/AuthProvider";
 import {EnvironmentBanner} from "./components/EnvironmentBanner";
 import {TranslationProvider} from "./components/TranslationProvider";
 import {startApiPollEventTimer} from "./lib/apiPolling";
+import {ThemeProvider} from "@material-tailwind/react";
 
 startApiPollEventTimer();
 
@@ -14,12 +15,14 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <TranslationProvider>
-        <AuthProvider>
-            <EnvironmentBanner/>
-            <BrowserRouter>
-                <App/>
-            </BrowserRouter>
-        </AuthProvider>
-    </TranslationProvider>
+    <ThemeProvider>
+        <TranslationProvider>
+            <AuthProvider>
+                <EnvironmentBanner/>
+                <BrowserRouter>
+                    <App/>
+                </BrowserRouter>
+            </AuthProvider>
+        </TranslationProvider>
+    </ThemeProvider>
 );
