@@ -18,7 +18,7 @@ import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {EmberiNemDropdown} from "../components/inputs/dropdowns/EmberiNemDropdown";
+import {EmberiNemSelect} from "../components/selects/EmberiNemSelect";
 import {Button, IconButton} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
@@ -154,13 +154,13 @@ function UszokList(props: {
                                    <IconButton onClick={() => {
                                        doOpenEditUszoModal(id);
                                    }}>
-                                       <PencilIcon className="w-6"/>
+                                       <PencilIcon className="w-5"/>
                                    </IconButton>
                                    <DestructiveIconButton confirmText={t("actions.generic.delete")}
                                                           onClick={() => {
                                                               doDeleteUszo(id);
                                                           }}>
-                                       <TrashIcon className="w-6"/>
+                                       <TrashIcon className="w-5"/>
                                    </DestructiveIconButton>
                                </Fragment>
                            )}/>
@@ -293,7 +293,7 @@ function UszoModal(props: {
                                      min={1980}
                                      max={(new Date()).getFullYear()}/>
                         <label>Nem:</label>
-                        <EmberiNemDropdown selected={nem} onSelect={setNem}/>
+                        <EmberiNemSelect selected={nem} onSelect={setNem}/>
                     </div>
                 </Fragment>
             )}

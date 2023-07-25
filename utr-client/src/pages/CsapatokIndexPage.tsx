@@ -33,7 +33,7 @@ export function CsapatokIndexPage() {
                 }} excludedProperties={["id"]} actionColumn={entry => (
                     <Link to={String(entry.id)}>
                         <IconButton>
-                            <PencilIcon className="w-6"/>
+                            <PencilIcon className="w-5"/>
                         </IconButton>
                     </Link>
                 )}/>

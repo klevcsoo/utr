@@ -17,7 +17,7 @@ import {TextInput} from "../components/inputs/TextInput";
 import {DateInput} from "../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
-import {GenericDropdown} from "../components/inputs/dropdowns/GenericDropdown";
+import {GenericSelect} from "../components/selects/GenericSelect";
 import {CheckBox} from "../components/inputs/CheckBox";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useUszasnemDropdownList} from "../hooks/useUszasnemDropdownList";
@@ -187,13 +187,13 @@ function VersenyszamokList(props: {
                        actionColumn={({id}) => (
                            <Fragment>
                                <Link to={`versenyszamok/${id}`}>
-                                   <IconButton className="w-6">
+                                   <IconButton className="w-5">
                                        <PencilIcon/>
                                    </IconButton>
                                </Link>
                                <DestructiveIconButton confirmText={t("actions.versenyszam.delete")}
                                                       onClick={() => doDeleteVersenyszam(id)}>
-                                   <TrashIcon className="w-6"/>
+                                   <TrashIcon className="w-5"/>
                                </DestructiveIconButton>
                            </Fragment>
                        )}/>
@@ -323,13 +323,19 @@ function VersenyszamModal(props: {
                 <label>{t("versenyszam.hossz")}</label>
                 <NumberInput value={hossz} onValue={setHossz} min={25} max={200}/>
                 <label>{t("versenyszam.nem")}</label>
-                <GenericDropdown options={emberiNemList} onSelect={value => {
-                    setEmberiNem(value);
-                }} selected={emberiNem}/>
+                <GenericSelect options={emberiNemList}
+                               label={t("generic_label.nem")}
+                               onSelect={value => {
+                                   setEmberiNem(value);
+                               }}
+                               selected={emberiNem}/>
                 <label>{t("versenyszam.uszasnem")}</label>
-                <GenericDropdown options={uszasnemList} onSelect={value => {
-                    setUszasnem(value);
-                }} selected={uszasnem}/>
+                <GenericSelect options={uszasnemList}
+                               label={t("generic_label.uszasnem")}
+                               onSelect={value => {
+                                   setUszasnem(value);
+                               }}
+                               selected={uszasnem}/>
             </div>
         </FullPageModalWithActions>
     );

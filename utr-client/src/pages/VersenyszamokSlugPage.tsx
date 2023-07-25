@@ -11,17 +11,17 @@ import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {CheckBox} from "../components/inputs/CheckBox";
-import {VersenyszamNemDropdown} from "../components/inputs/dropdowns/VersenyszamNemDropdown";
-import {UszasnemDropdown} from "../components/inputs/dropdowns/UszasnemDropdown";
+import {VersenyszamNemSelect} from "../components/selects/VersenyszamNemSelect";
+import {UszasnemSelect} from "../components/selects/UszasnemSelect";
 import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {CsapatDropdown} from "../components/inputs/dropdowns/CsapatDropdown";
+import {CsapatSelect} from "../components/selects/CsapatSelect";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
-import {UszoDropdown} from "../components/inputs/dropdowns/UszoDropdown";
+import {UszoSelect} from "../components/selects/UszoSelect";
 import {IntervalMaskedInput} from "../components/inputs/numeric/IntervalMaskedInput";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
@@ -156,9 +156,9 @@ export function VersenyszamDetails(props: {
             <p>{t("versenyszam.hossz")}</p>
             <NumberInput value={hossz} onValue={setHossz}/>
             <p>{t("versenyszam.nem")}</p>
-            <VersenyszamNemDropdown selected={nem} onSelect={setNem}/>
+            <VersenyszamNemSelect selected={nem} onSelect={setNem}/>
             <p>{t("versenyszam.uszasnem")}</p>
-            <UszasnemDropdown selected={uszasnem} onSelect={setUszasnem}/>
+            <UszasnemSelect selected={uszasnem} onSelect={setUszasnem}/>
             {unsavedChanges ? (
                 <Button onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
@@ -289,12 +289,12 @@ function NevezesModal(props: {
                                   gap-y-2 gap-x-8 items-center p-6"
                                   canComplete={canComplete}>
             <label>{t("generic_label.csapat.with_colon")}</label>
-            <CsapatDropdown selected={csapat} onSelect={setCsapat}/>
+            <CsapatSelect selected={csapat} onSelect={setCsapat}/>
             {csapat ? (
                 <Fragment>
                     <label>{t("csapat.uszok.with_colon")}</label>
-                    <UszoDropdown csapatId={csapat} selected={uszo}
-                                  onSelect={setUszo}/>
+                    <UszoSelect csapatId={csapat} selected={uszo}
+                                onSelect={setUszo}/>
                 </Fragment>
             ) : null}
             {uszo ? (

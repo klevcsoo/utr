@@ -7,7 +7,7 @@ import {useAuthLogout} from "../hooks/auth/useAuthLogout";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useSetLocale} from "../hooks/translations/useSetLocale";
 import {Locale} from "../types/Locale";
-import {GenericDropdown} from "../components/inputs/dropdowns/GenericDropdown";
+import {GenericSelect} from "../components/selects";
 
 export function NavbarLayout() {
     const user = useAuthUser();
@@ -82,10 +82,10 @@ function LanguageSelector() {
 
     const languageOptions = useMemo<{ [key in Locale]: string }>(() => {
         return {
-            hu: "🇭🇺",
-            en: "🇬🇧"
+            hu: `🇭🇺 ${t("language.hungarian")}`,
+            en: `🇬🇧 ${t("language.english")}`
         };
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         setLocale(selectedLocale);
@@ -102,10 +102,11 @@ function LanguageSelector() {
                 {t("generic_label.language")}
             </div>
             <div>
-                <GenericDropdown options={languageOptions} selected={selectedLocale}
-                                 onSelect={id => {
-                                     setSelectedLocale(id as Locale);
-                                 }}/>
+                <GenericSelect options={languageOptions} selected={selectedLocale}
+                               label={t("generic_label.language")}
+                               onSelect={id => {
+                                   setSelectedLocale(id as Locale);
+                               }}/>
             </div>
         </div>
     );

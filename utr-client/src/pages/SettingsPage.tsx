@@ -75,11 +75,11 @@ function UsersList() {
             }} actionColumn={entry => (
                 <Fragment>
                     <IconButton onClick={() => doOpenUserModal(entry.id)}>
-                        <PencilIcon className="w-6"/>
+                        <PencilIcon className="w-5"/>
                     </IconButton>
                     <DestructiveIconButton confirmText={t("actions.generic.delete")}
                                            onConfirm={() => doDeleteUser(entry.id)}>
-                        <TrashIcon className="w-6"/>
+                        <TrashIcon className="w-5"/>
                     </DestructiveIconButton>
                 </Fragment>
             )}/>

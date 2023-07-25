@@ -88,12 +88,12 @@ export function UszoversenyekIndexPage() {
                         helyszin: t("generic_label.location")
                     }} excludedProperties={["id", "nyitott"]} actionColumn={entry => (
                         <Fragment>
-                            <IconButton className="w-6"
+                            <IconButton className="w-5"
                                         onClick={() => doChangeVersenyNyitottState(entry)}>
                                 {entry.nyitott ? <LockClosedIcon/> : <LockOpenIcon/>}
                             </IconButton>
                             <Link to={String(entry.id)}>
-                                <IconButton className="w-6">
+                                <IconButton className="w-5">
                                     <PencilIcon/>
                                 </IconButton>
                             </Link>
