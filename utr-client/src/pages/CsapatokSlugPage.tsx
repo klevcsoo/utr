@@ -18,7 +18,7 @@ import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {EmberiNemSelect} from "../components/selects/EmberiNemSelect";
+import {EmberiNemSelect} from "../components/selects";
 import {Button, IconButton} from "@material-tailwind/react";
 import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
 import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";

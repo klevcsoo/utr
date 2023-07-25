@@ -11,17 +11,19 @@ import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
 import {CheckBox} from "../components/inputs/CheckBox";
-import {VersenyszamNemSelect} from "../components/selects/VersenyszamNemSelect";
-import {UszasnemSelect} from "../components/selects/UszasnemSelect";
+import {
+    CsapatSelect,
+    UszasnemSelect,
+    UszoSelect,
+    VersenyszamNemSelect
+} from "../components/selects";
 import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {CsapatSelect} from "../components/selects/CsapatSelect";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
-import {UszoSelect} from "../components/selects/UszoSelect";
 import {IntervalMaskedInput} from "../components/inputs/numeric/IntervalMaskedInput";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";

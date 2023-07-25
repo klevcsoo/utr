@@ -17,7 +17,7 @@ import {TextInput} from "../components/inputs/TextInput";
 import {DateInput} from "../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
-import {GenericSelect} from "../components/selects/GenericSelect";
+import {GenericSelect} from "../components/selects";
 import {CheckBox} from "../components/inputs/CheckBox";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useUszasnemDropdownList} from "../hooks/useUszasnemDropdownList";
