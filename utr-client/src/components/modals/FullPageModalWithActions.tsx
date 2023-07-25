@@ -3,11 +3,8 @@ import {TitleIcon} from "../icons/TitleIcon";
 import {
     FullPageModalWithActionsProps
 } from "../../types/componentProps/modals/FullPageModalWithActionsProps";
-import {useTranslation} from "../../hooks/translations/useTranslation";
 
 export function FullPageModalWithActions(props: FullPageModalWithActionsProps) {
-    const t = useTranslation();
-
     return (
         <FullPageModal>
             <div className="flex flex-row items-center
