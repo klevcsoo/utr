@@ -221,9 +221,9 @@ export function NevezesekList(props: {
                 idoeredmeny: t("generic_label.idoeredmeny")
             }} excludedProperties={["id"]} actionColumn={({id}) => (
                 <Fragment>
-                    <DestructiveIconButton confirmText={t("actions.generic.delete")}
-                                           onClick={() => doDeleteNevezes(id)}>
-                        {t("actions.generic.delete")}
+                    <DestructiveIconButton confirmText={t("confirm.generic.delete")}
+                                           onConfirm={() => doDeleteNevezes(id)}>
+                        {t("confirm.generic.delete")}
                     </DestructiveIconButton>
                 </Fragment>
             )}/>

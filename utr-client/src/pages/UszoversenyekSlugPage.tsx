@@ -192,7 +192,7 @@ function VersenyszamokList(props: {
                                    </IconButton>
                                </Link>
                                <DestructiveIconButton confirmText={t("actions.versenyszam.delete")}
-                                                      onClick={() => doDeleteVersenyszam(id)}>
+                                                      onConfirm={() => doDeleteVersenyszam(id)}>
                                    <TrashIcon className="w-5"/>
                                </DestructiveIconButton>
                            </Fragment>

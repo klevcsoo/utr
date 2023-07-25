@@ -156,8 +156,8 @@ function UszokList(props: {
                                    }}>
                                        <PencilIcon className="w-5"/>
                                    </IconButton>
-                                   <DestructiveIconButton confirmText={t("actions.generic.delete")}
-                                                          onClick={() => {
+                                   <DestructiveIconButton confirmText={t("confirm.generic.delete")}
+                                                          onConfirm={() => {
                                                               doDeleteUszo(id);
                                                           }}>
                                        <TrashIcon className="w-5"/>

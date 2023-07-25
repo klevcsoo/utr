@@ -1,7 +1,9 @@
-import {IconButton} from "@material-tailwind/react";
+// noinspection DuplicatedCode
+
+import {Button, Dialog, DialogFooter, DialogHeader, IconButton} from "@material-tailwind/react";
 import {DestructiveButtonProps} from "./DestructiveButtonProps";
-import {DestructiveButtonBase} from "./DestructiveButtonBase";
-import {useMemo} from "react";
+import {Fragment, useCallback, useMemo, useState} from "react";
+import {useTranslation} from "../../hooks/translations/useTranslation";
 
 export function DestructiveIconButton(props: DestructiveButtonProps) {
     const cleanProps = useMemo(() => {
@@ -18,9 +20,35 @@ export function DestructiveIconButton(props: DestructiveButtonProps) {
         return p;
     }, [props]);
 
+    const t = useTranslation();
+    const [confirmOpen, setConfirmOpen] = useState(false);
+
+    const confirmHandler = useCallback(() => {
+        setConfirmOpen(prevState => !prevState);
+    }, []);
+
     return (
-        <DestructiveButtonBase {...props}>
-            <IconButton color="red" {...cleanProps as any}>{props.children}</IconButton>
-        </DestructiveButtonBase>
+        <Fragment>
+            <IconButton color="red" onClick={confirmHandler} {...cleanProps as any}>
+                {props.children}
+            </IconButton>
+            <Dialog open={confirmOpen} handler={confirmHandler}>
+                <DialogHeader>{props.confirmText}</DialogHeader>
+                <DialogFooter className="flex flex-row gap-2">
+                    <Button variant="outlined" onClick={() => {
+                        confirmHandler();
+                        props.onDismiss && props.onDismiss();
+                    }}>
+                        {t("generic_label.rather_not")}
+                    </Button>
+                    <Button variant="filled" color="red" onClick={() => {
+                        confirmHandler();
+                        props.onConfirm && props.onConfirm();
+                    }}>
+                        {t("generic_label.lets_go")}
+                    </Button>
+                </DialogFooter>
+            </Dialog>
+        </Fragment>
     );
 }

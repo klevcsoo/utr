@@ -77,7 +77,7 @@ function UsersList() {
                     <IconButton onClick={() => doOpenUserModal(entry.id)}>
                         <PencilIcon className="w-5"/>
                     </IconButton>
-                    <DestructiveIconButton confirmText={t("actions.generic.delete")}
+                    <DestructiveIconButton confirmText={t("confirm.generic.delete")}
                                            onConfirm={() => doDeleteUser(entry.id)}>
                         <TrashIcon className="w-5"/>
                     </DestructiveIconButton>
