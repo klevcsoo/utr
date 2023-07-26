@@ -1,13 +1,22 @@
-import {NavLink} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {AppLogo} from "../components/icons/AppLogo";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {Fragment, ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import {RawMaterialIcon} from "../components/icons/RawMaterialIcon";
 import {useAuthLogout} from "../hooks/auth/useAuthLogout";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useSetLocale} from "../hooks/translations/useSetLocale";
 import {Locale} from "../types/Locale";
 import {GenericSelect} from "../components/selects";
+import {Button, Card, CardBody, CardFooter} from "@material-tailwind/react";
+import {
+    CalendarDaysIcon,
+    CogIcon,
+    LifebuoyIcon,
+    PrinterIcon,
+    UserGroupIcon
+} from "@heroicons/react/24/solid";
+import {packageVersion} from "../lib/config";
 
 export function NavbarLayout() {
     const user = useAuthUser();
@@ -23,52 +32,105 @@ export function NavbarLayout() {
     }, [logout, t]);
 
     return (
-        <div className="w-full h-full bg-slate-200 text-white
-        flex flex-col items-start gap-4 p-4 justify-between">
-            <div className="flex flex-col items-start gap-2 w-full">
-                <AppLogo className="m-4"/>
-                <NavbarNavButton icon="event" text={t("navbar.uszoversenyek")}
-                                 to="/admin/uszoversenyek"/>
-                <NavbarNavButton icon="groups" text={t("navbar.csapatok")}
-                                 to="/admin/csapatok"/>
-                <NavbarNavButton icon="print" text={t("navbar.print")}
-                                 to="/admin/nyomtatas"/>
-                <NavbarNavButton icon="settings" text={t("navbar.settings")}
-                                 to="/admin/settings"/>
-            </div>
-            <div className="flex flex-col items-start gap-2 w-full">
-                <NavbarNavButton icon="support" text={t("navbar.support")}
-                                 to="/admin/support"/>
-                <LanguageSelector/>
-                <div className="w-full border-t-2 border-slate-300 my-2"></div>
-                <div className="w-full flex flex-row gap-4
-                items-center justify-between">
-                    <h3 className="pl-2">{user?.displayName}</h3>
-                    <button type="button" className="grid place-content-center
-                    text-red-500 hover:bg-red-200 p-2 rounded-md" onClick={doLogout}>
-                        <RawMaterialIcon name="logout"/>
-                    </button>
+        <Fragment>
+            <Card className="overflow-hidden flex flex-col">
+                <div className="grid place-content-center w-full flex-grow">
+                    <AppLogo className="h-12"/>
                 </div>
-            </div>
+                <EnvironmentBanner/>
+            </Card>
+            <Card className="flex flex-col justify-between">
+                <CardBody className="flex flex-col items-start gap-2">
+                    <NavbarNavButton text={t("navbar.uszoversenyek")}
+                                     to="/admin/uszoversenyek">
+                        <CalendarDaysIcon className="w-8"/>
+                    </NavbarNavButton>
+                    <NavbarNavButton text={t("navbar.csapatok")}
+                                     to="/admin/csapatok">
+                        <UserGroupIcon className="w-8"/>
+                    </NavbarNavButton>
+                    <NavbarNavButton text={t("navbar.print")}
+                                     to="/admin/nyomtatas">
+                        <PrinterIcon className="w-8"/>
+                    </NavbarNavButton>
+                    <NavbarNavButton text={t("navbar.settings")}
+                                     to="/admin/settings">
+                        <CogIcon className="w-8"/>
+                    </NavbarNavButton>
+                </CardBody>
+                <CardFooter>
+                    <NavbarNavButton text={t("navbar.support")}
+                                     to="/admin/support">
+                        <LifebuoyIcon className="w-8"/>
+                    </NavbarNavButton>
+                    <LanguageSelector/>
+                    <div className="w-full border-t-2 border-slate-300 my-2"></div>
+                    <div className="w-full flex flex-row gap-4
+                    items-center justify-between">
+                        <h3 className="pl-2">{user?.displayName}</h3>
+                        <button type="button" className="grid place-content-center
+                    text-red-500 hover:bg-red-200 p-2 rounded-md" onClick={doLogout}>
+                            <RawMaterialIcon name="logout"/>
+                        </button>
+                    </div>
+                </CardFooter>
+            </Card>
+        </Fragment>
+    );
+}
+
+function EnvironmentBanner() {
+    const t = useTranslation();
+
+    const devEnv = useMemo<boolean>(() => {
+        return window.location.hostname === "localhost";
+    }, []);
+
+    const preRelease = useMemo(() => {
+        return !!(packageVersion?.endsWith("alpha") ||
+            packageVersion?.endsWith("beta") ||
+            packageVersion?.endsWith("RC"));
+    }, []);
+
+    return !devEnv && !preRelease ? null : (
+        <div
+            className={`rounded-b-xl h-8
+            ${devEnv ? "bg-red-500" : "bg-amber-500"}\
+            flex flex-row gap-2 justify-center items-center\
+            ${devEnv ? "text-white" : "text-black"} text-sm`}>
+            {devEnv ? <p className="text-inherit">
+                {t("generic_label.developer.developer_environment")}
+            </p> : null}
+            {preRelease ? <p className="text-inherit">
+                {t("generic_label.developer.pre_release")}
+            </p> : null}
+            <p className="text-inherit">
+                {packageVersion ?? t("generic_label.unknown")}
+            </p>
         </div>
     );
 }
 
 function NavbarNavButton(props: {
-    icon: string
     text: string
     to: string
+    children: ReactNode
 }) {
+    const {pathname} = useLocation();
+
+    const isActive = useMemo(() => {
+        return pathname.startsWith(props.to);
+    }, [pathname, props.to]);
+
     return (
-        <NavLink to={props.to} className={({isActive}) => `
-            w-full h-10 px-4 py-1 rounded-md text-center
-            flex flex-row items-center gap-4 text-inherit
-            ${isActive ? "bg-white" :
-            "bg-transparent hover:bg-slate-100"}
-        `}>
-            <RawMaterialIcon name={props.icon}/>
-            {props.text}
-        </NavLink>
+        <Link to={props.to} className="w-full">
+            <Button variant={isActive ? "filled" : "text"}
+                    color="blue-gray" fullWidth
+                    className="flex flex-row gap-4 items-center">
+                {props.children}
+                {props.text}
+            </Button>
+        </Link>
     );
 }
 
@@ -99,7 +161,6 @@ function LanguageSelector() {
             `}>
             <div className="flex flex-row gap-4 items-center">
                 <RawMaterialIcon name="language"/>
-                {t("generic_label.language")}
             </div>
             <div>
                 <GenericSelect options={languageOptions} selected={selectedLocale}

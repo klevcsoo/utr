@@ -32,7 +32,7 @@ export function UszoversenyekIndexPage() {
 
     return (
         <Fragment>
-            <div className="w-full flex flex-col gap-12 items-start p-4">
+            <div className="w-full flex flex-col gap-12 items-start">
                 <NyitottUszoversenyCard/>
                 <UszoversenyekList/>
             </div>
@@ -48,7 +48,7 @@ function NyitottUszoversenyCard() {
     return loadingNyitottVerseny ? (
         <Spinner/>
     ) : !nyitottVerseny ? null : (
-        <Card className="w-full">
+        <Card className="w-full mt-6">
             <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
                 <Typography variant="h5">{t("uszoverseny.opened")}</Typography>
             </CardHeader>
