@@ -72,7 +72,7 @@ function UsersList() {
                 roles: t("settings.roles")
             }} actionColumn={entry => (
                 <Fragment>
-                    <IconButton onClick={() => doOpenUserModal(entry.id)}>
+                    <IconButton color="blue-gray" onClick={() => doOpenUserModal(entry.id)}>
                         <PencilIcon className="w-5"/>
                     </IconButton>
                     <DestructiveIconButton confirmText={t("confirm.generic.delete")}
@@ -81,7 +81,7 @@ function UsersList() {
                     </DestructiveIconButton>
                 </Fragment>
             )}/>
-            <Button variant="outlined" onClick={() => doOpenUserModal()}>
+            <Button color="blue-gray" variant="outlined" onClick={() => doOpenUserModal()}>
                 {t("actions.user.create")}
             </Button>
         </div>
@@ -146,7 +146,7 @@ function UserModal() {
                                    placeholder={t("generic_label.username")}/>
                     </div>
                     <UserRoleSelector user={user}/>
-                    <Button onClick={doOpenPasswordModal}>
+                    <Button color="blue-gray" onClick={doOpenPasswordModal}>
                         {t("actions.user.change_password")}
                     </Button>
                 </Fragment>

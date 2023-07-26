@@ -52,7 +52,7 @@ export function CsapatokSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("csapat.not_found")}</p>
                 <Link to=".." relative="path">
-                    <Button variant="filled">{t("actions.generic.back")}</Button>
+                    <Button color="blue-gray" variant="filled">{t("actions.generic.back")}</Button>
                 </Link>
             </div>
         </div>
@@ -100,7 +100,7 @@ function CsapatDetailsForm(props: {
 
     return (
         <Card className="w-full">
-            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
+            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {props.csapat.nev}
                 </Typography>
@@ -116,7 +116,7 @@ function CsapatDetailsForm(props: {
                 </form>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
-                <Button disabled={!isDirty} onClick={doCommitChanges}>
+                <Button color="blue-gray" disabled={!isDirty} onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
                 </Button>
                 <DestructiveButton confirmText={t("confirm.generic.delete")}
@@ -184,7 +184,7 @@ function UszokList(props: {
                 }} excludedProperties={["id", "csapatId"]}
                            actionColumn={({id}) => (
                                <Fragment>
-                                   <IconButton onClick={() => {
+                                   <IconButton color="blue-gray" onClick={() => {
                                        doOpenEditUszoModal(id);
                                    }}>
                                        <PencilIcon className="w-5"/>
@@ -198,7 +198,7 @@ function UszokList(props: {
                                </Fragment>
                            )}/>
             )}
-            <Button variant="outlined" onClick={doOpenNewUszoModal}>
+            <Button color="blue-gray" variant="outlined" onClick={doOpenNewUszoModal}>
                 {t("actions.uszo.create")}
             </Button>
         </Fragment>

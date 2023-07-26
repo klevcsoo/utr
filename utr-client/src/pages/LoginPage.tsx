@@ -32,7 +32,7 @@ export function LoginPage() {
                 <TextInput value={password} onValue={setPassword}
                            placeholder={t("generic_label.password")} password
                            onSubmit={doLogin}/>
-                <Button onClick={doLogin} disabled={!canLogin}>
+                <Button color="blue-gray" onClick={doLogin} disabled={!canLogin}>
                     {t("actions.generic.login")}
                 </Button>
             </div>

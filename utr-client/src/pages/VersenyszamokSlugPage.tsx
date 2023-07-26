@@ -78,7 +78,7 @@ export function VersenyszamokSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("versenyszam.not_found")}</p>
                 <Link to=".." relative="path">
-                    <Button>{t("actions.generic.back")}</Button>
+                    <Button color="blue-gray">{t("actions.generic.back")}</Button>
                 </Link>
             </div>
         </div>
@@ -160,7 +160,7 @@ export function VersenyszamDetails(props: {
             <p>{t("versenyszam.uszasnem")}</p>
             <UszasnemSelect selected={uszasnem} onSelect={setUszasnem}/>
             {unsavedChanges ? (
-                <Button onClick={doCommitChanges}>
+                <Button color="blue-gray" onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
                 </Button>
             ) : null}
@@ -225,7 +225,7 @@ export function NevezesekList(props: {
                     </DestructiveIconButton>
                 </Fragment>
             )}/>
-            <Button variant="outlined" onClick={doOpenNewNevezesModal}>
+            <Button color="blue-gray" variant="outlined" onClick={doOpenNewNevezesModal}>
                 {t("actions.versenyszam.add_uszo")}
             </Button>
         </Fragment>
