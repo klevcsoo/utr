@@ -3,7 +3,6 @@ import {Link, useSearchParams} from "react-router-dom";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable} from "../components/tables/DataTable";
-import {TextInput} from "../components/inputs/TextInput";
 import {DateInput} from "../components/inputs/DateInput";
 import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
@@ -11,112 +10,164 @@ import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {DestructiveButton} from "../components/buttons";
-import {Button, Card, IconButton, Spinner} from "@material-tailwind/react";
-import {LockClosedIcon, LockOpenIcon, PencilIcon} from "@heroicons/react/24/solid";
+import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader,
+    Dialog,
+    IconButton,
+    Input,
+    Spinner,
+    Typography
+} from "@material-tailwind/react";
+import {LockClosedIcon, LockOpenIcon, PencilIcon, PlusIcon} from "@heroicons/react/24/solid";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
 
+    useSetAdminLayoutTitle(t("title.admin_layout.uszoversenyek"));
+
+    return (
+        <Fragment>
+            <div className="w-full flex flex-col gap-12 items-start p-4">
+                <NyitottUszoversenyCard/>
+                <UszoversenyekList/>
+            </div>
+            <NewUszoversenyModal/>
+        </Fragment>
+    );
+}
+
+function NyitottUszoversenyCard() {
+    const t = useTranslation();
+    const [nyitottVerseny, loadingNyitottVerseny] = useNyitottVerseny();
+
+    return loadingNyitottVerseny ? (
+        <Spinner/>
+    ) : !nyitottVerseny ? null : (
+        <Card className="w-full">
+            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
+                <Typography variant="h5">{t("uszoverseny.opened")}</Typography>
+            </CardHeader>
+            <CardBody>
+                <Typography variant="lead">{nyitottVerseny.nev}</Typography>
+                <Typography>
+                    {nyitottVerseny.helyszin} ·&nbsp;
+                    {nyitottVerseny.datum.toLocaleDateString()}
+                </Typography>
+            </CardBody>
+            <CardFooter className="flex flex-row gap-2">
+                <DestructiveButton className="max-w-xs" fullWidth
+                                   confirmText={t("actions.uszoverseny.close")}>
+                    {t("actions.uszoverseny.close")}
+                </DestructiveButton>
+                <Link to={String(nyitottVerseny.id)} className="w-full">
+                    <Button variant="outlined" className="max-w-xs" fullWidth>
+                        {t("actions.generic.view_details")}
+                    </Button>
+                </Link>
+            </CardFooter>
+        </Card>
+    );
+}
+
+function UszoversenyekList() {
+    const t = useTranslation();
+    const [, setSearchParams] = useSearchParams();
+
     const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [nyitottVerseny, nyitottVersenyLoading] = useNyitottVerseny();
+    const [nyitottVerseny, loadingNyitottVerseny] = useNyitottVerseny();
     const openUszoverseny = useOpenUszoverseny();
     const closeUszoverseny = useCloseUszoverseny();
 
-    const doChangeVersenyNyitottState = useCallback((uszoverseny: Uszoverseny) => {
-        if (uszoverseny.nyitott) {
-            if (window.confirm(t("confirm.uszoverseny.close"))) {
-                closeUszoverseny()
-                    .then(console.log)
-                    .catch(console.error);
-            }
-        } else {
-            if (window.confirm(t("confirm.uszoverseny.open"))) {
-                openUszoverseny(uszoverseny.id)
-                    .then(console.log)
-                    .catch(console.error);
-            }
-        }
-    }, [closeUszoverseny, openUszoverseny, t]);
+    const existsOpenUszoverseny = useMemo(() => {
+        return !!nyitottVerseny && !loadingNyitottVerseny;
+    }, [loadingNyitottVerseny, nyitottVerseny]);
 
-    useSetAdminLayoutTitle(t("title.admin_layout.uszoversenyek"));
+    const doChangeVersenyNyitottState = useCallback((uszoverseny: Uszoverseny) => {
+        (uszoverseny.nyitott ? closeUszoverseny() : openUszoverseny(uszoverseny.id))
+            .then(console.log)
+            .catch(console.error);
+    }, [closeUszoverseny, openUszoverseny]);
+
+    const actionColumn = useCallback((entry: Uszoverseny) => (
+        <Fragment>
+            <DestructiveIconButton confirmText={t("confirm.uszoverseny.close")}
+                                   onConfirm={() => {
+                                       doChangeVersenyNyitottState(entry);
+                                   }}
+                                   disabled={
+                                       existsOpenUszoverseny && !entry.nyitott
+                                   }>
+                {entry.nyitott ? (
+                    <LockClosedIcon className="w-5"/>
+                ) : (
+                    <LockOpenIcon className="w-5"/>
+                )}
+            </DestructiveIconButton>
+            <Link to={String(entry.id)}>
+                <IconButton>
+                    <PencilIcon className="w-5"/>
+                </IconButton>
+            </Link>
+        </Fragment>
+    ), [doChangeVersenyNyitottState, existsOpenUszoverseny, t]);
 
     return uszoversenyekLoading ? (
-        <div className="w-full h-full grid place-content-center">
-            <Spinner/>
-        </div>
+        <Spinner/>
     ) : (
-        <Fragment>
-            <div className="w-full flex flex-col gap-2 items-start">
-                {nyitottVersenyLoading ? (
-                    <Spinner/>
-                ) : !!nyitottVerseny ? (
-                    <Fragment>
-                        <h3>{t("uszoverseny.opened")}</h3>
-                        <Card className="w-full flex flex-col gap-2">
-                            <p>
-                                <b>{nyitottVerseny.nev}</b> ·&nbsp;
-                                {nyitottVerseny.helyszin} ·&nbsp;
-                                {nyitottVerseny.datum.toLocaleDateString()}
-                            </p>
-                            <div className="flex flex-row gap-2 items-start">
-                                <DestructiveButton
-                                    confirmText={t("actions.uszoverseny.close")}
-                                    onClick={() => {
-                                        doChangeVersenyNyitottState(nyitottVerseny);
-                                    }}>
-                                    {t("actions.uszoverseny.close")}
-                                </DestructiveButton>
-                                <Link to={String(nyitottVerseny.id)} className="w-full">
-                                    <Button variant="outlined">
-                                        {t("actions.generic.view_details")}
-                                    </Button>
-                                </Link>
-                            </div>
-                        </Card>
-                    </Fragment>
-                ) : null}
-                <h3 className="mt-2">{t("uszoversenyek.other_versenyek")}</h3>
-                <div className="flex flex-col gap-4 w-full items-start">
-                    <DataTable dataList={uszoversenyek} propertyNameOverride={{
-                        nev: t("generic_label.name"),
-                        datum: t("generic_label.date"),
-                        helyszin: t("generic_label.location")
-                    }} excludedProperties={["id", "nyitott"]} actionColumn={entry => (
-                        <Fragment>
-                            <IconButton className="w-5"
-                                        onClick={() => doChangeVersenyNyitottState(entry)}>
-                                {entry.nyitott ? <LockClosedIcon/> : <LockOpenIcon/>}
-                            </IconButton>
-                            <Link to={String(entry.id)}>
-                                <IconButton className="w-5">
-                                    <PencilIcon/>
-                                </IconButton>
-                            </Link>
-                        </Fragment>
-                    )}/>
-                    <Button variant="outlined" onClick={() => {
-                        setSearchParams({modal: "create"});
-                    }}>
-                        {t("actions.uszoverseny.create")}
-                    </Button>
-                </div>
-            </div>
-            {searchParams.get("modal") === "create" ? <NewUszoversenyModal/> : null}
-        </Fragment>
+        <Card className="w-full">
+            <CardHeader variant="gradient" color="blue"
+                        className="p-4 mb-4 text-center">
+                <Typography variant="h5">
+                    {t("generic_label.all_uszoversenyek")}
+                </Typography>
+            </CardHeader>
+            <CardBody>
+                <DataTable dataList={uszoversenyek}
+                           propertyNameOverride={{
+                               nev: t("generic_label.name"),
+                               datum: t("generic_label.date"),
+                               helyszin: t("generic_label.location")
+                           }}
+                           excludedProperties={["id", "nyitott"]}
+                           actionColumn={actionColumn}/>
+            </CardBody>
+            <CardFooter>
+                <Button variant="outlined" onClick={() => {
+                    setSearchParams({modal: "create"});
+                }}>
+                    {t("actions.uszoverseny.create")}
+                </Button>
+            </CardFooter>
+        </Card>
     );
 }
 
 function NewUszoversenyModal() {
     const t = useTranslation();
-    const [, setSearchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const createUszoverseny = useCreateUszoverseny();
 
     const [nev, setNev] = useState("");
     const [helyszin, setHelyszin] = useState("");
     const [datum, setDatum] = useState(Date.now());
+
+    const open = useMemo(() => {
+        return searchParams.has("modal") && searchParams.get("modal") === "create";
+    }, [searchParams]);
+
+    const setOpen = useCallback((open: boolean) => {
+        setSearchParams(state => {
+            if (open) state.set("modal", "create");
+            else state.delete("modal");
+
+            return state;
+        });
+    }, [setSearchParams]);
 
     const canComplete = useMemo<boolean>(() => {
         return !!nev && !!helyszin && !!datum;
@@ -131,32 +182,40 @@ function NewUszoversenyModal() {
                 nyitott: false
             }).then((message) => {
                 console.log(message);
-                setSearchParams(prevState => {
-                    prevState.delete("modal");
-                    return prevState;
-                });
+                setOpen(false);
             }).catch(console.error);
         }
-    }, [nev, helyszin, createUszoverseny, datum, setSearchParams]);
-
-    const doDismiss = useCallback(() => {
-        setSearchParams(prevState => {
-            prevState.delete("modal");
-            return prevState;
-        });
-    }, [setSearchParams]);
+    }, [nev, helyszin, createUszoverseny, datum, setOpen]);
 
     return (
-        <FullPageModalWithActions icon="groups"
-                                  title={t("actions.uszoverseny.create")}
-                                  onComplete={doComplete} onDismiss={doDismiss}
-                                  className="flex flex-col gap-2 p-6"
-                                  canComplete={canComplete}>
-            <TextInput value={nev} onValue={setNev}
-                       placeholder={t("generic_label.name")}/>
-            <TextInput value={helyszin} onValue={setHelyszin}
-                       placeholder={t("generic_label.city")}/>
-            <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
-        </FullPageModalWithActions>
+        <Dialog open={open} handler={setOpen}>
+            <Card>
+                <CardHeader variant="gradient" color="blue"
+                            className="p-4 mb-4 text-center
+                            flex flex-row items-baseline justify-center gap-4">
+                    <PlusIcon className="w-8"/>
+                    <Typography variant="h5">
+                        {t("actions.uszoverseny.create")}
+                    </Typography>
+                </CardHeader>
+                <CardBody className="flex flex-col gap-2">
+                    <Input value={nev} onChange={event => {
+                        setNev(event.currentTarget.value);
+                    }} label={t("generic_label.name")}/>
+                    <Input value={helyszin} onChange={event => {
+                        setHelyszin(event.currentTarget.value);
+                    }} label={t("generic_label.city")}/>
+                    <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
+                </CardBody>
+                <CardFooter className="flex flex-row gap-2">
+                    <Button variant="outlined" fullWidth onClick={() => setOpen(false)}>
+                        {t("generic_label.rather_not")}
+                    </Button>
+                    <Button variant="filled" fullWidth onClick={doComplete} disabled={!canComplete}>
+                        {t("generic_label.lets_go")}
+                    </Button>
+                </CardFooter>
+            </Card>
+        </Dialog>
     );
 }
