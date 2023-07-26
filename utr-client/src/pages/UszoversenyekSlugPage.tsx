@@ -44,12 +44,8 @@ export function UszoversenyekSlugPage() {
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 
-    const [searchParams, setSearchParams] = useSearchParams();
-
+    const [searchParams] = useSearchParams();
     const [uszoverseny, uszoversenyLoading] = useUszoversenyDetails(idNumber);
-    const deleteUszoverseny = useDeleteUszoverseny();
-    const openUszoverseny = useOpenUszoverseny();
-    const closeUszoverseny = useCloseUszoverseny();
 
     useSetAdminLayoutTitle(!uszoverseny ? t("generic_label.loading") : uszoverseny.nev);
 
