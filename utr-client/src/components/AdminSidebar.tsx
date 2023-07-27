@@ -1,13 +1,13 @@
 import {Link, useLocation} from "react-router-dom";
-import {AppLogo} from "../components/icons/AppLogo";
+import {AppLogo} from "./icons/AppLogo";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
 import {Fragment, ReactNode, useCallback, useEffect, useMemo, useState} from "react";
-import {RawMaterialIcon} from "../components/icons/RawMaterialIcon";
+import {RawMaterialIcon} from "./icons/RawMaterialIcon";
 import {useAuthLogout} from "../hooks/auth/useAuthLogout";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useSetLocale} from "../hooks/translations/useSetLocale";
 import {Locale} from "../types/Locale";
-import {GenericSelect} from "../components/selects";
+import {GenericSelect} from "./selects";
 import {Button, Card, CardBody, CardFooter} from "@material-tailwind/react";
 import {
     CalendarDaysIcon,
@@ -18,7 +18,7 @@ import {
 } from "@heroicons/react/24/solid";
 import {packageVersion} from "../lib/config";
 
-export function NavbarLayout() {
+export function AdminSidebar() {
     const user = useAuthUser();
     const logout = useAuthLogout();
     const t = useTranslation();
