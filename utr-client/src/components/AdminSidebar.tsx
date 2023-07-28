@@ -1,13 +1,18 @@
 import {Link, useLocation} from "react-router-dom";
-import {useAuthUser} from "../hooks/auth/useAuthUser";
-import {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
-import {RawMaterialIcon} from "./icons/RawMaterialIcon";
-import {useAuthLogout} from "../hooks/auth/useAuthLogout";
+import {createElement, FunctionComponent, useEffect, useMemo, useState} from "react";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useSetLocale} from "../hooks/translations/useSetLocale";
 import {Locale} from "../types/Locale";
 import {GenericSelect} from "./selects";
-import {Button, Card, CardBody, CardFooter} from "@material-tailwind/react";
+import {
+    Card,
+    CardBody,
+    CardFooter,
+    List,
+    ListItem,
+    ListItemPrefix,
+    Typography
+} from "@material-tailwind/react";
 import {
     CalendarDaysIcon,
     CogIcon,
@@ -17,77 +22,91 @@ import {
 } from "@heroicons/react/24/solid";
 
 export function AdminSidebar() {
-    const user = useAuthUser();
-    const logout = useAuthLogout();
     const t = useTranslation();
 
-    const doLogout = useCallback(() => {
-        if (window.confirm(t("confirm.generic.delete"))) {
-            logout().then(() => {
-                console.log(t("generic_label.logged_out"));
-            });
-        }
-    }, [logout, t]);
+    const navigationList = useMemo<{
+        icon: FunctionComponent,
+        title: string
+        redirect: string
+    }[]>(() => {
+        return [
+            {
+                icon: CalendarDaysIcon,
+                title: t("navigation.sidebar.competitions"),
+                redirect: "/admin/uszoversenyek"
+            },
+            {
+                icon: UserGroupIcon,
+                title: t("navigation.sidebar.teams"),
+                redirect: "/admin/csapatok"
+            },
+            {
+                icon: PrinterIcon,
+                title: t("navigation.sidebar.print"),
+                redirect: "/admin/print"
+            },
+            {
+                icon: CogIcon,
+                title: t("navigation.sidebar.settings"),
+                redirect: "/admin/settings"
+            },
+            {
+                icon: LifebuoyIcon,
+                title: t("navigation.sidebar.support"),
+                redirect: "/admin/support"
+            }
+        ];
+    }, [t]);
 
     return (
-        <Card className="flex flex-col justify-between">
-            <CardBody className="flex flex-col items-start gap-2">
-                <NavbarNavButton text={t("navbar.uszoversenyek")}
-                                 to="/admin/uszoversenyek">
-                    <CalendarDaysIcon className="w-8"/>
-                </NavbarNavButton>
-                <NavbarNavButton text={t("navbar.csapatok")}
-                                 to="/admin/csapatok">
-                    <UserGroupIcon className="w-8"/>
-                </NavbarNavButton>
-                <NavbarNavButton text={t("navbar.print")}
-                                 to="/admin/nyomtatas">
-                    <PrinterIcon className="w-8"/>
-                </NavbarNavButton>
-                <NavbarNavButton text={t("navbar.settings")}
-                                 to="/admin/settings">
-                    <CogIcon className="w-8"/>
-                </NavbarNavButton>
+        <Card className="w-full justify-between">
+            <CardBody className="px-0">
+                <div className="px-6">
+                    <Typography variant="h4" color="blue"
+                                className="font-display">
+                        {t("generic_label.navigation")}
+                    </Typography>
+                </div>
+                <hr className="mx-6 my-4 border-blue-gray-50"/>
+                <List className="px-0">
+                    {navigationList.map((entry, index) => (
+                        <NavButton key={index} {...entry}/>
+                    ))}
+                </List>
             </CardBody>
             <CardFooter>
-                <NavbarNavButton text={t("navbar.support")}
-                                 to="/admin/support">
-                    <LifebuoyIcon className="w-8"/>
-                </NavbarNavButton>
+                <hr className="mb-5 border-blue-gray-50"/>
                 <LanguageSelector/>
-                <div className="w-full border-t-2 border-slate-300 my-2"></div>
-                <div className="w-full flex flex-row gap-4
-                    items-center justify-between">
-                    <h3 className="pl-2">{user?.displayName}</h3>
-                    <button type="button" className="grid place-content-center
-                    text-red-500 hover:bg-red-200 p-2 rounded-md" onClick={doLogout}>
-                        <RawMaterialIcon name="logout"/>
-                    </button>
-                </div>
             </CardFooter>
         </Card>
     );
 }
 
-function NavbarNavButton(props: {
-    text: string
-    to: string
-    children: ReactNode
+function NavButton(props: {
+    icon: FunctionComponent,
+    title: string
+    redirect: string
 }) {
     const {pathname} = useLocation();
 
     const isActive = useMemo(() => {
-        return pathname.startsWith(props.to);
-    }, [pathname, props.to]);
+        return pathname.startsWith(props.redirect);
+    }, [pathname, props.redirect]);
 
     return (
-        <Link to={props.to} className="w-full">
-            <Button variant={isActive ? "filled" : "text"}
-                    color="blue-gray" fullWidth
-                    className="flex flex-row gap-4 items-center">
-                {props.children}
-                {props.text}
-            </Button>
+        <Link to={props.redirect}
+              className={`px-6 border-l-4 ${isActive ?
+                  "border-blue-400" :
+                  "border-transparent"
+              }`}>
+            <ListItem className={isActive ? "bg-blue-50" : "bg-transparent"}>
+                <ListItemPrefix>
+                    {createElement<{ className: string }>(props.icon, {className: "h-6"})}
+                </ListItemPrefix>
+                <Typography className="font-medium" variant="small">
+                    {props.title}
+                </Typography>
+            </ListItem>
         </Link>
     );
 }
@@ -112,21 +131,10 @@ function LanguageSelector() {
     }, [selectedLocale, setLocale]);
 
     return (
-        <div className={`
-            w-full h-10 px-4 py-1 rounded-md text-center
-            flex flex-row items-center gap-4 text-inherit
-            justify-between
-            `}>
-            <div className="flex flex-row gap-4 items-center">
-                <RawMaterialIcon name="language"/>
-            </div>
-            <div>
-                <GenericSelect options={languageOptions} selected={selectedLocale}
-                               label={t("generic_label.language")}
-                               onSelect={id => {
-                                   setSelectedLocale(id as Locale);
-                               }}/>
-            </div>
-        </div>
+        <GenericSelect options={languageOptions} selected={selectedLocale}
+                       label={t("generic_label.language")}
+                       onSelect={id => {
+                           setSelectedLocale(id as Locale);
+                       }}/>
     );
 }

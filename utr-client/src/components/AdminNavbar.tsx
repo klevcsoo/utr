@@ -25,7 +25,8 @@ export function AdminNavbar() {
     const t = useTranslation();
 
     return (
-        <Navbar blurred shadow className="px-8 py-0 flex flex-row justify-between items-center">
+        <Navbar blurred shadow
+                className="px-8 py-0 flex flex-row justify-between items-center max-w-screen-3xl">
             <div className="flex flex-row items-center">
                 <AppLogo className="h-12"/>
             </div>
@@ -62,8 +63,10 @@ function NavButton(props: {
         <Badge className="animate-pulse" invisible={!badge}>
             <Link to={props.to}>
                 <Typography as="div" variant="small" color={isActive ? "blue" : "blue-gray"}
-                            className={`font-normal px-2 py-2 rounded-lg 
-                        ${isActive ? "bg-blue-50" : "bg-transparent hover:bg-gray-100"}
+                            className={`font-normal px-4 py-2 rounded-lg 
+                        ${isActive ?
+                                "bg-blue-gray-50 border border-blue-gray-100" :
+                                "bg-transparent hover:bg-gray-100"}
                         flex flex-row items-center gap-2`}>
                     {createElement<{ className: string }>(props.icon, {
                         className: "w-6 mb-0.5"
