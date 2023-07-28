@@ -52,22 +52,20 @@ export function DataTable<
     }, [props.dataList, props.excludedProperties]);
 
     return (
-        <div className="w-full flex flex-col gap-1">
+        <div className="w-full flex flex-col gap-4">
             <table className="table-auto rounded-md overflow-hidden border-collapse">
-                <thead className="bg-slate-100 rounded-md">
+                <thead className="bg-gray-200 rounded-md border-b border-b-gray-400">
                 <tr className="h-12">
                     {columnNames.map((value, index) => (
-                        <th key={index} className="text-start first:pl-4 last:pr-2
-                        uppercase">
+                        <th key={index} className="text-start first:pl-4 last:pr-2 uppercase">
                             {value}
                         </th>
                     ))}
                 </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100
-                border-x border-b border-slate-100 overflow-hidden">
+                <tbody className="overflow-x-scroll overflow-y-hidden">
                 {columnValues.map((entry, indexEntry) => (
-                    <tr key={indexEntry} className="h-12">
+                    <tr key={indexEntry} className="h-12 even:bg-gray-100">
                         {entry.map((value, indexValue) => (
                             <td key={indexValue} className="first:pl-4">
                                 {value}
