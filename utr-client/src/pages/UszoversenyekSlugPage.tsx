@@ -58,7 +58,7 @@ export function UszoversenyekSlugPage() {
             <div className="flex flex-col gap-2 items-center">
                 <p>{t("uszoverseny.not_found")}</p>
                 <Link to=".." relative="path">
-                    <Button color="blue-gray">{t("actions.generic.back")}</Button>
+                    <Button color="blue">{t("actions.generic.back")}</Button>
                 </Link>
             </div>
         </div>
@@ -128,7 +128,7 @@ function UszoversenyDetailsForm(props: {
 
     return (
         <Card className="w-full">
-            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
+            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {props.uszoverseny.nev}
                 </Typography>
@@ -145,7 +145,7 @@ function UszoversenyDetailsForm(props: {
                 </form>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
-                <Button color="blue-gray" disabled={!isDirty} onClick={doCommitChanges}>
+                <Button color="blue" disabled={!isDirty} onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
                 </Button>
                 <Button variant={props.uszoverseny.nyitott ? "filled" : "outlined"}
@@ -215,7 +215,7 @@ function VersenyszamokList(props: {
                        actionColumn={({id}) => (
                            <Fragment>
                                <Link to={`versenyszamok/${id}`}>
-                                   <IconButton color="blue-gray">
+                                   <IconButton color="blue">
                                        <PencilIcon className="w-5"/>
                                    </IconButton>
                                </Link>
@@ -225,7 +225,7 @@ function VersenyszamokList(props: {
                                </DestructiveIconButton>
                            </Fragment>
                        )}/>
-            <Button color="blue-gray" variant="outlined" onClick={doOpenNewVersenyszamModal}>
+            <Button color="blue" variant="outlined" onClick={doOpenNewVersenyszamModal}>
                 {t("actions.versenyszam.create")}
             </Button>
         </Fragment>

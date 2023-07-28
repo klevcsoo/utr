@@ -35,7 +35,7 @@ export function DestructiveIconButton(props: DestructiveButtonProps) {
             <Dialog open={confirmOpen} handler={confirmHandler}>
                 <DialogHeader>{props.confirmText}</DialogHeader>
                 <DialogFooter className="flex flex-row gap-2">
-                    <Button color="blue-gray" variant="outlined" onClick={() => {
+                    <Button color="blue" variant="outlined" onClick={() => {
                         confirmHandler();
                         props.onDismiss && props.onDismiss();
                     }}>

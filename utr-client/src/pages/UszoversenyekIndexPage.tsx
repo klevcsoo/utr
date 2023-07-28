@@ -49,7 +49,7 @@ function NyitottUszoversenyCard() {
         <Spinner/>
     ) : !nyitottVerseny ? null : (
         <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
+            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
                 <Typography variant="h5">{t("uszoverseny.opened")}</Typography>
             </CardHeader>
             <CardBody>
@@ -65,7 +65,7 @@ function NyitottUszoversenyCard() {
                     {t("actions.uszoverseny.close")}
                 </DestructiveButton>
                 <Link to={String(nyitottVerseny.id)} className="w-full">
-                    <Button color="blue-gray" variant="outlined" className="max-w-xs" fullWidth>
+                    <Button color="blue" variant="outlined" className="max-w-xs" fullWidth>
                         {t("actions.generic.view_details")}
                     </Button>
                 </Link>
@@ -109,7 +109,7 @@ function UszoversenyekList() {
                 )}
             </DestructiveIconButton>
             <Link to={String(entry.id)}>
-                <IconButton color="blue-gray">
+                <IconButton color="blue">
                     <PencilIcon className="w-5"/>
                 </IconButton>
             </Link>
@@ -120,7 +120,7 @@ function UszoversenyekList() {
         <Spinner/>
     ) : (
         <Card className="w-full">
-            <CardHeader variant="gradient" color="blue-gray"
+            <CardHeader variant="gradient" color="blue"
                         className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {t("generic_label.all_uszoversenyek")}
@@ -137,7 +137,7 @@ function UszoversenyekList() {
                            actionColumn={actionColumn}/>
             </CardBody>
             <CardFooter>
-                <Button color="blue-gray" variant="outlined" onClick={() => {
+                <Button color="blue" variant="outlined" onClick={() => {
                     setSearchParams({modal: "create"});
                 }}>
                     {t("actions.uszoverseny.create")}
@@ -190,7 +190,7 @@ function NewUszoversenyModal() {
     return (
         <Dialog open={open} handler={setOpen}>
             <Card>
-                <CardHeader variant="gradient" color="blue-gray"
+                <CardHeader variant="gradient" color="blue"
                             className="p-4 mb-4 text-center
                             flex flex-row items-baseline justify-center gap-4">
                     <PlusIcon className="w-8"/>
@@ -208,11 +208,11 @@ function NewUszoversenyModal() {
                     <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
                 </CardBody>
                 <CardFooter className="flex flex-row gap-2">
-                    <Button color="blue-gray" variant="outlined" fullWidth
+                    <Button color="blue" variant="outlined" fullWidth
                             onClick={() => setOpen(false)}>
                         {t("generic_label.rather_not")}
                     </Button>
-                    <Button color="blue-gray" variant="filled" fullWidth onClick={doComplete}
+                    <Button color="blue" variant="filled" fullWidth onClick={doComplete}
                             disabled={!canComplete}>
                         {t("generic_label.lets_go")}
                     </Button>

@@ -31,12 +31,12 @@ export function CsapatokIndexPage() {
                     id: t("generic_label.id")
                 }} excludedProperties={["id"]} actionColumn={entry => (
                     <Link to={String(entry.id)}>
-                        <IconButton color="blue-gray">
+                        <IconButton color="blue">
                             <PencilIcon className="w-5"/>
                         </IconButton>
                     </Link>
                 )}/>
-                <Button color="blue-gray" variant="outlined" onClick={() => {
+                <Button color="blue" variant="outlined" onClick={() => {
                     setSearchParams({modal: "newCsapat"});
                 }}>
                     {t("actions.csapat.create")}

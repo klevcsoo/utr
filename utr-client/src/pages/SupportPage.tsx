@@ -72,7 +72,7 @@ function ServerLog() {
                     <code key={index}>{value}</code>
                 ))}
             </Card>
-            <Button color="blue-gray" onClick={refreshServerLog} disabled={loadingServerLog}>
+            <Button color="blue" onClick={refreshServerLog} disabled={loadingServerLog}>
                 {t("actions.generic.refresh")}
             </Button>
         </div>
