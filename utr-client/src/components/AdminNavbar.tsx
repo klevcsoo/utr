@@ -1,0 +1,100 @@
+import {
+    Avatar,
+    Button,
+    Menu,
+    MenuHandler,
+    MenuList,
+    Navbar,
+    Typography
+} from "@material-tailwind/react";
+import {AppLogo} from "./icons/AppLogo";
+import {Link, useLocation} from "react-router-dom";
+import {useTranslation} from "../hooks/translations/useTranslation";
+import {createElement, FunctionComponent, useMemo, useState} from "react";
+import {
+    ArrowRightOnRectangleIcon,
+    ChevronDownIcon,
+    CubeTransparentIcon,
+    TableCellsIcon
+} from "@heroicons/react/24/solid";
+import {useAuthUser} from "../hooks/auth/useAuthUser";
+import {useAuthLogout} from "../hooks/auth/useAuthLogout";
+
+export function AdminNavbar() {
+    const t = useTranslation();
+
+    return (
+        <Navbar blurred shadow className="px-8 py-0 flex flex-row justify-between items-center">
+            <div className="flex flex-row items-center">
+                <AppLogo className="h-12"/>
+            </div>
+            <div className="flex flex-row gap-8 items-center">
+                <NavButton text={t("navigation.admin_layout")}
+                           to="/admin" icon={TableCellsIcon}/>
+                <NavButton text={t("navigation.live_view")}
+                           to="/live" icon={CubeTransparentIcon}/>
+            </div>
+            <UserMenu/>
+        </Navbar>
+    );
+}
+
+function NavButton(props: {
+    to: string
+    text: string
+    icon: FunctionComponent
+}) {
+    const {pathname} = useLocation();
+
+    const isActive = useMemo(() => {
+        return pathname.startsWith(props.to);
+    }, [pathname, props.to]);
+
+    return (
+        <Link to={props.to}>
+            <Typography as="div" variant="small" color={isActive ? "blue" : "blue-gray"}
+                        className={`font-normal px-2 py-2 rounded-lg 
+                        ${isActive ? "bg-blue-50" : "bg-transparent hover:bg-gray-100"}
+                        flex flex-row items-center gap-2`}>
+                {createElement<{ className: string }>(props.icon, {
+                    className: "w-6 mb-0.5"
+                })}
+                {props.text}
+            </Typography>
+        </Link>
+    );
+}
+
+function UserMenu() {
+    const t = useTranslation();
+    const user = useAuthUser();
+    const logout = useAuthLogout();
+
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Menu open={open} handler={setOpen}>
+            <MenuHandler>
+                <Button variant="text" color="blue-gray"
+                        className="flex flex-row items-center gap-2 p-1 rounded-full">
+                    <Avatar src="user_avatar.png"
+                            alt={user?.displayName ?? t("generic_label.user")}
+                            withBorder className="p-0.5" size="sm"/>
+                    <ChevronDownIcon
+                        className={`h-4 w-4 transition-transform ${
+                            open ? "rotate-180" : ""
+                        }`}
+                    />
+                </Button>
+            </MenuHandler>
+            <MenuList>
+                <Button variant="text" color="red"
+                        className="flex flex-row items-center gap-2"
+                        onClick={logout}>
+                    <ArrowRightOnRectangleIcon className="h-6"/>
+                    {t("actions.logout")}
+                </Button>
+            </MenuList>
+        </Menu>
+    );
+}
