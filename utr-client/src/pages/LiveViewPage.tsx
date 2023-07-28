@@ -5,7 +5,7 @@ import {Fragment} from "react";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {Button, Spinner} from "@material-tailwind/react";
 
-export function IndexPage() {
+export function LiveViewPage() {
     const t = useTranslation();
     const [uszoverseny, uszoversenyLoading] = useNyitottVerseny();
     const user = useAuthUser();

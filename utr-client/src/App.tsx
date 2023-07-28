@@ -4,7 +4,7 @@ import {LoginPage} from "./pages/LoginPage";
 import {CsapatokIndexPage} from "./pages/CsapatokIndexPage";
 import {UnprotectedView} from "./components/providers/UnprotectedView";
 import {ProtectedView} from "./components/providers/ProtectedView";
-import {IndexPage} from "./pages/IndexPage";
+import {LiveViewPage} from "./pages/LiveViewPage";
 import {AdminLayout} from "./layouts/AdminLayout";
 import {CsapatokSlugPage} from "./pages/CsapatokSlugPage";
 import {UszoversenyekIndexPage} from "./pages/UszoversenyekIndexPage";
@@ -23,26 +23,27 @@ function App() {
                     <Outlet/>
                 </ProtectedView>
             }>
-                <Route index element={<IndexPage/>}/>
+                <Route index element={<Navigate to="live" relative="path"/>}/>
+                <Route path="live" element={<LiveViewPage/>}/>
                 <Route path="admin" element={
                     <ProtectedView role="admin">
                         <AdminLayout/>
                     </ProtectedView>
                 }>
-                    <Route path="" element={<AdminIndexPage/>}/>
+                    <Route index element={<AdminIndexPage/>}/>
                     <Route path="uszoversenyek">
-                        <Route path="" element={<UszoversenyekIndexPage/>}/>
+                        <Route index element={<UszoversenyekIndexPage/>}/>
                         <Route path=":id">
-                            <Route path="" element={<UszoversenyekSlugPage/>}/>
+                            <Route index element={<UszoversenyekSlugPage/>}/>
                             <Route path="versenyszamok">
-                                <Route path="" element={<Navigate to=".."
-                                                                  relative="path"/>}/>
+                                <Route index element={<Navigate to=".."
+                                                                relative="path"/>}/>
                                 <Route path=":id" element={<VersenyszamokSlugPage/>}/>
                             </Route>
                         </Route>
                     </Route>
                     <Route path="csapatok">
-                        <Route path="" element={<CsapatokIndexPage/>}/>
+                        <Route index element={<CsapatokIndexPage/>}/>
                         <Route path=":id" element={<CsapatokSlugPage/>}/>
                     </Route>
                     <Route path="settings/*" element={<SettingsPage/>}/>
