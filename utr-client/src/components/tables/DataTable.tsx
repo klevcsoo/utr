@@ -1,7 +1,7 @@
 import {ReactElement, ReactNode, useCallback, useState} from "react";
 import {Identifiable} from "../../types/Identifiable";
 import {DataTableContext, DataTableContextType} from "./DataTableContext";
-import {DataTableColumnProps} from "./DataTableDataColumn";
+import {DataTableDataColumnProps} from "./DataTableDataColumn";
 import {typedObjectKeys} from "../../lib/utils";
 import {Card} from "@material-tailwind/react";
 
@@ -11,7 +11,7 @@ export interface DataTableProps<T extends Identifiable<K>, K extends object = ob
     propertyNameOverride?: { [key in keyof T]?: string };
     excludedProperties?: (keyof T)[];
     actionColumn?: (entry: T) => ReactNode;
-    children: ReactElement<DataTableColumnProps<T>> | ReactElement<DataTableColumnProps<T>>[];
+    children: ReactElement<DataTableDataColumnProps<T>> | ReactElement<DataTableDataColumnProps<T>>[];
 }
 
 export function DataTable<
