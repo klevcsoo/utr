@@ -2,7 +2,7 @@ import {useUszoversenyekList} from "../hooks/uszoversenyek/useUszoversenyekList"
 import {Link, useSearchParams} from "react-router-dom";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {DataTable} from "../components/tables/DataTable";
+import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DateInput} from "../components/inputs/DateInput";
 import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
@@ -17,6 +17,7 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    Chip,
     Dialog,
     IconButton,
     Input,
@@ -127,14 +128,26 @@ function UszoversenyekList() {
                 </Typography>
             </CardHeader>
             <CardBody>
-                <DataTable dataList={uszoversenyek}
-                           propertyNameOverride={{
-                               nev: t("generic_label.name"),
-                               datum: t("generic_label.date"),
-                               helyszin: t("generic_label.location")
-                           }}
-                           excludedProperties={["id", "nyitott"]}
-                           actionColumn={actionColumn}/>
+                <DataTable dataList={uszoversenyek} excludedProperties={["id"]}>
+                    <DataTableDataColumn list={uszoversenyek} forKey="nev"
+                                         header={"name"} element={name => (
+                        <Typography variant="small" className="font-medium">
+                            {name}
+                        </Typography>
+                    )}/>
+                    <DataTableDataColumn list={uszoversenyek} forKey="datum"
+                                         header={"date"} element={date => (
+                        <Chip value={date.toLocaleDateString()}
+                              variant="ghost"
+                              className="w-min"/>
+                    )}/>
+                    <DataTableDataColumn list={uszoversenyek} forKey="helyszin"
+                                         header={"location"} element={location => (
+                        <Typography variant="small" className="font-normal">
+                            {location}
+                        </Typography>
+                    )}/>
+                </DataTable>
             </CardBody>
             <CardFooter>
                 <Button color="blue" variant="outlined" onClick={() => {

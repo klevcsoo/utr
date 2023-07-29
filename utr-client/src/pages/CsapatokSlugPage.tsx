@@ -2,7 +2,6 @@ import {Link, useParams, useSearchParams} from "react-router-dom";
 import {useCsapatDetails} from "../hooks/csapatok/useCsapatDetails";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useUszokList} from "../hooks/uszok/useUszokList";
-import {DataTable} from "../components/tables/DataTable";
 import {TextInput} from "../components/inputs/TextInput";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs/numeric/NumberInput";
@@ -23,13 +22,11 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
-    IconButton,
     Input,
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
-import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
+import {DestructiveButton} from "../components/buttons";
 
 export function CsapatokSlugPage() {
     const t = useTranslation();
@@ -178,25 +175,26 @@ function UszokList(props: {
                     <p>{t("csapat.no_uszok")}</p>
                 </Card>
             ) : (
-                <DataTable dataList={displayedUszok} propertyNameOverride={{
-                    nev: t("generic_label.name"),
-                    szuletesiEv: t("generic_label.year_of_birth")
-                }} excludedProperties={["id", "csapatId"]}
-                           actionColumn={({id}) => (
-                               <Fragment>
-                                   <IconButton color="blue" onClick={() => {
-                                       doOpenEditUszoModal(id);
-                                   }}>
-                                       <PencilIcon className="w-5"/>
-                                   </IconButton>
-                                   <DestructiveIconButton confirmText={t("confirm.generic.delete")}
-                                                          onConfirm={() => {
-                                                              doDeleteUszo(id);
-                                                          }}>
-                                       <TrashIcon className="w-5"/>
-                                   </DestructiveIconButton>
-                               </Fragment>
-                           )}/>
+                <Fragment></Fragment>
+                // <DataTable dataList={displayedUszok} propertyNameOverride={{
+                //     nev: t("generic_label.name"),
+                //     szuletesiEv: t("generic_label.year_of_birth")
+                // }} excludedProperties={["id", "csapatId"]}
+                //            actionColumn={({id}) => (
+                //                <Fragment>
+                //                    <IconButton color="blue" onClick={() => {
+                //                        doOpenEditUszoModal(id);
+                //                    }}>
+                //                        <PencilIcon className="w-5"/>
+                //                    </IconButton>
+                //                    <DestructiveIconButton confirmText={t("confirm.generic.delete")}
+                //                                           onConfirm={() => {
+                //                                               doDeleteUszo(id);
+                //                                           }}>
+                //                        <TrashIcon className="w-5"/>
+                //                    </DestructiveIconButton>
+                //                </Fragment>
+                //            )}/>
             )}
             <Button color="blue" variant="outlined" onClick={doOpenNewUszoModal}>
                 {t("actions.uszo.create")}

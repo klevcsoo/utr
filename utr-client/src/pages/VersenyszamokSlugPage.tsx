@@ -18,7 +18,6 @@ import {
 import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
-import {DataTable} from "../components/tables/DataTable";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
@@ -28,7 +27,7 @@ import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElneve
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {Button, Card, Spinner} from "@material-tailwind/react";
-import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
+import {DestructiveButton} from "../components/buttons";
 
 export function VersenyszamokSlugPage() {
     const t = useTranslation();
@@ -211,20 +210,20 @@ export function NevezesekList(props: {
         </Card>
     ) : (
         <Fragment>
-            <DataTable dataList={displayedNevezesek} propertyNameOverride={{
-                uszoNev: t("generic_label.uszo"),
-                uszoSzuletesiEv: t("generic_label.year_of_birth"),
-                csapatNev: t("generic_label.csapat"),
-                nevezesiIdo: t("generic_label.nevezesi_ido"),
-                idoeredmeny: t("generic_label.idoeredmeny")
-            }} excludedProperties={["id"]} actionColumn={({id}) => (
-                <Fragment>
-                    <DestructiveIconButton confirmText={t("confirm.generic.delete")}
-                                           onConfirm={() => doDeleteNevezes(id)}>
-                        {t("confirm.generic.delete")}
-                    </DestructiveIconButton>
-                </Fragment>
-            )}/>
+            {/*<DataTable dataList={displayedNevezesek} propertyNameOverride={{*/}
+            {/*    uszoNev: t("generic_label.uszo"),*/}
+            {/*    uszoSzuletesiEv: t("generic_label.year_of_birth"),*/}
+            {/*    csapatNev: t("generic_label.csapat"),*/}
+            {/*    nevezesiIdo: t("generic_label.nevezesi_ido"),*/}
+            {/*    idoeredmeny: t("generic_label.idoeredmeny")*/}
+            {/*}} excludedProperties={["id"]} actionColumn={({id}) => (*/}
+            {/*    <Fragment>*/}
+            {/*        <DestructiveIconButton confirmText={t("confirm.generic.delete")}*/}
+            {/*                               onConfirm={() => doDeleteNevezes(id)}>*/}
+            {/*            {t("confirm.generic.delete")}*/}
+            {/*        </DestructiveIconButton>*/}
+            {/*    </Fragment>*/}
+            {/*)}/>*/}
             <Button color="blue" variant="outlined" onClick={doOpenNewNevezesModal}>
                 {t("actions.versenyszam.add_uszo")}
             </Button>

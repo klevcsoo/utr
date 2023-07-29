@@ -2,7 +2,6 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {TabSelector} from "../components/inputs/TabSelector";
 import {useSearchParams} from "react-router-dom";
 import {useServerEnvVars} from "../hooks/support/useServerEnvVars";
-import {DataTable} from "../components/tables/DataTable";
 import {useEffect, useMemo} from "react";
 import {useServerLog} from "../hooks/support/useServerLog";
 import {useTranslation} from "../hooks/translations/useTranslation";
@@ -49,10 +48,10 @@ function EnvironmentVariables() {
     ) : (
         <div className="flex flex-col gap-2">
             <h3>{t("support.utr_variables")}</h3>
-            <DataTable dataList={utrVariables} excludedProperties={["id"]}/>
+            {/*<DataTable dataList={utrVariables} excludedProperties={["id"]}/>*/}
             <div className="h-2"></div>
             <h3>{t("support.other_variables")}</h3>
-            <DataTable dataList={nonUtrVariables} excludedProperties={["id"]}/>
+            {/*<DataTable dataList={nonUtrVariables} excludedProperties={["id"]}/>*/}
         </div>
     );
 }

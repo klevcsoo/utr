@@ -1,6 +1,5 @@
 import {useCsapatokList} from "../hooks/csapatok/useCsapatokList";
-import {DataTable} from "../components/tables/DataTable";
-import {Link, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
 import {useAuthUser} from "../hooks/auth/useAuthUser";
@@ -8,8 +7,7 @@ import {createCsapat} from "../api/csapatok";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, IconButton, Spinner} from "@material-tailwind/react";
-import {PencilIcon} from "@heroicons/react/20/solid";
+import {Button, Spinner} from "@material-tailwind/react";
 
 export function CsapatokIndexPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();
@@ -25,17 +23,17 @@ export function CsapatokIndexPage() {
     ) : (
         <Fragment>
             <div className="w-full flex flex-col gap-4 items-start">
-                <DataTable dataList={csapatok} propertyNameOverride={{
-                    nev: t("generic_label.name"),
-                    varos: t("generic_label.city"),
-                    id: t("generic_label.id")
-                }} excludedProperties={["id"]} actionColumn={entry => (
-                    <Link to={String(entry.id)}>
-                        <IconButton color="blue">
-                            <PencilIcon className="w-5"/>
-                        </IconButton>
-                    </Link>
-                )}/>
+                {/*<DataTable dataList={csapatok} propertyNameOverride={{*/}
+                {/*    nev: t("generic_label.name"),*/}
+                {/*    varos: t("generic_label.city"),*/}
+                {/*    id: t("generic_label.id")*/}
+                {/*}} excludedProperties={["id"]} actionColumn={entry => (*/}
+                {/*    <Link to={String(entry.id)}>*/}
+                {/*        <IconButton color="blue">*/}
+                {/*            <PencilIcon className="w-5"/>*/}
+                {/*        </IconButton>*/}
+                {/*    </Link>*/}
+                {/*)}/>*/}
                 <Button color="blue" variant="outlined" onClick={() => {
                     setSearchParams({modal: "newCsapat"});
                 }}>

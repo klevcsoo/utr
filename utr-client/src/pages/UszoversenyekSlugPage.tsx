@@ -8,7 +8,6 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
-import {DataTable} from "../components/tables/DataTable";
 import {DisplayedVersenyszam} from "../types/DisplayedVersenyszam";
 import {useEditUszoverseny} from "../hooks/uszoversenyek/useEditUszoverseny";
 import {TextInput} from "../components/inputs/TextInput";
@@ -30,13 +29,11 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
-    IconButton,
     Input,
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
-import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
+import {DestructiveButton} from "../components/buttons";
 
 export function UszoversenyekSlugPage() {
     const t = useTranslation();
@@ -208,23 +205,23 @@ function VersenyszamokList(props: {
         </Card>
     ) : (
         <Fragment>
-            <DataTable dataList={displayedVersenyszamok} propertyNameOverride={{
-                valto: t("generic_label.valto"),
-                uszasnem: t("generic_label.uszasnem")
-            }} excludedProperties={["id"]}
-                       actionColumn={({id}) => (
-                           <Fragment>
-                               <Link to={`versenyszamok/${id}`}>
-                                   <IconButton color="blue">
-                                       <PencilIcon className="w-5"/>
-                                   </IconButton>
-                               </Link>
-                               <DestructiveIconButton confirmText={t("actions.versenyszam.delete")}
-                                                      onConfirm={() => doDeleteVersenyszam(id)}>
-                                   <TrashIcon className="w-5"/>
-                               </DestructiveIconButton>
-                           </Fragment>
-                       )}/>
+            {/*<DataTable dataList={displayedVersenyszamok} propertyNameOverride={{*/}
+            {/*    valto: t("generic_label.valto"),*/}
+            {/*    uszasnem: t("generic_label.uszasnem")*/}
+            {/*}} excludedProperties={["id"]}*/}
+            {/*           actionColumn={({id}) => (*/}
+            {/*               <Fragment>*/}
+            {/*                   <Link to={`versenyszamok/${id}`}>*/}
+            {/*                       <IconButton color="blue">*/}
+            {/*                           <PencilIcon className="w-5"/>*/}
+            {/*                       </IconButton>*/}
+            {/*                   </Link>*/}
+            {/*                   <DestructiveIconButton confirmText={t("actions.versenyszam.delete")}*/}
+            {/*                                          onConfirm={() => doDeleteVersenyszam(id)}>*/}
+            {/*                       <TrashIcon className="w-5"/>*/}
+            {/*                   </DestructiveIconButton>*/}
+            {/*               </Fragment>*/}
+            {/*           )}/>*/}
             <Button color="blue" variant="outlined" onClick={doOpenNewVersenyszamModal}>
                 {t("actions.versenyszam.create")}
             </Button>

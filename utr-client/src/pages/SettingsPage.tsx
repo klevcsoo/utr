@@ -1,7 +1,6 @@
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useUsersList} from "../hooks/auth/useUsersList";
-import {DataTable} from "../components/tables/DataTable";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {useDeleteUser} from "../hooks/auth/useDeleteUser";
@@ -12,9 +11,7 @@ import {useRolesList} from "../hooks/auth/useRolesList";
 import {CheckBox} from "../components/inputs/CheckBox";
 import {useEditUser} from "../hooks/auth/useEditUser";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, Card, IconButton, Spinner} from "@material-tailwind/react";
-import {PencilIcon, TrashIcon} from "@heroicons/react/24/solid";
-import {DestructiveIconButton} from "../components/buttons";
+import {Button, Card, Spinner} from "@material-tailwind/react";
 
 export function SettingsPage() {
     const t = useTranslation();
@@ -65,22 +62,22 @@ function UsersList() {
     return (
         <div className="flex flex-col gap-2">
             <h3>{t("settings.users")}</h3>
-            <DataTable dataList={users} propertyNameOverride={{
-                id: t("generic_label.id"),
-                displayName: t("generic_label.name"),
-                username: t("generic_label.username"),
-                roles: t("settings.roles")
-            }} actionColumn={entry => (
-                <Fragment>
-                    <IconButton color="blue" onClick={() => doOpenUserModal(entry.id)}>
-                        <PencilIcon className="w-5"/>
-                    </IconButton>
-                    <DestructiveIconButton confirmText={t("confirm.generic.delete")}
-                                           onConfirm={() => doDeleteUser(entry.id)}>
-                        <TrashIcon className="w-5"/>
-                    </DestructiveIconButton>
-                </Fragment>
-            )}/>
+            {/*<DataTable dataList={users} propertyNameOverride={{*/}
+            {/*    id: t("generic_label.id"),*/}
+            {/*    displayName: t("generic_label.name"),*/}
+            {/*    username: t("generic_label.username"),*/}
+            {/*    roles: t("settings.roles")*/}
+            {/*}} actionColumn={entry => (*/}
+            {/*    <Fragment>*/}
+            {/*        <IconButton color="blue" onClick={() => doOpenUserModal(entry.id)}>*/}
+            {/*            <PencilIcon className="w-5"/>*/}
+            {/*        </IconButton>*/}
+            {/*        <DestructiveIconButton confirmText={t("confirm.generic.delete")}*/}
+            {/*                               onConfirm={() => doDeleteUser(entry.id)}>*/}
+            {/*            <TrashIcon className="w-5"/>*/}
+            {/*        </DestructiveIconButton>*/}
+            {/*    </Fragment>*/}
+            {/*)}/>*/}
             <Button color="blue" variant="outlined" onClick={() => doOpenUserModal()}>
                 {t("actions.user.create")}
             </Button>
