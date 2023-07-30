@@ -22,6 +22,7 @@ import {
 } from "@material-tailwind/react";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+import {DateChip} from "../components/DateChip";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
@@ -50,12 +51,12 @@ function NyitottUszoversenyCard() {
             <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
                 <Typography variant="h5">{t("uszoverseny.opened")}</Typography>
             </CardHeader>
-            <CardBody>
+            <CardBody className="flex flex-col gap-2">
                 <Typography variant="lead">{nyitottVerseny.nev}</Typography>
-                <Typography>
-                    {nyitottVerseny.helyszin} ·&nbsp;
-                    {nyitottVerseny.datum.toLocaleDateString()}
-                </Typography>
+                <div className="flex flex-row gap-2">
+                    <DateChip date={nyitottVerseny.datum}/>
+                    <Chip value={nyitottVerseny.helyszin} color="teal" variant="ghost"/>
+                </div>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
                 <DestructiveButton className="max-w-xs" fullWidth
@@ -98,9 +99,7 @@ function UszoversenyekList() {
                     )}/>
                     <DataTableDataColumn list={uszoversenyek} forKey="datum"
                                          header={t("generic_label.date")} element={date => (
-                        <Chip value={date.toLocaleDateString()}
-                              variant="ghost"
-                              className="w-min"/>
+                        <DateChip date={date}/>
                     )}/>
                     <DataTableDataColumn list={uszoversenyek} forKey="helyszin"
                                          header={t("generic_label.location")} element={location => (
