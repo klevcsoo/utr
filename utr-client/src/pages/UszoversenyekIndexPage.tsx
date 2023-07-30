@@ -4,13 +4,10 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DateInput} from "../components/inputs/DateInput";
-import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
-import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
-import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {DestructiveButton, DestructiveIconButton} from "../components/buttons";
+import {DestructiveButton} from "../components/buttons";
 import {
     Button,
     Card,
@@ -19,12 +16,12 @@ import {
     CardHeader,
     Chip,
     Dialog,
-    IconButton,
     Input,
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {LockClosedIcon, LockOpenIcon, PencilIcon, PlusIcon} from "@heroicons/react/24/solid";
+import {PlusIcon} from "@heroicons/react/24/solid";
+import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
@@ -80,42 +77,6 @@ function UszoversenyekList() {
     const [, setSearchParams] = useSearchParams();
 
     const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
-    const [nyitottVerseny, loadingNyitottVerseny] = useNyitottVerseny();
-    const openUszoverseny = useOpenUszoverseny();
-    const closeUszoverseny = useCloseUszoverseny();
-
-    const existsOpenUszoverseny = useMemo(() => {
-        return !!nyitottVerseny && !loadingNyitottVerseny;
-    }, [loadingNyitottVerseny, nyitottVerseny]);
-
-    const doChangeVersenyNyitottState = useCallback((uszoverseny: Uszoverseny) => {
-        (uszoverseny.nyitott ? closeUszoverseny() : openUszoverseny(uszoverseny.id))
-            .then(console.log)
-            .catch(console.error);
-    }, [closeUszoverseny, openUszoverseny]);
-
-    const actionColumn = useCallback((entry: Uszoverseny) => (
-        <Fragment>
-            <DestructiveIconButton confirmText={t("confirm.uszoverseny.close")}
-                                   onConfirm={() => {
-                                       doChangeVersenyNyitottState(entry);
-                                   }}
-                                   disabled={
-                                       existsOpenUszoverseny && !entry.nyitott
-                                   }>
-                {entry.nyitott ? (
-                    <LockClosedIcon className="w-5"/>
-                ) : (
-                    <LockOpenIcon className="w-5"/>
-                )}
-            </DestructiveIconButton>
-            <Link to={String(entry.id)}>
-                <IconButton color="blue">
-                    <PencilIcon className="w-5"/>
-                </IconButton>
-            </Link>
-        </Fragment>
-    ), [doChangeVersenyNyitottState, existsOpenUszoverseny, t]);
 
     return uszoversenyekLoading ? (
         <Spinner/>
@@ -130,22 +91,37 @@ function UszoversenyekList() {
             <CardBody>
                 <DataTable dataList={uszoversenyek} excludedProperties={["id"]}>
                     <DataTableDataColumn list={uszoversenyek} forKey="nev"
-                                         header={"name"} element={name => (
+                                         header={t("generic_label.name")} element={name => (
                         <Typography variant="small" className="font-medium">
                             {name}
                         </Typography>
                     )}/>
                     <DataTableDataColumn list={uszoversenyek} forKey="datum"
-                                         header={"date"} element={date => (
+                                         header={t("generic_label.date")} element={date => (
                         <Chip value={date.toLocaleDateString()}
                               variant="ghost"
                               className="w-min"/>
                     )}/>
                     <DataTableDataColumn list={uszoversenyek} forKey="helyszin"
-                                         header={"location"} element={location => (
+                                         header={t("generic_label.location")} element={location => (
                         <Typography variant="small" className="font-normal">
                             {location}
                         </Typography>
+                    )}/>
+                    <DataTableDataColumn list={uszoversenyek} forKey="nyitott"
+                                         header={t("uszoverseny.state")} element={nyitott => (
+                        <Chip value={nyitott ?
+                            t("uszoverseny.state.open") :
+                            t("uszoverseny.state.closed")}
+                              variant="ghost" color={nyitott ? "teal" : "amber"}
+                              className="w-min"/>
+                    )}/>
+                    <DataTableActionColumn list={uszoversenyek} element={entry => (
+                        <Link to={String(entry.id)} relative="path">
+                            <Button variant="text" color="blue-gray">
+                                {t("actions.generic.edit")}
+                            </Button>
+                        </Link>
                     )}/>
                 </DataTable>
             </CardBody>

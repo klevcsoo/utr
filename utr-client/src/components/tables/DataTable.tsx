@@ -4,28 +4,31 @@ import {DataTableContext, DataTableContextType} from "./DataTableContext";
 import {DataTableDataColumnProps} from "./DataTableDataColumn";
 import {typedObjectKeys} from "../../lib/utils";
 import {Card} from "@material-tailwind/react";
+import {DataTableActionColumnProps} from "./DataTableActionColumn";
 
-export interface DataTableProps<T extends Identifiable<K>, K extends object = object> {
+export type DataTableChildren<T extends Identifiable<object>> =
+    (ReactElement<DataTableDataColumnProps<T>> |
+        ReactElement<DataTableActionColumnProps<T>>)[]
+
+export interface DataTableProps<T extends Identifiable<object>> {
     dataList: T[];
     loadAllInOnePage?: boolean;
     propertyNameOverride?: { [key in keyof T]?: string };
     excludedProperties?: (keyof T)[];
     actionColumn?: (entry: T) => ReactNode;
-    children: ReactElement<DataTableDataColumnProps<T>> | ReactElement<DataTableDataColumnProps<T>>[];
+    children: DataTableChildren<T>;
 }
 
-export function DataTable<
-    T extends Identifiable<O>,
-    O extends object = object
->(props: DataTableProps<T>) {
+export function DataTable<T extends Identifiable<object>>(props: DataTableProps<T>) {
     const [headers, setHeaders] = useState<{ [key in keyof T]?: string }>({});
     const [rows, setRows] = useState<{ [key in keyof T]?: ReactNode }[]>(
         props.dataList.map(value => {
             return {id: value.id};
         })
     );
+    const [actionRowCells, setActionRowCells] = useState<ReactNode[]>();
 
-    const doSetColumn = useCallback<DataTableContextType<T>["setColumn"]>(options => {
+    const doSetDataColumn = useCallback<DataTableContextType<T>["setDataColumn"]>(options => {
         setHeaders(prevState => {
             (prevState as any)[options.forKey] = options.header ?? options.forKey;
             return prevState;
@@ -33,18 +36,23 @@ export function DataTable<
 
         setRows(prevState => {
             for (let i = 0; i < prevState.length; i++) {
-                prevState[i][options.forKey] = options.element(props.dataList[i][options.forKey]);
+                (prevState[i])[options.forKey] = options.element(props.dataList[i][options.forKey]);
             }
 
             return prevState;
         });
     }, [props.dataList]);
 
+    const doSetActionColum = useCallback<DataTableContextType<T>["setActionColumn"]>(options => {
+        setActionRowCells(rows.map((_, index) => options.element(props.dataList[index])));
+    }, [props.dataList, rows]);
+
     // noinspection com.haulmont.rcb.ArrayToJSXMapInspection
     return (
         <DataTableContext.Provider value={{
             list: props.dataList,
-            setColumn: doSetColumn
+            setDataColumn: doSetDataColumn,
+            setActionColumn: doSetActionColum
         }}>
             {props.children}
             <Card>
@@ -56,6 +64,9 @@ export function DataTable<
                                 {headers[key]}
                             </th>
                         ))}
+                        {!!actionRowCells ? (
+                            <th className="text-start first:pl-4 last:pr-2 uppercase"></th>
+                        ) : null}
                     </tr>
                     </thead>
                     <tbody className="overflow-x-scroll overflow-y-hidden">
@@ -68,6 +79,11 @@ export function DataTable<
                                     </td>
                                 );
                             })}
+                            {!!actionRowCells ? (
+                                <td className="first:pl-4 last:pr-4">
+                                    {actionRowCells[indexEntry]}
+                                </td>
+                            ) : null}
                         </tr>
                     ))}
                     </tbody>

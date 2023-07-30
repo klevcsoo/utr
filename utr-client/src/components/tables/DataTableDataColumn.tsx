@@ -1,10 +1,9 @@
 import {Identifiable} from "../../types/Identifiable";
-import {ReactNode, useContext} from "react";
+import {ReactNode, useContext, useEffect} from "react";
 import {DataTableContext, DataTableContextType} from "./DataTableContext";
 
 export interface DataTableDataColumnProps<
-    T extends Identifiable<O>,
-    O extends object = object,
+    T extends Identifiable<object>,
     K extends keyof T = keyof T
 > {
     list: T[];
@@ -15,12 +14,14 @@ export interface DataTableDataColumnProps<
 }
 
 export function DataTableDataColumn<
-    T extends Identifiable<O>,
-    O extends object = object,
+    T extends Identifiable<object>,
     K extends keyof T = keyof T
->(props: DataTableDataColumnProps<T, O, K>) {
-    const context = useContext<DataTableContextType<T>>(DataTableContext);
-    context.setColumn(props);
+>(props: DataTableDataColumnProps<T, K>) {
+    const {setDataColumn} = useContext<DataTableContextType<T>>(DataTableContext);
+
+    useEffect(() => {
+        setDataColumn(props);
+    }, [props, setDataColumn]);
 
     return null;
 }
