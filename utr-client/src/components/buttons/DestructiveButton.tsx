@@ -1,9 +1,14 @@
 // noinspection DuplicatedCode
 
-import {Button, Dialog, DialogFooter, DialogHeader} from "@material-tailwind/react";
-import {DestructiveButtonProps} from "./DestructiveButtonProps";
+import {Button, ButtonProps, Dialog, DialogFooter, DialogHeader} from "@material-tailwind/react";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {useTranslation} from "../../hooks/translations/useTranslation";
+
+export type DestructiveButtonProps = Omit<ButtonProps, "color"> & {
+    confirmText: string
+    onDismiss?(): void
+    onConfirm?(): void
+}
 
 export function DestructiveButton(props: DestructiveButtonProps) {
     const cleanProps = useMemo(() => {
