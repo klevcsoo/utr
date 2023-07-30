@@ -8,32 +8,36 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
-import {DisplayedVersenyszam} from "../types/DisplayedVersenyszam";
 import {useEditUszoverseny} from "../hooks/uszoversenyek/useEditUszoverseny";
-import {TextInput} from "../components/inputs/TextInput";
 import {DateInput} from "../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
-import {NumberInput} from "../components/inputs/numeric/NumberInput";
-import {GenericSelect} from "../components/selects";
-import {CheckBox} from "../components/inputs/CheckBox";
+import {NumberInput} from "../components/inputs";
+import {UszasnemSelect, VersenyszamNemSelect} from "../components/selects";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {useUszasnemDropdownList} from "../hooks/useUszasnemDropdownList";
-import {useEmberiNemDropdownList} from "../hooks/useEmberiNemDropdownList";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {EmberiNemId} from "../types/EmberiNemId";
-import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {
     Button,
     Card,
     CardBody,
     CardFooter,
     CardHeader,
+    Chip,
+    ChipProps,
+    Dialog,
     Input,
     Spinner,
+    Switch,
     Typography
 } from "@material-tailwind/react";
 import {DestructiveButton} from "../components/buttons";
+import {DataTable, DataTableDataColumn} from "../components/tables";
+import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+import {UszasnemId} from "../types/UszasnemId";
+import {PlusIcon} from "@heroicons/react/24/solid";
+
+const CREATE_RACE_PARAM_KEY = "race";
 
 export function UszoversenyekSlugPage() {
     const t = useTranslation();
@@ -41,7 +45,6 @@ export function UszoversenyekSlugPage() {
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
 
-    const [searchParams] = useSearchParams();
     const [uszoverseny, uszoversenyLoading] = useUszoversenyDetails(idNumber);
 
     useSetAdminLayoutTitle(!uszoverseny ? t("generic_label.loading") : uszoverseny.nev);
@@ -60,15 +63,13 @@ export function UszoversenyekSlugPage() {
             </div>
         </div>
     ) : (
-        <div className="p-4 w-full flex flex-col gap-4">
-            <UszoversenyDetailsForm uszoverseny={uszoverseny}/>
-            <VersenyszamokList uszoverseny={uszoverseny}/>
-            {searchParams.get("modal") === "uszoverseny" ? (
-                <UszoversenyModal uszoverseny={uszoverseny}/>
-            ) : searchParams.get("modal") === "versenyszam" ? (
-                <VersenyszamModal uszoverseny={uszoverseny}/>
-            ) : null}
-        </div>
+        <Fragment>
+            <div className="w-full flex flex-col gap-12 items-start">
+                <UszoversenyDetailsForm uszoverseny={uszoverseny}/>
+                <VersenyszamokList uszoverseny={uszoverseny}/>
+            </div>
+            <VersenyszamModal uszoverseny={uszoverseny}/>
+        </Fragment>
     );
 }
 
@@ -124,7 +125,7 @@ function UszoversenyDetailsForm(props: {
     }, [datum, helyszin, nev, props.uszoverseny]);
 
     return (
-        <Card className="w-full">
+        <Card className="w-full mt-6">
             <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {props.uszoverseny.nev}
@@ -161,6 +162,13 @@ function UszoversenyDetailsForm(props: {
     );
 }
 
+const SWIMMING_STYLE_COLOURS: { [key in UszasnemId]: ChipProps["color"] } = {
+    USZASNEM_HAT: "teal",
+    USZASNEM_GYORS: "brown",
+    USZASNEM_MELL: "indigo",
+    USZASNEM_PILLANGO: "light-green"
+} as const;
+
 function VersenyszamokList(props: {
     uszoverseny?: Uszoverseny
 }) {
@@ -172,21 +180,9 @@ function VersenyszamokList(props: {
     const deleteVersenyszam = useDeleteVersenyszam();
     const [, setSearchParams] = useSearchParams();
 
-    const displayedVersenyszamok = useMemo<DisplayedVersenyszam[]>(() => {
-        return versenyszamok.map(value => {
-            return {
-                id: value.id,
-                valto: !!value.valto ? `${value.valto}x` : "",
-                hossz: `${value.hossz}m`,
-                nem: getVersenyszamNemElnevezes(value.nem),
-                uszasnem: getUszasnemElnevezes(value.uszasnem)
-            };
-        });
-    }, [getUszasnemElnevezes, getVersenyszamNemElnevezes, versenyszamok]);
-
     const doOpenNewVersenyszamModal = useCallback(() => {
         setSearchParams(prevState => {
-            prevState.set("modal", "versenyszam");
+            prevState.set("modal", CREATE_RACE_PARAM_KEY);
             return prevState;
         });
     }, [setSearchParams]);
@@ -200,83 +196,81 @@ function VersenyszamokList(props: {
             <Spinner/>
         </div>
     ) : !versenyszamok || !versenyszamok.length ? (
-        <Card>
-            <p>{t("uszoversenyek.no_versenyszam")}</p>
+        <Card className="w-full">
+            <CardBody>
+                <Typography variant="lead" className="text-center">
+                    {t("uszoversenyek.no_versenyszam")}
+                </Typography>
+            </CardBody>
+            <CardFooter className="grid place-content-center">
+                <Button color="blue" variant="outlined" onClick={doOpenNewVersenyszamModal}>
+                    {t("actions.versenyszam.create")}
+                </Button>
+            </CardFooter>
         </Card>
     ) : (
-        <Fragment>
-            {/*<DataTable dataList={displayedVersenyszamok} propertyNameOverride={{*/}
-            {/*    valto: t("generic_label.valto"),*/}
-            {/*    uszasnem: t("generic_label.uszasnem")*/}
-            {/*}} excludedProperties={["id"]}*/}
-            {/*           actionColumn={({id}) => (*/}
-            {/*               <Fragment>*/}
-            {/*                   <Link to={`versenyszamok/${id}`}>*/}
-            {/*                       <IconButton color="blue">*/}
-            {/*                           <PencilIcon className="w-5"/>*/}
-            {/*                       </IconButton>*/}
-            {/*                   </Link>*/}
-            {/*                   <DestructiveIconButton confirmText={t("actions.versenyszam.delete")}*/}
-            {/*                                          onConfirm={() => doDeleteVersenyszam(id)}>*/}
-            {/*                       <TrashIcon className="w-5"/>*/}
-            {/*                   </DestructiveIconButton>*/}
-            {/*               </Fragment>*/}
-            {/*           )}/>*/}
-            <Button color="blue" variant="outlined" onClick={doOpenNewVersenyszamModal}>
-                {t("actions.versenyszam.create")}
-            </Button>
-        </Fragment>
-    );
-}
-
-function UszoversenyModal(props: {
-    uszoverseny?: Uszoverseny
-}) {
-    const t = useTranslation();
-
-    const [, setSearchParams] = useSearchParams();
-    const editUszoverseny = useEditUszoverseny();
-
-    const [nev, setNev] = useState(props.uszoverseny?.nev ?? "");
-    const [datum, setDatum] = useState(props.uszoverseny?.datum.getTime() ?? Date.now());
-    const [helyszin, setHelyszin] = useState(props.uszoverseny?.helyszin);
-
-    const doDismiss = useCallback(() => {
-        setSearchParams(prevState => {
-            prevState.delete("modal");
-            return prevState;
-        });
-    }, [setSearchParams]);
-
-    const doComplete = useCallback(() => {
-        if (!!props.uszoverseny) {
-            editUszoverseny(props.uszoverseny.id, {
-                nev, datum: new Date(datum), helyszin
-            }).then(console.log);
-            doDismiss();
-        }
-    }, [props.uszoverseny, editUszoverseny, nev, datum, helyszin, doDismiss]);
-
-    useEffect(() => {
-        if (!!props.uszoverseny) {
-            setNev(props.uszoverseny.nev);
-            setDatum(props.uszoverseny.datum.getTime());
-            setHelyszin(props.uszoverseny.helyszin);
-        }
-    }, [props.uszoverseny]);
-
-    return (
-        <FullPageModalWithActions icon="edit" title={t("actions.uszoverseny.edit")}
-                                  onComplete={doComplete} onDismiss={doDismiss}
-                                  className="flex flex-col gap-2 p-6">
-            <TextInput value={nev} onValue={setNev}
-                       placeholder={t("csapat.name")}/>
-            <DateInput value={datum} onValue={setDatum}/>
-            {!!helyszin ? (
-                <TextInput value={helyszin} onValue={setHelyszin}
-                           placeholder={t("csapat.city")}/>
-            ) : null}
-        </FullPageModalWithActions>
+        <Card className="w-full">
+            <CardHeader variant="gradient" color="blue"
+                        className="p-4 mb-4 text-center">
+                <Typography variant="h5">
+                    {t("generic_label.all_uszoversenyek")}
+                </Typography>
+            </CardHeader>
+            <CardBody>
+                <DataTable dataList={versenyszamok} excludedProperties={["id"]}>
+                    <DataTableDataColumn list={versenyszamok} forKey="valto"
+                                         header={t("generic_label.valto")}
+                                         element={value => (
+                                             <Typography variant="small"
+                                                         className="font-normal">
+                                                 {value ? `${value}x` : ""}
+                                             </Typography>
+                                         )}/>
+                    <DataTableDataColumn list={versenyszamok} forKey="hossz"
+                                         header={t("versenyszam.hossz")}
+                                         element={value => (
+                                             <Typography variant="small"
+                                                         className="font-normal">
+                                                 {value}m
+                                             </Typography>
+                                         )}/>
+                    <DataTableDataColumn list={versenyszamok} forKey="nem"
+                                         header={t("generic_label.nem")}
+                                         element={value => (
+                                             <Chip value={getVersenyszamNemElnevezes(value)}
+                                                   className="w-min" variant="ghost"
+                                                   color={value === "NEM_FERFI" ?
+                                                       "light-blue" : "pink"}/>
+                                         )}/>
+                    <DataTableDataColumn list={versenyszamok} forKey="uszasnem"
+                                         header={t("generic_label.uszasnem")}
+                                         element={value => (
+                                             <Chip value={getUszasnemElnevezes(value)}
+                                                   className="w-min" variant="ghost"
+                                                   color={SWIMMING_STYLE_COLOURS[value]}/>
+                                         )}/>
+                    <DataTableActionColumn list={versenyszamok} element={entry => (
+                        <Fragment>
+                            <Link to={`versenyszamok/${entry.id}`} relative="path">
+                                <Button variant="text" color="blue-gray">
+                                    {t("actions.generic.edit")}
+                                </Button>
+                            </Link>
+                            <Button variant="text" color="red" onClick={() => {
+                                doDeleteVersenyszam(entry.id);
+                            }}>
+                                {t("actions.generic.delete")}
+                            </Button>
+                        </Fragment>
+                    )}/>
+                </DataTable>
+            </CardBody>
+            <CardFooter>
+                <Button color="blue" variant="outlined" onClick={doOpenNewVersenyszamModal}>
+                    {t("actions.versenyszam.create")}
+                </Button>
+            </CardFooter>
+        </Card>
     );
 }
 
@@ -284,28 +278,31 @@ function VersenyszamModal(props: {
     uszoverseny?: Uszoverseny
 }) {
     const t = useTranslation();
-
-    const uszasnemList = useUszasnemDropdownList();
-    const emberiNemList = useEmberiNemDropdownList();
-
     const [searchParams, setSearchParams] = useSearchParams();
     const createVersenyszam = useCreateVersenyszam();
 
+    const open = useMemo(() => {
+        return searchParams.has("modal") && searchParams.get("modal") === CREATE_RACE_PARAM_KEY;
+    }, [searchParams]);
+
+    const setOpen = useCallback((open: boolean) => {
+        setSearchParams(state => {
+            if (open) state.set("modal", CREATE_RACE_PARAM_KEY);
+            else state.delete("modal");
+
+            return state;
+        });
+    }, [setSearchParams]);
+
     const [hossz, setHossz] = useState<number>(25);
-    const [uszasnem, setUszasnem] = useState("-");
-    const [emberiNem, setEmberiNem] = useState("-");
+    const [uszasnem, setUszasnem] = useState<UszasnemId>("USZASNEM_GYORS");
+    const [versenyszamNem, setVersenyszamNem] = useState<EmberiNemId>("NEM_FERFI");
     const [valto, setValto] = useState<number>(4);
     const [valtoEnabled, setValtoEnabled] = useState(false);
 
-    const modalTitle = useMemo(() => {
-        return searchParams.has("versenyszamId") ?
-            t("actions.versenyszam.edit") :
-            t("actions.versenyszam.create");
-    }, [searchParams, t]);
-
     const canComplete = useMemo(() => {
-        return !!hossz && uszasnem !== "-" && emberiNem !== "-";
-    }, [emberiNem, hossz, uszasnem]);
+        return !!hossz;
+    }, [hossz]);
 
     const doDismiss = useCallback(() => {
         setSearchParams(prevState => {
@@ -320,48 +317,52 @@ function VersenyszamModal(props: {
             createVersenyszam({
                 hossz: hossz,
                 valto: valtoEnabled ? valto : undefined,
-                emberiNemId: emberiNem as EmberiNemId,
-                uszasnemId: uszasnemList.indexOf(uszasnem),
+                emberiNemId: versenyszamNem,
+                uszasnemId: uszasnem,
                 versenyId: props.uszoverseny.id
             }).then(message => {
                 console.log(message);
                 doDismiss();
             }).catch(console.error);
         }
-    }, [
-        canComplete, createVersenyszam, doDismiss, emberiNem,
-        hossz, props.uszoverseny, uszasnem, uszasnemList, valto, valtoEnabled
-    ]);
+    }, [canComplete, createVersenyszam, doDismiss, versenyszamNem,
+        hossz, props.uszoverseny, uszasnem, valto, valtoEnabled]);
 
     return (
-        <FullPageModalWithActions icon="person" title={modalTitle}
-                                  onComplete={doComplete} onDismiss={doDismiss}
-                                  className="flex flex-col gap-2 p-6">
-            <div className="grid grid-rows-2 grid-cols-[auto_auto]
-                        gap-y-2 gap-x-8 items-center">
-                <label>{t("versenyszam.valto")}</label>
-                <div className="flex flex-row gap-2 justify-items-start">
-                    <CheckBox value={valtoEnabled} onValue={setValtoEnabled}/>
-                    <NumberInput value={valto} onValue={setValto} min={1} max={8}
-                                 disabled={!valtoEnabled}/>
-                </div>
-                <label>{t("versenyszam.hossz")}</label>
-                <NumberInput value={hossz} onValue={setHossz} min={25} max={200}/>
-                <label>{t("versenyszam.nem")}</label>
-                <GenericSelect options={emberiNemList}
-                               label={t("generic_label.nem")}
-                               onSelect={value => {
-                                   setEmberiNem(value);
-                               }}
-                               selected={emberiNem}/>
-                <label>{t("versenyszam.uszasnem")}</label>
-                <GenericSelect options={uszasnemList}
-                               label={t("generic_label.uszasnem")}
-                               onSelect={value => {
-                                   setUszasnem(value);
-                               }}
-                               selected={uszasnem}/>
-            </div>
-        </FullPageModalWithActions>
+        <Dialog open={open} handler={setOpen}>
+            <Card>
+                <CardHeader variant="gradient" color="blue"
+                            className="p-4 mb-4 text-center
+                            flex flex-row items-center justify-center gap-4">
+                    <PlusIcon className="w-8"/>
+                    <Typography variant="h5">
+                        {t("actions.versenyszam.create")}
+                    </Typography>
+                </CardHeader>
+                <CardBody className="grid grid-rows-2 grid-cols-2 gap-2">
+                    <div className="flex flex-row gap-8 items-center">
+                        <Switch checked={valtoEnabled} onChange={event => {
+                            setValtoEnabled(event.currentTarget.checked);
+                        }} label={t("generic_label.valto")}/>
+                        <NumberInput value={valto} onValue={setValto} disabled={!valtoEnabled}
+                                     label={t("generic_label.valto")}/>
+                    </div>
+                    <NumberInput value={hossz} onValue={setHossz} min={25} max={200}
+                                 label={t("versenyszam.hossz")}/>
+                    <VersenyszamNemSelect selected={versenyszamNem} onSelect={setVersenyszamNem}/>
+                    <UszasnemSelect selected={uszasnem} onSelect={setUszasnem}/>
+                </CardBody>
+                <CardFooter className="flex flex-row gap-2">
+                    <Button color="blue" variant="outlined" fullWidth
+                            onClick={() => setOpen(false)}>
+                        {t("generic_label.rather_not")}
+                    </Button>
+                    <Button color="blue" variant="filled" fullWidth onClick={doComplete}
+                            disabled={!canComplete}>
+                        {t("generic_label.lets_go")}
+                    </Button>
+                </CardFooter>
+            </Card>
+        </Dialog>
     );
 }

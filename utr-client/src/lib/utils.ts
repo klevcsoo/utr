@@ -94,3 +94,8 @@ export function hungarianNormalize(input: string): string {
 export function typedObjectKeys<T extends object>(obj: T): (keyof T)[] {
     return Object.keys(obj) as (keyof T)[];
 }
+
+
+export function isBetweenInclusive(n: number, min: number, max: number): boolean {
+    return n >= min && n <= max;
+}

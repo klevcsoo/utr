@@ -4,7 +4,7 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useUszokList} from "../hooks/uszok/useUszokList";
 import {TextInput} from "../components/inputs/TextInput";
 import {EmberiNemId} from "../types/EmberiNemId";
-import {NumberInput} from "../components/inputs/numeric/NumberInput";
+import {NumberInput} from "../components/inputs/NumberInput";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";

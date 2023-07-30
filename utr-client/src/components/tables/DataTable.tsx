@@ -8,7 +8,8 @@ import {DataTableActionColumnProps} from "./DataTableActionColumn";
 
 export type DataTableChildren<T extends Identifiable<object>> =
     (ReactElement<DataTableDataColumnProps<T>> |
-        ReactElement<DataTableActionColumnProps<T>>)[]
+        ReactElement<DataTableActionColumnProps<T>>)[] |
+    ReactElement<DataTableDataColumnProps<T>>
 
 export interface DataTableProps<T extends Identifiable<object>> {
     dataList: T[];

@@ -7,7 +7,7 @@ import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam"
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
-import {NumberInput} from "../components/inputs/numeric/NumberInput";
+import {NumberInput} from "../components/inputs";
 import {CheckBox} from "../components/inputs/CheckBox";
 import {
     CsapatSelect,
@@ -140,9 +140,9 @@ export function VersenyszamDetails(props: {
             valto: valtoEnabled ? valto : undefined,
             emberiNemId: nem,
             hossz: hossz,
-            uszasnemId: uszasnemId
+            uszasnemId: "USZASNEM_MELL"
         }).then(console.log).catch(console.error);
-    }, [editVersenyszam, hossz, nem, props.versenyszam.id, uszasnemId, valto, valtoEnabled]);
+    }, [editVersenyszam, hossz, nem, props.versenyszam, valto, valtoEnabled]);
 
     return (
         <Card className="grid grid-cols-2 gap-2">
