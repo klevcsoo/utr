@@ -126,7 +126,7 @@ function UszoversenyDetailsForm(props: {
 
     return (
         <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
+            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {props.uszoverseny.nev}
                 </Typography>
@@ -210,7 +210,7 @@ function VersenyszamokList(props: {
         </Card>
     ) : (
         <Card className="w-full">
-            <CardHeader variant="gradient" color="blue"
+            <CardHeader variant="gradient" color="blue-gray"
                         className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {t("generic_label.all_uszoversenyek")}
@@ -331,7 +331,7 @@ function VersenyszamModal(props: {
     return (
         <Dialog open={open} handler={setOpen}>
             <Card>
-                <CardHeader variant="gradient" color="blue"
+                <CardHeader variant="gradient" color="blue-gray"
                             className="p-4 mb-4 text-center
                             flex flex-row items-center justify-center gap-4">
                     <PlusIcon className="w-8"/>

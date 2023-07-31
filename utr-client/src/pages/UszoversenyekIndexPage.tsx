@@ -48,7 +48,7 @@ function NyitottUszoversenyCard() {
         <Spinner/>
     ) : !nyitottVerseny ? null : (
         <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
+            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
                 <Typography variant="h5">{t("uszoverseny.opened")}</Typography>
             </CardHeader>
             <CardBody className="flex flex-col gap-2">
@@ -83,7 +83,7 @@ function UszoversenyekList() {
         <Spinner/>
     ) : (
         <Card className="w-full">
-            <CardHeader variant="gradient" color="blue"
+            <CardHeader variant="gradient" color="blue-gray"
                         className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {t("generic_label.all_uszoversenyek")}
@@ -178,7 +178,7 @@ function NewUszoversenyModal() {
     return (
         <Dialog open={open} handler={setOpen}>
             <Card>
-                <CardHeader variant="gradient" color="blue"
+                <CardHeader variant="gradient" color="blue-gray"
                             className="p-4 mb-4 text-center
                             flex flex-row items-baseline justify-center gap-4">
                     <PlusIcon className="w-8"/>
