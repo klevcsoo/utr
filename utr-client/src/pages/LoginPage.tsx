@@ -1,9 +1,9 @@
-import {useCallback, useContext, useMemo, useState} from "react";
+import {Fragment, useCallback, useContext, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
 import {AuthContext} from "../api/auth";
 import {AppLogo} from "../components/icons/AppLogo";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {Button} from "@material-tailwind/react";
+import {Button, Card, CardBody, CardFooter, CardHeader, Spinner} from "@material-tailwind/react";
 
 export function LoginPage() {
     const t = useTranslation();
@@ -11,6 +11,7 @@ export function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const {login} = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
 
     const canLogin = useMemo(() => {
         return !!username && !!password;
@@ -18,24 +19,48 @@ export function LoginPage() {
 
     const doLogin = useCallback(() => {
         if (canLogin) {
-            login(username, password).then(u => console.log(u));
+            setLoading(true);
+            setTimeout(() => {
+                login(username, password)
+                    .then(console.log)
+                    .catch(console.error)
+                    .finally(() => setLoading(false));
+            }, 2000);
         }
     }, [canLogin, login, username, password]);
 
     return (
-        <div className="w-screen h-screen grid place-content-center">
-            <div className="flex flex-col gap-4 items-center">
-                <AppLogo/>
-                <TextInput value={username} onValue={setUsername}
-                           placeholder={t("generic_label.username")}
-                           onSubmit={doLogin}/>
-                <TextInput value={password} onValue={setPassword}
-                           placeholder={t("generic_label.password")} password
-                           onSubmit={doLogin}/>
-                <Button color="blue" onClick={doLogin} disabled={!canLogin}>
-                    {t("actions.generic.login")}
-                </Button>
+        <Fragment>
+            <div className="fixed inset-0 z-0">
+                <img src="/login_bg.jpg" alt="login_bg"
+                     className="w-screen h-screen opacity-50"/>
             </div>
-        </div>
+            <div className="w-screen h-screen grid place-content-center">
+                <Card className="w-80">
+                    <CardHeader variant="gradient" color="blue"
+                                className="grid place-content-center p-1">
+                        <AppLogo className="invert brightness-200" scale={120}/>
+                    </CardHeader>
+                    <CardBody className="flex flex-col items-center gap-2">
+                        <TextInput value={username} onValue={setUsername}
+                                   label={t("generic_label.username")}
+                                   onSubmit={doLogin}/>
+                        <TextInput value={password} onValue={setPassword}
+                                   label={t("generic_label.password")} type="password"
+                                   onSubmit={doLogin}/>
+                    </CardBody>
+                    <CardFooter>
+                        <Button color="blue" onClick={doLogin} fullWidth
+                                disabled={!canLogin || loading}>
+                            {loading ? (
+                                <div className="grid place-content-center w-full">
+                                    <Spinner className="w-4 h-4"/>
+                                </div>
+                            ) : t("actions.generic.login")}
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </div>
+        </Fragment>
     );
 }

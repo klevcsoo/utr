@@ -244,13 +244,13 @@ function UserPasswordChangeModal() {
                 <form className="grid grid-cols-2 gap-2 p-6">
                     <label>{t("settings.user.password.old")}</label>
                     <TextInput value={oldPass} onValue={setOldPass}
-                               password/>
+                               type="password"/>
                     <label>{t("settings.user.password.new")}</label>
                     <TextInput value={newPass} onValue={setNewPass}
-                               password/>
+                               type="password"/>
                     <label>{t("settings.user.password.new_again")}</label>
                     <TextInput value={newPass2} onValue={setNewPass2}
-                               password/>
+                               type="password"/>
                 </form>
             )}
         </FullPageModalWithActions>
