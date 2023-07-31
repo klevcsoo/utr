@@ -180,7 +180,7 @@ function NewUszoversenyModal() {
             <Card>
                 <CardHeader variant="gradient" color="blue-gray"
                             className="p-4 mb-4 text-center
-                            flex flex-row items-baseline justify-center gap-4">
+                            flex flex-row items-center justify-center gap-2">
                     <PlusIcon className="w-8"/>
                     <Typography variant="h5">
                         {t("actions.uszoverseny.create")}
