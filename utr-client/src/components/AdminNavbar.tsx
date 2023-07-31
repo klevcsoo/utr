@@ -65,7 +65,7 @@ function NavButton(props: {
                 <Typography as="div" variant="small" color={isActive ? "blue" : "blue-gray"}
                             className={`font-normal px-4 py-2 rounded-lg 
                         ${isActive ?
-                                "bg-blue-gray-50 border border-blue-gray-100" :
+                                "bg-blue-gray-50 bg-opacity-50 border border-blue-gray-100" :
                                 "bg-transparent hover:bg-gray-100"}
                         flex flex-row items-center gap-2`}>
                     {createElement<{ className: string }>(props.icon, {
