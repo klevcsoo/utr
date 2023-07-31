@@ -8,9 +8,9 @@ import {
     Navbar,
     Typography
 } from "@material-tailwind/react";
-import {AppLogo} from "./icons/AppLogo";
+import {AppLogo} from "../icons/AppLogo";
 import {Link, useLocation} from "react-router-dom";
-import {useTranslation} from "../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations/useTranslation";
 import {createElement, FunctionComponent, useMemo, useState} from "react";
 import {
     ArrowRightOnRectangleIcon,
@@ -18,26 +18,30 @@ import {
     CubeTransparentIcon,
     TableCellsIcon
 } from "@heroicons/react/24/solid";
-import {useAuthLogout} from "../hooks/auth/useAuthLogout";
-import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
+import {useAuthLogout} from "../../hooks/auth/useAuthLogout";
+import {useNyitottVerseny} from "../../hooks/nyitottVerseny/useNyitottVerseny";
+import {AdminBreadcrumbs} from "./AdminBreadcrumbs";
 
 export function AdminNavbar() {
     const t = useTranslation();
 
     return (
         <Navbar blurred shadow
-                className="px-8 py-0 flex flex-row justify-between items-center max-w-screen-3xl">
-            <div className="flex flex-row items-center">
-                <AppLogo className="h-12"/>
+                className="p-1 max-w-screen-3xl flex flex-col justify-between">
+            <div className="px-8 flex flex-row justify-between items-center">
+                <div className="flex flex-row items-center">
+                    <AppLogo className="h-12"/>
+                </div>
+                <div className="flex flex-row gap-8 items-center">
+                    <NavButton text={t("navigation.admin_layout")}
+                               to="/admin" icon={TableCellsIcon}/>
+                    <NavButton text={t("navigation.live_view")}
+                               to="/live" icon={CubeTransparentIcon}
+                               nyitottVersenyBadge/>
+                </div>
+                <UserMenu/>
             </div>
-            <div className="flex flex-row gap-8 items-center">
-                <NavButton text={t("navigation.admin_layout")}
-                           to="/admin" icon={TableCellsIcon}/>
-                <NavButton text={t("navigation.live_view")}
-                           to="/live" icon={CubeTransparentIcon}
-                           nyitottVersenyBadge/>
-            </div>
-            <UserMenu/>
+            <AdminBreadcrumbs/>
         </Navbar>
     );
 }

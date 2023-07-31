@@ -1,9 +1,9 @@
 import {Link, useLocation} from "react-router-dom";
 import {createElement, FunctionComponent, useEffect, useMemo, useState} from "react";
-import {useTranslation} from "../hooks/translations/useTranslation";
-import {useSetLocale} from "../hooks/translations/useSetLocale";
-import {Locale} from "../types/Locale";
-import {GenericSelect} from "./selects";
+import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useSetLocale} from "../../hooks/translations/useSetLocale";
+import {Locale} from "../../types/Locale";
+import {GenericSelect} from "../selects";
 import {
     Card,
     CardBody,
