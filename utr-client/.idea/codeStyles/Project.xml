@@ -33,5 +33,9 @@
         <pair source="cu" header="cuh" fileNamingConvention="NONE" />
       </extensions>
     </files>
+    <codeStyleSettings language="HTML">
+      <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
+      <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />
+    </codeStyleSettings>
   </code_scheme>
 </component>

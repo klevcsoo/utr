@@ -1,89 +1,98 @@
-import {useMemo} from "react";
+import {ReactElement, ReactNode, useCallback, useState} from "react";
 import {Identifiable} from "../../types/Identifiable";
-import {DataTableProps} from "../../types/componentProps/tables/DataTableProps";
+import {DataTableContext, DataTableContextType} from "./DataTableContext";
+import {DataTableDataColumnProps} from "./DataTableDataColumn";
+import {typedObjectKeys} from "../../lib/utils";
+import {Card} from "@material-tailwind/react";
+import {DataTableActionColumnProps} from "./DataTableActionColumn";
 
-export function DataTable<
-    T extends Identifiable<K>,
-    K extends object = object
->(props: DataTableProps<T>) {
-    const propDisplayNames = useMemo<{ [key in keyof T]?: string }>(() => {
-        const out: { [key in keyof T]?: string } = {};
+export type DataTableChildren<T extends Identifiable<object>> =
+    (ReactElement<DataTableDataColumnProps<T>> |
+        ReactElement<DataTableActionColumnProps<T>>)[] |
+    ReactElement<DataTableDataColumnProps<T>>
 
-        for (const p of Object.keys(props.dataList[0] ?? {})) {
-            out[p as keyof T] = p;
-        }
+export interface DataTableProps<T extends Identifiable<object>> {
+    dataList: T[];
+    loadAllInOnePage?: boolean;
+    propertyNameOverride?: { [key in keyof T]?: string };
+    excludedProperties?: (keyof T)[];
+    actionColumn?: (entry: T) => ReactNode;
+    children: DataTableChildren<T>;
+}
 
-        if (props.propertyNameOverride) {
-            for (const p of Object.keys(props.propertyNameOverride)) {
-                out[p as keyof T] = props.propertyNameOverride[p as keyof T];
+export function DataTable<T extends Identifiable<object>>(props: DataTableProps<T>) {
+    const [headers, setHeaders] = useState<{ [key in keyof T]?: string }>({});
+    const [rows, setRows] = useState<{ [key in keyof T]?: ReactNode }[]>(
+        props.dataList.map(value => {
+            return {id: value.id};
+        })
+    );
+    const [actionRowCells, setActionRowCells] = useState<ReactNode[]>();
+
+    const doSetDataColumn = useCallback<DataTableContextType<T>["setDataColumn"]>(options => {
+        setHeaders(prevState => {
+            (prevState as any)[options.forKey] = options.header ?? options.forKey;
+            return prevState;
+        });
+
+        setRows(prevState => {
+            for (let i = 0; i < prevState.length; i++) {
+                (prevState[i])[options.forKey] = options.element(props.dataList[i][options.forKey]);
             }
-        }
 
-        return out;
-    }, [props.propertyNameOverride, props.dataList]);
-
-    const columnNames = useMemo<string[]>(() => {
-        const out = Object.keys(props.dataList[0] ?? {}).filter(key => {
-            return !props.excludedProperties?.includes(key as keyof T);
-        }).map(key => {
-            return String(propDisplayNames[key as keyof T]);
+            return prevState;
         });
+    }, [props.dataList]);
 
-        if (!!props.actionColumn) {
-            out.push("");
-        }
+    const doSetActionColum = useCallback<DataTableContextType<T>["setActionColumn"]>(options => {
+        setActionRowCells(rows.map((_, index) => options.element(props.dataList[index])));
+    }, [props.dataList, rows]);
 
-        return out;
-    }, [propDisplayNames, props.actionColumn, props.dataList, props.excludedProperties]);
-
-    const columnValues = useMemo<string[][]>(() => {
-        return props.dataList.map(entry => {
-            return Object.keys(entry).filter(key => {
-                return !props.excludedProperties?.includes(key as keyof T);
-            }).map(key => {
-                const val = entry[key as keyof T];
-                if (val instanceof Date) {
-                    return (val as Date).toLocaleDateString();
-                }
-
-                return String(val);
-            });
-        });
-    }, [props.dataList, props.excludedProperties]);
-
+    // noinspection com.haulmont.rcb.ArrayToJSXMapInspection
     return (
-        <div className="w-full flex flex-col gap-1">
-            <table className="table-auto rounded-md overflow-hidden border-collapse">
-                <thead className="bg-slate-100 rounded-md">
-                <tr className="h-12">
-                    {columnNames.map((value, index) => (
-                        <th key={index} className="text-start first:pl-4 last:pr-2
-                        uppercase">
-                            {value}
-                        </th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100
-                border-x border-b border-slate-100 overflow-hidden">
-                {columnValues.map((entry, indexEntry) => (
-                    <tr key={indexEntry} className="h-12">
-                        {entry.map((value, indexValue) => (
-                            <td key={indexValue} className="first:pl-4">
-                                {value}
-                            </td>
+        <DataTableContext.Provider value={{
+            list: props.dataList,
+            setDataColumn: doSetDataColumn,
+            setActionColumn: doSetActionColum
+        }}>
+            {props.children}
+            <Card>
+                <table className="table-auto rounded-md overflow-hidden border-collapse w-full">
+                    <thead className="bg-blue-gray-100 rounded-md border-b border-b-blue-gray-400">
+                    <tr className="h-12">
+                        {typedObjectKeys(headers).map((key, index) => (
+                            <th key={index} className="text-start first:pl-4 last:pr-2 uppercase">
+                                {headers[key]}
+                            </th>
                         ))}
-                        {!props.actionColumn ? null : (
-                            <td className="pr-2">
-                                <div className="flex flex-row items-center gap-2">
-                                    {props.actionColumn(props.dataList[indexEntry])}
-                                </div>
-                            </td>
-                        )}
+                        {!!actionRowCells ? (
+                            <th className="text-start first:pl-4 last:pr-2 uppercase"></th>
+                        ) : null}
                     </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody className="overflow-x-scroll overflow-y-hidden">
+                    {rows.map((entry, indexEntry) => (
+                        <tr key={indexEntry} className="h-12 even:bg-blue-gray-50">
+                            {typedObjectKeys(entry).map((key, indexKey) => {
+                                return props.excludedProperties?.includes(key) ? null : (
+                                    <td key={indexKey} className="first:pl-4 last:pr-4">
+                                        {entry[key]}
+                                    </td>
+                                );
+                            })}
+                            {!!actionRowCells ? (
+                                <td className="first:pl-4 last:pr-4">
+                                    <div className="w-full flex flex-row items-center
+                                    justify-end gap-2">
+                                        {actionRowCells[indexEntry]}
+                                    </div>
+                                </td>
+                            ) : null}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </Card>
+        </DataTableContext.Provider>
     );
 }
