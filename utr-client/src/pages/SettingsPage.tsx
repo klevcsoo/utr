@@ -1,4 +1,3 @@
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useUsersList} from "../hooks/auth/useUsersList";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
@@ -8,45 +7,86 @@ import {useUserDetails} from "../hooks/auth/useUserDetails";
 import {TextInput} from "../components/inputs/TextInput";
 import {DisplayedUser} from "../types/DisplayedUser";
 import {useRolesList} from "../hooks/auth/useRolesList";
-import {CheckBox} from "../components/inputs/CheckBox";
 import {useEditUser} from "../hooks/auth/useEditUser";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
-import {Button, Card, Spinner} from "@material-tailwind/react";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader,
+    Checkbox,
+    Chip,
+    ChipProps,
+    Dialog,
+    Spinner,
+    Typography
+} from "@material-tailwind/react";
+import {DataTable, DataTableDataColumn} from "../components/tables";
+import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+
+const MODAL_PARAM_KEY = "modal";
+const USER_ID_PARAM_KEY = "userId";
+const USER_PARAM_VALUE = "user";
+const USER_PASSWORD_PARAM_VALUE = "userPassword";
 
 export function SettingsPage() {
-    const t = useTranslation();
-    const [searchParams] = useSearchParams();
-
-    useSetAdminLayoutTitle(t("title.admin_layout.settings"));
-
     return (
-        <div className="flex flex-col gap-4 w-full">
-            <UsersList/>
-            {searchParams.get("modal") === "user" ? (
-                <UserModal/>
-            ) : searchParams.get("modal") === "user_password" ? (
-                <UserPasswordChangeModal/>
-            ) : null}
-        </div>
+        <Fragment>
+            <div className="flex flex-col gap-4 w-full">
+                <UsersListCard/>
+            </div>
+            <UserModalContainer/>
+        </Fragment>
     );
 }
 
-function UsersList() {
+function UsersListCard() {
     const t = useTranslation();
     const [, setSearchParams] = useSearchParams();
 
     const users = useUsersList();
+
+    const doOpenModal = useCallback(() => {
+        setSearchParams(state => {
+            state.set(MODAL_PARAM_KEY, USER_PARAM_VALUE);
+            state.delete(USER_ID_PARAM_KEY);
+            return state;
+        });
+    }, [setSearchParams]);
+
+    return (
+        <Card className="w-full mt-6">
+            <CardHeader variant="gradient" color="blue-gray"
+                        className="p-4 mb-4 text-center
+                            flex flex-row items-center justify-center gap-2">
+                <Typography variant="h5">
+                    {t("settings.users")}
+                </Typography>
+            </CardHeader>
+            {!!users && !!users.length ? (
+                <CardBody>
+                    <UsersTable users={users}/>
+                </CardBody>
+            ) : null}
+            <CardFooter>
+                <Button color="blue" variant="outlined" onClick={() => doOpenModal()}>
+                    {t("actions.user.create")}
+                </Button>
+            </CardFooter>
+        </Card>
+    );
+}
+
+function UsersTable(props: { users: DisplayedUser[] }) {
+    const t = useTranslation();
+    const [, setSearchParams] = useSearchParams();
     const deleteUser = useDeleteUser();
 
-    const doOpenUserModal = useCallback((userId?: number) => {
+    const doOpenModal = useCallback((id: number) => {
         setSearchParams(state => {
-            state.set("modal", "user");
-            // noinspection SuspiciousTypeOfGuard
-            if (!!userId && typeof userId === "number") {
-                state.set("id", String(userId));
-            } else if (state.has("id")) {
-                state.delete("id");
-            }
+            state.set(MODAL_PARAM_KEY, USER_PARAM_VALUE);
+            state.set(USER_ID_PARAM_KEY, String(id));
             return state;
         });
     }, [setSearchParams]);
@@ -60,42 +100,109 @@ function UsersList() {
     }, [deleteUser, t]);
 
     return (
-        <div className="flex flex-col gap-2">
-            <h3>{t("settings.users")}</h3>
-            {/*<DataTable dataList={users} propertyNameOverride={{*/}
-            {/*    id: t("generic_label.id"),*/}
-            {/*    displayName: t("generic_label.name"),*/}
-            {/*    username: t("generic_label.username"),*/}
-            {/*    roles: t("settings.roles")*/}
-            {/*}} actionColumn={entry => (*/}
-            {/*    <Fragment>*/}
-            {/*        <IconButton color="blue" onClick={() => doOpenUserModal(entry.id)}>*/}
-            {/*            <PencilIcon className="w-5"/>*/}
-            {/*        </IconButton>*/}
-            {/*        <DestructiveIconButton confirmText={t("confirm.generic.delete")}*/}
-            {/*                               onConfirm={() => doDeleteUser(entry.id)}>*/}
-            {/*            <TrashIcon className="w-5"/>*/}
-            {/*        </DestructiveIconButton>*/}
-            {/*    </Fragment>*/}
-            {/*)}/>*/}
-            <Button color="blue" variant="outlined" onClick={() => doOpenUserModal()}>
-                {t("actions.user.create")}
-            </Button>
+        <DataTable dataList={props.users}>
+            <DataTableDataColumn list={props.users} forKey="id"
+                                 header={t("generic_label.id")}
+                                 element={value => (
+                                     <Typography variant="small">{value}</Typography>
+                                 )}/>
+            <DataTableDataColumn list={props.users} forKey="displayName"
+                                 header={t("generic_label.name")}
+                                 element={value => (
+                                     <Typography variant="small" className="font-bold">
+                                         {value}
+                                     </Typography>
+                                 )}/>
+            <DataTableDataColumn list={props.users} forKey="username"
+                                 header={t("generic_label.username")}
+                                 element={value => (
+                                     <Typography variant="small">{value}</Typography>
+                                 )}/>
+            <DataTableDataColumn list={props.users} forKey="roles"
+                                 header={t("settings.roles")}
+                                 element={value => (
+                                     <RoleChips roles={value}/>
+                                 )}/>
+            <DataTableActionColumn list={props.users} element={entry => (
+                <Fragment>
+                    <Button variant="text" color="blue-gray" onClick={() => {
+                        doOpenModal(entry.id);
+                    }}>
+                        {t("actions.generic.edit")}
+                    </Button>
+                    <Button variant="text" color="red" onClick={() => {
+                        doDeleteUser(entry.id);
+                    }}>
+                        {t("actions.generic.delete")}
+                    </Button>
+                </Fragment>
+            )}/>
+        </DataTable>
+    );
+}
+
+function RoleChips(props: { roles: string[] }) {
+    const roleColour = useCallback((role: string): ChipProps["color"] => {
+        switch (role) {
+            case "ROLE_ADMIN":
+                return "deep-purple";
+            case "ROLE_ALLITOBIRO":
+                return "orange";
+            case "ROLE_SPEAKER":
+                return "light-blue";
+            case "ROLE_IDOROGZITO":
+                return "green";
+        }
+    }, []);
+
+    return (
+        <div className="flex flex-row gap-2 items-center">
+            {props.roles.sort().map((value, index) => (
+                <Chip key={index} value={value} variant="ghost"
+                      className="w-fit" color={roleColour(value)}/>
+            ))}
         </div>
     );
 }
 
-function UserModal() {
+function UserModalContainer() {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const open = useMemo(() => {
+        return searchParams.has(MODAL_PARAM_KEY) &&
+            searchParams.get(MODAL_PARAM_KEY) === USER_PARAM_VALUE;
+    }, [searchParams]);
+
+    const setOpen = useCallback((open: boolean) => {
+        setSearchParams(state => {
+            if (open) {
+                state.set(MODAL_PARAM_KEY, USER_PARAM_VALUE);
+            } else {
+                state.delete(MODAL_PARAM_KEY);
+                state.delete(USER_ID_PARAM_KEY);
+            }
+
+            return state;
+        });
+    }, [setSearchParams]);
+
+    return (
+        <Dialog open={open} handler={setOpen}>
+            <UserModal close={() => setOpen(false)}/>
+        </Dialog>
+    );
+}
+
+function UserModal(props: { close(): void }) {
     const t = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const [user, loadingUser] = useUserDetails(parseInt(searchParams.get("id") ?? "-1"));
+    const [user] = useUserDetails(parseInt(
+        searchParams.get(USER_ID_PARAM_KEY) ?? "-1"
+    ));
     const editUser = useEditUser();
-    const [displayName, setDisplayName] = useState("");
 
-    const modalIcon = useMemo(() => {
-        return !user ? "person" : "edit";
-    }, [user]);
+    const [displayName, setDisplayName] = useState("");
 
     const modalTitle = useMemo(() => {
         return !user ? t("actions.user.create") : t("actions.user.edit");
@@ -103,15 +210,7 @@ function UserModal() {
 
     const doOpenPasswordModal = useCallback(() => {
         setSearchParams(state => {
-            state.set("modal", "user_password");
-            return state;
-        });
-    }, [setSearchParams]);
-
-    const doDismiss = useCallback(() => {
-        setSearchParams(state => {
-            state.delete("modal");
-            state.has("id") && state.delete("id");
+            state.set(MODAL_PARAM_KEY, USER_PASSWORD_PARAM_VALUE);
             return state;
         });
     }, [setSearchParams]);
@@ -120,46 +219,57 @@ function UserModal() {
         if (!!user && displayName.length > 6) {
             editUser(user.id, {displayName: displayName}).then(messages => {
                 messages.forEach(console.log);
-                doDismiss();
+                props.close();
             });
         }
-    }, [displayName, doDismiss, editUser, user]);
+    }, [displayName, props, editUser, user]);
 
     useEffect(() => {
         setDisplayName(user?.displayName ?? "");
     }, [user]);
 
     return (
-        <FullPageModalWithActions icon={modalIcon} title={modalTitle}
-                                  onComplete={doComplete} onDismiss={doDismiss}
-                                  className="flex flex-col gap-8 p-6 items-center">
-            {loadingUser || !user ? (
-                <Spinner/>
-            ) : (
-                <Fragment>
-                    <div className="flex flex-row gap-8 items-center">
-                        <label>{t("generic_label.username")}</label>
-                        <TextInput value={displayName} onValue={setDisplayName}
-                                   placeholder={t("generic_label.username")}/>
-                    </div>
-                    <UserRoleSelector user={user}/>
-                    <Button color="blue" onClick={doOpenPasswordModal}>
-                        {t("actions.user.change_password")}
-                    </Button>
-                </Fragment>
-            )}
-        </FullPageModalWithActions>
+        <Card>
+            <CardHeader variant="gradient" color="blue-gray"
+                        className="p-4 mb-4 text-center
+                            flex flex-row items-center justify-center gap-4">
+                <Typography variant="h5">
+                    {modalTitle}
+                </Typography>
+            </CardHeader>
+            <CardBody className="flex flex-col gap-8">
+                <TextInput value={displayName} onValue={setDisplayName}
+                           label={t("generic_label.username")}/>
+                <UserRoleSelector user={user}/>
+                <Button color="blue" onClick={doOpenPasswordModal}>
+                    {t("actions.user.change_password")}
+                </Button>
+            </CardBody>
+            <CardFooter className="flex flex-row gap-2">
+                <Button color="blue" variant="outlined" fullWidth
+                        onClick={() => props.close()}>
+                    {t("generic_label.rather_not")}
+                </Button>
+                <Button color="blue" variant="filled" fullWidth onClick={doComplete}>
+                    {t("generic_label.lets_go")}
+                </Button>
+            </CardFooter>
+        </Card>
     );
 }
 
-function UserRoleSelector(props: { user: DisplayedUser }) {
+function UserRoleSelector(props: { user?: DisplayedUser }) {
     const t = useTranslation();
 
     const roles = useRolesList();
     const editUser = useEditUser();
-    const [selectedRoles, setSelectedRoles] = useState<string>(
-        props.user.roles.join(";")
-    );
+
+    const defaultState = useMemo(() => {
+        return props.user?.roles.join(";") ?? "";
+    }, [props.user?.roles]);
+
+    const [selectedRoles, setSelectedRoles] = useState(defaultState);
+    console.log(selectedRoles);
 
     const doUpdateSelectedRoles = useCallback((role: string) => {
         setSelectedRoles(prevState => {
@@ -176,24 +286,37 @@ function UserRoleSelector(props: { user: DisplayedUser }) {
         });
     }, []);
 
-    useEffect(() => {
-        editUser(props.user.id, {
-            roles: selectedRoles.split(";")
-        });
-    }, [selectedRoles, props.user, editUser]);
+    const doRevertChanges = useCallback(() => {
+        setSelectedRoles(defaultState);
+    }, [defaultState]);
+
+    const doSaveChanges = useCallback(() => {
+        if (!!props.user) {
+            editUser(props.user.id, {
+                roles: selectedRoles.split(";")
+            }).then(console.log).catch(console.log);
+        }
+    }, [editUser, props.user, selectedRoles]);
 
     return (
-        <div className="flex flex-col gap-2 items-start w-full">
-            <h3>{t("settings.user_edit.roles")}</h3>
-            <Card className="flex flex-col items-start w-full">
+        <div className="flex flex-col gap-2">
+            <div>
                 {roles.map((value, index) => (
                     <div key={index} className="flex flex-row gap-2 items-center">
-                        <CheckBox value={selectedRoles.includes(value)}
-                                  onValue={() => doUpdateSelectedRoles(value)}/>
-                        <label>{value}</label>
+                        <Checkbox checked={selectedRoles.includes(value)}
+                                  onChange={() => doUpdateSelectedRoles(value)}
+                                  label={value}/>
                     </div>
                 ))}
-            </Card>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+                <Button variant="outlined" color="blue-gray">
+                    {t("generic_label.revert")}
+                </Button>
+                <Button color="blue-gray">
+                    {t("settings.user_edit.roles.save")}
+                </Button>
+            </div>
         </div>
     );
 }
@@ -202,7 +325,9 @@ function UserPasswordChangeModal() {
     const t = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const [user, loadingUser] = useUserDetails(parseInt(searchParams.get("id") ?? "-1"));
+    const [user, loadingUser] = useUserDetails(parseInt(
+        searchParams.get(USER_ID_PARAM_KEY) ?? "-1"
+    ));
     const editUser = useEditUser();
 
     const [oldPass, setOldPass] = useState("");
@@ -215,7 +340,7 @@ function UserPasswordChangeModal() {
 
     const doDismiss = useCallback(() => {
         setSearchParams(state => {
-            state.set("modal", "user");
+            state.set(MODAL_PARAM_KEY, USER_PARAM_VALUE);
             return state;
         });
     }, [setSearchParams]);
