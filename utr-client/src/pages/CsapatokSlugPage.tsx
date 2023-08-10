@@ -4,7 +4,7 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useUszokList} from "../hooks/uszok/useUszokList";
 import {TextInput} from "../components/inputs/TextInput";
 import {EmberiNemId} from "../types/EmberiNemId";
-import {NumberInput} from "../components/inputs/NumberInput";
+import {NumberInput} from "../components/inputs";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";
@@ -14,7 +14,6 @@ import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
-import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {EmberiNemSelect} from "../components/selects";
 import {
     Button,
@@ -22,19 +21,25 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    Dialog,
     Input,
     Spinner,
     Typography
 } from "@material-tailwind/react";
 import {DestructiveButton} from "../components/buttons";
+import {DataTable, DataTableDataColumn} from "../components/tables";
+import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+import {PlusIcon} from "@heroicons/react/24/solid";
+
+const MODAL_PARAM_KEY = "modal";
+const USZO_ID_PARAM_KEY = "uszoId";
+const USZO_PARAM_VALUE = "uszo";
 
 export function CsapatokSlugPage() {
     const t = useTranslation();
 
     const {id} = useParams();
     const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
-
-    const [searchParams] = useSearchParams();
 
     const [csapat, csapatLoading] = useCsapatDetails(idNumber);
 
@@ -54,13 +59,13 @@ export function CsapatokSlugPage() {
             </div>
         </div>
     ) : (
-        <div className="p-4 w-full flex flex-col gap-4">
-            <CsapatDetailsForm csapat={csapat}/>
-            <UszokList csapat={csapat}/>
-            {searchParams.get("modal") === "uszo" ? (
-                <UszoModal csapat={csapat}/>
-            ) : null}
-        </div>
+        <Fragment>
+            <div className="w-full flex flex-col gap-4 items-start">
+                <CsapatDetailsForm csapat={csapat}/>
+                <UszokList csapat={csapat}/>
+            </div>
+            <UszoModal csapat={csapat}/>
+        </Fragment>
     );
 }
 
@@ -96,8 +101,8 @@ function CsapatDetailsForm(props: {
     }, [nev, props.csapat, varos]);
 
     return (
-        <Card className="w-full">
-            <CardHeader variant="gradient" color="blue" className="p-4 mb-4 text-center">
+        <Card className="w-full mt-6">
+            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
                 <Typography variant="h5">
                     {props.csapat.nev}
                 </Typography>
@@ -131,7 +136,7 @@ function UszokList(props: {
     const t = useTranslation();
     const getEmberiNemElnevezes = useGetEmberiNemElnevezes();
 
-    const [uszok, uszokLoading] = useUszokList(props.csapat.id);
+    const [uszok, loadingUszok] = useUszokList(props.csapat.id);
     const deleteUszo = useDeleteUszo();
     const [, setSearchParams] = useSearchParams();
 
@@ -147,70 +152,86 @@ function UszokList(props: {
 
     const doOpenEditUszoModal = useCallback((id: number) => {
         setSearchParams(prevState => {
-            prevState.set("modal", "uszo");
-            prevState.set("uszoId", String(id));
+            prevState.set(MODAL_PARAM_KEY, USZO_PARAM_VALUE);
+            prevState.set(USZO_ID_PARAM_KEY, String(id));
             return prevState;
         });
     }, [setSearchParams]);
 
     const doOpenNewUszoModal = useCallback(() => {
         setSearchParams(prevState => {
-            prevState.set("modal", "uszo");
+            prevState.set(MODAL_PARAM_KEY, USZO_PARAM_VALUE);
             return prevState;
         });
     }, [setSearchParams]);
 
     const doDeleteUszo = useCallback((id: number) => {
-        deleteUszo(id).then(console.log).catch(console.error);
-    }, [deleteUszo]);
+        if (window.confirm(t("confirm.generic.delete"))) {
+            deleteUszo(id).then(console.log).catch(console.error);
+        }
+    }, [deleteUszo, t]);
 
     return (
-        <Fragment>
-            {uszokLoading ? (
-                <div className="grid place-content-center">
+        <Card className="w-full">
+            {loadingUszok ? (
+                <CardBody className="grid place-content-center">
                     <Spinner/>
-                </div>
+                </CardBody>
             ) : !uszok || !uszok.length ? (
-                <Card>
-                    <p>{t("csapat.no_uszok")}</p>
-                </Card>
+                <CardBody className="grid place-content-center">
+                    <Typography>{t("csapat.no_uszok")}</Typography>
+                </CardBody>
             ) : (
-                <Fragment></Fragment>
-                // <DataTable dataList={displayedUszok} propertyNameOverride={{
-                //     nev: t("generic_label.name"),
-                //     szuletesiEv: t("generic_label.year_of_birth")
-                // }} excludedProperties={["id", "csapatId"]}
-                //            actionColumn={({id}) => (
-                //                <Fragment>
-                //                    <IconButton color="blue" onClick={() => {
-                //                        doOpenEditUszoModal(id);
-                //                    }}>
-                //                        <PencilIcon className="w-5"/>
-                //                    </IconButton>
-                //                    <DestructiveIconButton confirmText={t("confirm.generic.delete")}
-                //                                           onConfirm={() => {
-                //                                               doDeleteUszo(id);
-                //                                           }}>
-                //                        <TrashIcon className="w-5"/>
-                //                    </DestructiveIconButton>
-                //                </Fragment>
-                //            )}/>
+                <Fragment>
+                    <CardBody>
+                        <DataTable dataList={displayedUszok} excludedProperties={["id"]}>
+                            <DataTableDataColumn list={displayedUszok} forKey="nev"
+                                                 header={t("generic_label.name")}
+                                                 element={value => (
+                                                     <Typography
+                                                         variant="small">{value}</Typography>
+                                                 )}/>
+                            <DataTableDataColumn list={displayedUszok} forKey="szuletesiEv"
+                                                 header={t("generic_label.year_of_birth")}
+                                                 element={value => (
+                                                     <Typography
+                                                         variant="small">{value}</Typography>
+                                                 )}/>
+                            <DataTableActionColumn list={displayedUszok} element={entry => (
+                                <Fragment>
+                                    <Button variant="text" color="blue-gray" onClick={() => {
+                                        doOpenEditUszoModal(entry.id);
+                                    }}>
+                                        {t("actions.generic.edit")}
+                                    </Button>
+                                    <Button variant="text" color="red" onClick={() => {
+                                        doDeleteUszo(entry.id);
+                                    }}>
+                                        {t("actions.generic.delete")}
+                                    </Button>
+                                </Fragment>
+                            )}/>
+                        </DataTable>
+                    </CardBody>
+                    <CardFooter>
+                        <Button color="blue" variant="outlined" onClick={doOpenNewUszoModal}>
+                            {t("actions.uszo.create")}
+                        </Button>
+                    </CardFooter>
+                </Fragment>
             )}
-            <Button color="blue" variant="outlined" onClick={doOpenNewUszoModal}>
-                {t("actions.uszo.create")}
-            </Button>
-        </Fragment>
+        </Card>
     );
 }
 
 function UszoModal(props: {
-    csapat?: Csapat
+    csapat: Csapat
 }) {
     const t = useTranslation();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [uszo, loadingUszo] = useUszoDetails(
-        parseInt(searchParams.get("uszoId") ?? "-1")
+        parseInt(searchParams.get(USZO_ID_PARAM_KEY) ?? "-1")
     );
     const createUszo = useCreateUszo();
 
@@ -218,23 +239,35 @@ function UszoModal(props: {
     const [szuletesiEv, setSzuletesiEv] = useState((new Date()).getFullYear());
     const [nem, setNem] = useState<EmberiNemId>("NEM_NO");
 
-    const canCreateUszo = useMemo(() => {
+    const open = useMemo(() => {
+        return searchParams.has(MODAL_PARAM_KEY) &&
+            searchParams.get(MODAL_PARAM_KEY) === USZO_PARAM_VALUE;
+    }, [searchParams]);
+
+    const setOpen = useCallback((open: boolean) => {
+        setSearchParams(state => {
+            if (open) state.set(MODAL_PARAM_KEY, USZO_PARAM_VALUE);
+            else state.delete(MODAL_PARAM_KEY);
+
+            return state;
+        });
+
+        if (!open) {
+            setNev("");
+            setSzuletesiEv(0);
+            setNem("NEM_NO");
+        }
+    }, [setSearchParams]);
+
+    const canComplete = useMemo(() => {
         return !!nev && !!szuletesiEv && !!nem;
     }, [nem, nev, szuletesiEv]);
 
     const modalTitle = useMemo(() => {
-        return searchParams.has("uszoId") ?
+        return searchParams.has(USZO_ID_PARAM_KEY) ?
             t("actions.uszo.edit") :
             t("actions.uszo.create");
     }, [searchParams, t]);
-
-    const doDismiss = useCallback(() => {
-        setSearchParams(prevState => {
-            prevState.delete("modal");
-            prevState.delete("uszoId");
-            return prevState;
-        });
-    }, [setSearchParams]);
 
     const doComplete = useCallback(() => {
         if (!!props.csapat && !!nev && !!szuletesiEv && !!nem) {
@@ -245,10 +278,10 @@ function UszoModal(props: {
                 csapatId: props.csapat.id
             }).then(message => {
                 console.log(message);
-                doDismiss();
+                setOpen(false);
             }).catch(console.log);
         }
-    }, [createUszo, doDismiss, nem, nev, props.csapat, szuletesiEv]);
+    }, [createUszo, setOpen, nem, nev, props.csapat, szuletesiEv]);
 
     useEffect(() => {
         if (!!uszo) {
@@ -258,29 +291,40 @@ function UszoModal(props: {
         }
     }, [uszo]);
 
-    return (
-        <FullPageModalWithActions icon="person" title={modalTitle}
-                                  onComplete={doComplete} onDismiss={doDismiss}
-                                  className="flex flex-col gap-2 p-6"
-                                  canComplete={canCreateUszo}>
-            {loadingUszo ? (
-                <Spinner/>
-            ) : (
-                <Fragment>
+    return loadingUszo ? <Spinner/> : (
+        <Dialog open={open} handler={setOpen}>
+            <Card>
+
+                <CardHeader variant="gradient" color="blue-gray"
+                            className="p-4 mb-4 text-center
+                            flex flex-row items-center justify-center gap-4">
+                    <PlusIcon className="w-8"/>
+                    <Typography variant="h5">
+                        {modalTitle}
+                    </Typography>
+                </CardHeader>
+                <CardBody className="flex flex-col items-center gap-2">
                     <TextInput value={nev} onValue={setNev}
-                               placeholder={t("uszo.name")}/>
-                    <div className="grid grid-rows-2 grid-cols-[auto_auto]
-                        gap-y-2 gap-x-8 items-center">
-                        <label>{t("uszo.year_of_birth")}</label>
-                        <NumberInput value={szuletesiEv}
-                                     onValue={setSzuletesiEv}
-                                     min={1980}
-                                     max={(new Date()).getFullYear()}/>
-                        <label>Nem:</label>
+                               label={t("uszo.name")}/>
+                    <div className="flex flex-row gap-2 w-full">
+                        <NumberInput value={szuletesiEv} onValue={setSzuletesiEv}
+                                     min={1980} max={(new Date()).getFullYear()}
+                                     label={t("uszo.year_of_birth")}
+                                     className="row-start-2"/>
                         <EmberiNemSelect selected={nem} onSelect={setNem}/>
                     </div>
-                </Fragment>
-            )}
-        </FullPageModalWithActions>
+                </CardBody>
+                <CardFooter className="flex flex-row gap-2">
+                    <Button color="blue" variant="outlined" fullWidth
+                            onClick={() => setOpen(false)}>
+                        {t("generic_label.rather_not")}
+                    </Button>
+                    <Button color="blue" variant="filled" fullWidth onClick={doComplete}
+                            disabled={!canComplete}>
+                        {t("generic_label.lets_go")}
+                    </Button>
+                </CardFooter>
+            </Card>
+        </Dialog>
     );
 }
