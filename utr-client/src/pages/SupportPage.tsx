@@ -1,4 +1,3 @@
-import {useSearchParams} from "react-router-dom";
 import {useServerEnvVars} from "../hooks/support/useServerEnvVars";
 import {useEffect, useMemo} from "react";
 import {useServerLog} from "../hooks/support/useServerLog";
@@ -24,7 +23,6 @@ const LOG_TAB_KEY = "log";
 
 export function SupportPage() {
     const t = useTranslation();
-    const [searchParams] = useSearchParams();
 
     return (
         <Card>
