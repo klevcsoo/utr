@@ -11,8 +11,6 @@ import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam"
 import {useEditUszoverseny} from "../hooks/uszoversenyek/useEditUszoverseny";
 import {DateInput} from "../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
-import {NumberInput} from "../components/inputs";
-import {UszasnemSelect, VersenyszamNemSelect} from "../components/selects";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
@@ -28,7 +26,6 @@ import {
     Dialog,
     Input,
     Spinner,
-    Switch,
     Typography
 } from "@material-tailwind/react";
 import {DestructiveButton} from "../components/buttons";
@@ -36,6 +33,7 @@ import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {UszasnemId} from "../types/UszasnemId";
 import {PlusIcon} from "@heroicons/react/24/solid";
+import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
 
 const CREATE_RACE_PARAM_KEY = "race";
 
@@ -297,8 +295,7 @@ function VersenyszamModal(props: {
     const [hossz, setHossz] = useState<number>(25);
     const [uszasnem, setUszasnem] = useState<UszasnemId>("USZASNEM_GYORS");
     const [versenyszamNem, setVersenyszamNem] = useState<EmberiNemId>("NEM_FERFI");
-    const [valto, setValto] = useState<number>(4);
-    const [valtoEnabled, setValtoEnabled] = useState(false);
+    const [valto, setValto] = useState<number>(0);
 
     const canComplete = useMemo(() => {
         return !!hossz;
@@ -316,7 +313,7 @@ function VersenyszamModal(props: {
         if (!!props.uszoverseny && canComplete) {
             createVersenyszam({
                 hossz: hossz,
-                valto: valtoEnabled ? valto : undefined,
+                valto: valto === 0 ? undefined : valto,
                 emberiNemId: versenyszamNem,
                 uszasnemId: uszasnem,
                 versenyId: props.uszoverseny.id
@@ -326,7 +323,7 @@ function VersenyszamModal(props: {
             }).catch(console.error);
         }
     }, [canComplete, createVersenyszam, doDismiss, versenyszamNem,
-        hossz, props.uszoverseny, uszasnem, valto, valtoEnabled]);
+        hossz, props.uszoverseny, uszasnem, valto]);
 
     return (
         <Dialog open={open} handler={setOpen}>
@@ -340,17 +337,11 @@ function VersenyszamModal(props: {
                     </Typography>
                 </CardHeader>
                 <CardBody className="grid grid-rows-2 grid-cols-2 gap-2">
-                    <div className="flex flex-row gap-8 items-center">
-                        <Switch checked={valtoEnabled} onChange={event => {
-                            setValtoEnabled(event.currentTarget.checked);
-                        }} label={t("generic_label.valto")}/>
-                        <NumberInput value={valto} onValue={setValto} disabled={!valtoEnabled}
-                                     label={t("generic_label.valto")}/>
-                    </div>
-                    <NumberInput value={hossz} onValue={setHossz} min={25} max={200}
-                                 label={t("versenyszam.hossz")}/>
-                    <VersenyszamNemSelect selected={versenyszamNem} onSelect={setVersenyszamNem}/>
-                    <UszasnemSelect selected={uszasnem} onSelect={setUszasnem}/>
+                    <VersenyszamEditLayout valto={valto} hossz={hossz}
+                                           versenyszamNem={versenyszamNem} uszasnem={uszasnem}
+                                           setValto={setValto} setHossz={setHossz}
+                                           setVersenyszamNem={setVersenyszamNem}
+                                           setUszasnem={setUszasnem}/>
                 </CardBody>
                 <CardFooter className="flex flex-row gap-2">
                     <Button color="blue" variant="outlined" fullWidth
