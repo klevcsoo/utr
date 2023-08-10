@@ -1,11 +1,23 @@
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {TabSelector} from "../components/inputs/TabSelector";
 import {useSearchParams} from "react-router-dom";
 import {useServerEnvVars} from "../hooks/support/useServerEnvVars";
 import {useEffect, useMemo} from "react";
 import {useServerLog} from "../hooks/support/useServerLog";
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {Button, Card, Spinner} from "@material-tailwind/react";
+import {
+    Button,
+    Card,
+    CardBody,
+    Spinner,
+    Tab,
+    TabPanel,
+    Tabs,
+    TabsBody,
+    TabsHeader,
+    Typography
+} from "@material-tailwind/react";
+import {DataTable, DataTableDataColumn} from "../components/tables";
+import {KeyValueObject} from "../types/KeyValueObject";
+import {Identifiable} from "../types/Identifiable";
 
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";
@@ -14,20 +26,29 @@ export function SupportPage() {
     const t = useTranslation();
     const [searchParams] = useSearchParams();
 
-    useSetAdminLayoutTitle(t("title.admin_layout.support"));
-
     return (
-        <div className="flex flex-col gap-8 items-center w-full">
-            <TabSelector tabs={[
-                {name: t("support.environment_variables"), key: ENV_TAB_KEY},
-                {name: t("support.log"), key: LOG_TAB_KEY}
-            ]} defaultTabKey="env"/>
-            {!searchParams.has("tab") || searchParams.get("tab") === ENV_TAB_KEY ? (
-                <EnvironmentVariables/>
-            ) : (
-                <ServerLog/>
-            )}
-        </div>
+        <Card>
+            <CardBody>
+                <Tabs value={ENV_TAB_KEY}>
+                    <TabsHeader>
+                        <Tab value={ENV_TAB_KEY}>
+                            {t("support.environment_variables")}
+                        </Tab>
+                        <Tab value={LOG_TAB_KEY}>
+                            {t("support.log")}
+                        </Tab>
+                    </TabsHeader>
+                    <TabsBody>
+                        <TabPanel value={ENV_TAB_KEY}>
+                            <EnvironmentVariables/>
+                        </TabPanel>
+                        <TabPanel value={LOG_TAB_KEY}>
+                            <ServerLog/>
+                        </TabPanel>
+                    </TabsBody>
+                </Tabs>
+            </CardBody>
+        </Card>
     );
 }
 
@@ -46,13 +67,30 @@ function EnvironmentVariables() {
     return loadingVariables ? (
         <Spinner/>
     ) : (
-        <div className="flex flex-col gap-2">
-            <h3>{t("support.utr_variables")}</h3>
-            {/*<DataTable dataList={utrVariables} excludedProperties={["id"]}/>*/}
+        <div className="flex flex-col gap-2 overflow-x-scroll">
+            <Typography>{t("support.utr_variables")}</Typography>
+            {!!utrVariables.length ? <VariablesTable variables={utrVariables}/> : null}
             <div className="h-2"></div>
-            <h3>{t("support.other_variables")}</h3>
-            {/*<DataTable dataList={nonUtrVariables} excludedProperties={["id"]}/>*/}
+            <Typography>{t("support.other_variables")}</Typography>
+            {!!nonUtrVariables.length ? <VariablesTable variables={nonUtrVariables}/> : null}
         </div>
+    );
+}
+
+function VariablesTable(props: { variables: Identifiable<KeyValueObject<string, string>>[] }) {
+    return (
+        <DataTable dataList={props.variables} excludedProperties={["id"]}>
+            <DataTableDataColumn list={props.variables} forKey="key"
+                                 element={value => (
+                                     <Typography variant="small">{value}</Typography>
+                                 )}/>
+            <DataTableDataColumn list={props.variables} forKey="value"
+                                 element={value => (
+                                     <Typography variant="small" className="break-all">
+                                         {value}
+                                     </Typography>
+                                 )}/>
+        </DataTable>
     );
 }
 
@@ -66,11 +104,14 @@ function ServerLog() {
 
     return (
         <div className="flex flex-col gap-8 items-center">
-            <Card className="flex flex-col">
+            <div className="flex flex-col">
                 {serverLog.map((value, index) => (
-                    <code key={index}>{value}</code>
+                    <Typography as="code" key={index}
+                                className="font-mono break-all border-b border-b-blue-gray-50">
+                        {value}
+                    </Typography>
                 ))}
-            </Card>
+            </div>
             <Button color="blue" onClick={refreshServerLog} disabled={loadingServerLog}>
                 {t("actions.generic.refresh")}
             </Button>
