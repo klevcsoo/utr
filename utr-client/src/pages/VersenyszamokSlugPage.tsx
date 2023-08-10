@@ -6,7 +6,6 @@ import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam"
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
-import {CheckBox} from "../components/inputs/CheckBox";
 import {CsapatSelect, UszoSelect} from "../components/selects";
 import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
@@ -14,7 +13,6 @@ import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
 import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
-import {IntervalMaskedInput} from "../components/inputs/numeric/IntervalMaskedInput";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
@@ -24,7 +22,6 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
-    Checkbox,
     Dialog,
     IconButton,
     Spinner,
@@ -37,6 +34,7 @@ import {DataTableActionColumn} from "../components/tables/DataTableActionColumn"
 import {PencilSquareIcon, PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
 import {useEditNevezes} from "../hooks/nevezesek/useEditNevezes";
 import {useNevezesDetails} from "../hooks/nevezesek/useNevezesDetails";
+import {EntryTimeInput} from "../components/inputs/EntryTimeInput";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";
@@ -279,7 +277,6 @@ function CreateNevezesModal(props: { versenyszam: Versenyszam }) {
     const [csapat, setCsapat] = useState<number>(NaN);
     const [uszo, setUszo] = useState<number>(NaN);
     const [nevezesiIdo, setNevezesiIdo] = useState<string>();
-    const [nevezesiIdoEnabled, setNevezesiIdoEnabled] = useState(false);
 
     const open = useMemo(() => {
         return searchParams.has(MODAL_PARAM_KEY) &&
@@ -293,14 +290,16 @@ function CreateNevezesModal(props: { versenyszam: Versenyszam }) {
 
             return state;
         });
+
+        if (!open) {
+            setCsapat(NaN);
+            setUszo(NaN);
+        }
     }, [setSearchParams]);
 
     const canComplete = useMemo(() => {
-        return !!uszo &&
-            (nevezesiIdoEnabled ?
-                (!!nevezesiIdo && !nevezesiIdo.includes("_")) :
-                true);
-    }, [nevezesiIdo, nevezesiIdoEnabled, uszo]);
+        return !!uszo && !!nevezesiIdo && !nevezesiIdo.includes("_");
+    }, [nevezesiIdo, uszo]);
 
     const doComplete = useCallback(() => {
         if (!canComplete) {
@@ -340,16 +339,7 @@ function CreateNevezesModal(props: { versenyszam: Versenyszam }) {
                                     onSelect={setUszo}/>
                     ) : null}
                     {uszo ? (
-                        <Fragment>
-                            <label>{t("generic_label.nevezesi_ido.with_colon")}</label>
-                            <div className="flex flex-row gap-2 justify-items-start">
-                                <CheckBox value={nevezesiIdoEnabled}
-                                          onValue={setNevezesiIdoEnabled}/>
-                                <IntervalMaskedInput value={nevezesiIdo}
-                                                     onValue={setNevezesiIdo}
-                                                     disabled={!nevezesiIdoEnabled}/>
-                            </div>
-                        </Fragment>
+                        <EntryTimeInput value={nevezesiIdo} onValue={setNevezesiIdo}/>
                     ) : null}
                 </CardBody>
                 <CardFooter className="flex flex-row gap-2">
@@ -377,8 +367,7 @@ function EditNevezesModal() {
 
     const editNevezes = useEditNevezes();
 
-    const [nevezesiIdo, setNevezesiIdo] = useState("");
-    const [nevezesiIdoEnabled, setNevezesiIdoEnabled] = useState(false);
+    const [nevezesiIdo, setNevezesiIdo] = useState<string>();
 
     const open = useMemo(() => {
         return searchParams.has(MODAL_PARAM_KEY) &&
@@ -396,26 +385,25 @@ function EditNevezesModal() {
 
             return state;
         });
+
+        if (!open) {
+            setNevezesiIdo(undefined);
+        }
     }, [setSearchParams]);
 
-    const canComplete = useMemo<boolean>(() => {
-        return (nevezesiIdoEnabled && !!nevezesiIdo) || !nevezesiIdoEnabled;
-    }, [nevezesiIdo, nevezesiIdoEnabled]);
-
     const doComplete = useCallback(() => {
-        if (!!nevezes && canComplete) {
+        if (!!nevezes) {
             editNevezes(nevezes.id, {
-                nevezesiIdo: nevezesiIdoEnabled ? nevezesiIdo : undefined
+                nevezesiIdo: nevezesiIdo
             }).then(console.log).catch(console.error).finally(() => {
                 setOpen(false);
             });
         }
-    }, [canComplete, editNevezes, nevezes, nevezesiIdo, nevezesiIdoEnabled, setOpen]);
+    }, [editNevezes, nevezes, nevezesiIdo, setOpen]);
 
     useEffect(() => {
         if (!!nevezes) {
             setNevezesiIdo(formatInterval(nevezes.nevezesiIdo));
-            setNevezesiIdoEnabled(!!nevezes.nevezesiIdo);
         }
     }, [nevezes]);
 
@@ -423,16 +411,9 @@ function EditNevezesModal() {
         <Dialog open={open} handler={setOpen}>
             {loadingNevezes || !nevezes ? <Spinner/> : (
                 <Card>
-                    <CardBody className="flex flex-col gap-2">
+                    <CardBody className="flex flex-col gap-4">
                         <Typography variant="lead">{nevezes.uszo.nev}</Typography>
-                        <div className="flex flex-row gap-8 justify-items-start items-center">
-                            <Checkbox checked={nevezesiIdoEnabled} onChange={event => {
-                                setNevezesiIdoEnabled(event.currentTarget.checked);
-                            }} label={t("generic_label.nevezesi_ido.with_colon")}/>
-                            <IntervalMaskedInput value={nevezesiIdo}
-                                                 onValue={setNevezesiIdo}
-                                                 disabled={!nevezesiIdoEnabled}/>
-                        </div>
+                        <EntryTimeInput value={nevezesiIdo} onValue={setNevezesiIdo}/>
                     </CardBody>
                     <CardFooter className="flex flex-row gap-2">
                         <Button color="blue" variant="outlined" fullWidth
@@ -440,7 +421,7 @@ function EditNevezesModal() {
                             {t("generic_label.rather_not")}
                         </Button>
                         <Button color="blue" variant="filled" fullWidth
-                                onClick={doComplete} disabled={!canComplete}>
+                                onClick={doComplete}>
                             {t("generic_label.lets_go")}
                         </Button>
                     </CardFooter>
