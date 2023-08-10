@@ -82,7 +82,10 @@ export function DataTable<T extends Identifiable<object>>(props: DataTableProps<
                             })}
                             {!!actionRowCells ? (
                                 <td className="first:pl-4 last:pr-4">
-                                    {actionRowCells[indexEntry]}
+                                    <div className="w-full flex flex-row items-center
+                                    justify-end gap-2">
+                                        {actionRowCells[indexEntry]}
+                                    </div>
                                 </td>
                             ) : null}
                         </tr>

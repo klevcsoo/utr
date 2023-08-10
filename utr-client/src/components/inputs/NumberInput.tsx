@@ -6,6 +6,7 @@ export interface NumberInputProps {
     min?: number;
     max?: number;
     disabled?: boolean;
+    className?: string;
 
     onValue(value: number): void;
 
@@ -25,6 +26,6 @@ export function NumberInput(props: NumberInputProps) {
             if (event.code === "Enter" && props.onSubmit) {
                 props.onSubmit();
             }
-        }} disabled={props.disabled}/>
+        }} disabled={props.disabled} className={props.className}/>
     );
 }
