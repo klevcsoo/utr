@@ -9,6 +9,7 @@ import (
 type User struct {
 	ID          *uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
 	Username    string     `gorm:"type:varchar(100);not null;uniqueIndex"`
+	DisplayName string     `gorm:"type:varchar(100);not null"`
 	Password    string     `gorm:"type:varchar(100);not null"`
 	AccessLevel int        `gorm:"not null;default:1"`
 	CreatedAt   *time.Time `gorm:"not null;default:now()"`
