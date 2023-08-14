@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
+	"strconv"
 	"strings"
 	"time"
 	"utr-api-v2/ini"
@@ -23,7 +25,6 @@ func AuthCreateNewUser(ctx *fiber.Ctx) error {
 	if errors != nil {
 		return ctx.SendStatus(fiber.StatusBadRequest)
 	}
-	println(1)
 
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -113,4 +114,117 @@ func AuthGetAllUsers(ctx *fiber.Ctx) error {
 	ini.DB.Find(&users)
 
 	return ctx.Status(200).JSON(users)
+}
+
+func AuthGetUser(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	if id == "" {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	var user models.User
+	ini.DB.Where(&user, "id = ?", id)
+
+	return ctx.Status(200).JSON(user)
+}
+
+func AuthDeleteUser(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	if id == "" {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	ini.DB.Delete(&models.User{}, id)
+
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func AuthChangeUserPassword(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	if id == "" {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	// get user in question
+	var user models.User
+	ini.DB.First(&user, "id = ?", id)
+	if user.ID == nil {
+		return ctx.SendStatus(fiber.StatusNotFound)
+	}
+
+	// parse request body
+	var payload *schemas.ChangeUserPasswordRequest
+	if err := ctx.BodyParser(&payload); err != nil {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	// validate request body
+	errors := utils.ValidateStruct(payload)
+	if errors != nil {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	// authenticate user for security
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.OldPassword))
+	if err != nil {
+		return ctx.SendStatus(fiber.StatusUnauthorized)
+	}
+
+	// hash new password
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(payload.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return ctx.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	// update user
+	user.Password = string(hashedPass)
+	ini.DB.Save(&user)
+
+	return ctx.SendStatus(200)
+}
+
+func AuthChangeUserAccessLevel(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	if id == "" {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	// parse access level value
+	accessLevel, err := strconv.Atoi(ctx.Params("accessLevel"))
+	if err != nil {
+		log.Warnf("Failed to update user access level: %s", err.Error())
+		return ctx.SendStatus(400)
+	}
+
+	// get user
+	var user models.User
+	ini.DB.First(&user, "id = ?", id)
+
+	// update & save user
+	user.AccessLevel = accessLevel
+	ini.DB.Save(&user)
+
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func AuthChangeUserDisplayName(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	if id == "" {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	displayName := ctx.Params("displayName")
+	if displayName == "" {
+		return ctx.SendStatus(fiber.StatusBadRequest)
+	}
+
+	// get user
+	var user models.User
+	ini.DB.First(&user)
+
+	// update & save user
+	user.DisplayName = displayName
+	ini.DB.Save(&user)
+
+	return ctx.SendStatus(fiber.StatusOK)
 }
