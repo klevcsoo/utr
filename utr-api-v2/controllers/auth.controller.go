@@ -12,7 +12,7 @@ import (
 	"utr-api-v2/utils"
 )
 
-func CreateNewUser(ctx *fiber.Ctx) error {
+func AuthCreateNewUser(ctx *fiber.Ctx) error {
 	var payload *schemas.NewUserRequest
 
 	if err := ctx.BodyParser(&payload); err != nil {
@@ -46,7 +46,7 @@ func CreateNewUser(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusCreated)
 }
 
-func LogUserIn(ctx *fiber.Ctx) error {
+func AuthLogUserIn(ctx *fiber.Ctx) error {
 	var payload *schemas.LoginRequest
 
 	if err := ctx.BodyParser(&payload); err != nil {
@@ -97,7 +97,7 @@ func LogUserIn(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusOK)
 }
 
-func LogUserOut(ctx *fiber.Ctx) error {
+func AuthLogUserOut(ctx *fiber.Ctx) error {
 	expired := time.Now().Add(-time.Hour * 24)
 	ctx.Cookie(&fiber.Cookie{
 		Name:    "token",
@@ -106,4 +106,11 @@ func LogUserOut(ctx *fiber.Ctx) error {
 	})
 
 	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func AuthGetAllUsers(ctx *fiber.Ctx) error {
+	var users *[]models.User
+	ini.DB.Find(&users)
+
+	return ctx.Status(200).JSON(users)
 }

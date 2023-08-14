@@ -33,9 +33,9 @@ func main() {
 	}))
 
 	api.Route("/auth", func(router fiber.Router) {
-		router.Put("/users/", security.AdminAccess, controllers.CreateNewUser)
-		router.Post("/login", controllers.LogUserIn)
-		router.Post("/logout", controllers.LogUserOut)
+		router.Put("/users/", security.AdminAccess, controllers.AuthCreateNewUser)
+		router.Post("/login", controllers.AuthLogUserIn)
+		router.Post("/logout", controllers.AuthLogUserOut)
 	})
 
 	api.Get("/health", func(ctx *fiber.Ctx) error {
