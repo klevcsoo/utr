@@ -67,6 +67,11 @@
       <scope>provided</scope>
       <version>1.18.26</version>
     </dependency>
+    <dependency>
+      <artifactId>javax.persistence-api</artifactId>
+      <groupId>javax.persistence</groupId>
+      <version>2.2</version>
+    </dependency>
   </dependencies>
   <groupId>hu.bathorydse</groupId>
   <modelVersion>4.0.0</modelVersion>
