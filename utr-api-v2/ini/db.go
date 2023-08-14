@@ -32,9 +32,20 @@ func ConnectDB(config *Config) {
 }
 
 func runMigrations() {
-	log.Println("Running migrations")
+	log.Println("Running migrations...")
 
-	err := DB.AutoMigrate(&models.User{})
+	err := DB.AutoMigrate(
+		&models.User{},
+		&models.Competition{},
+		&models.Entry{},
+		&models.Heat{},
+		&models.Race{},
+		&models.Sex{},
+		&models.Start{},
+		&models.Swimmer{},
+		&models.SwimmingStyle{},
+		&models.Team{},
+	)
 
 	if err != nil {
 		log.Fatal("Migration failed: ", err.Error())
