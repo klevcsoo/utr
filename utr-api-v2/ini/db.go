@@ -32,7 +32,7 @@ func ConnectDB(config *Config) {
 }
 
 func runMigrations() {
-	log.Println("Running migrations...")
+	log.Println("Running migration...")
 
 	err := DB.AutoMigrate(
 		&models.User{},
@@ -49,5 +49,7 @@ func runMigrations() {
 
 	if err != nil {
 		log.Fatal("Migration failed: ", err.Error())
+	} else {
+		log.Print("Migration done")
 	}
 }
