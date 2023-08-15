@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -22,7 +23,7 @@ func main() {
 	app := fiber.New()
 	api := fiber.New()
 
-	app.Mount("/api", api)
+	app.Mount("/api/v2", api)
 	app.Use(logger.New())
 	api.Use(logger.New())
 	app.Use(cors.New(cors.Config{
@@ -32,39 +33,32 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	registerRoutes(app)
+	registerRoutes(api)
 
-	log.Fatal(app.Listen(":8080"))
+	log.Fatal(app.Listen("localhost:8080"))
 }
 
-func registerRoutes(app *fiber.App) {
-	app.Route("/auth", func(router fiber.Router) {
-		router.Post("/login", controllers.AuthLogUserIn)
-		router.Post("/logout", controllers.AuthLogUserOut)
-
-		router.Route("/users", func(router fiber.Router) {
-			router.Get("/", security.AdminAccess, controllers.AuthGetAllUsers)
-			router.Put("/", security.AdminAccess, controllers.AuthCreateNewUser)
-
-			router.Get("/:id", security.AdminAccess, controllers.AuthGetUser)
-			router.Delete("/:id", security.AdminAccess, controllers.AuthDeleteUser)
-
-			router.Patch("/:id/password", security.AdminAccess,
-				controllers.AuthChangeUserPassword)
-			router.Patch("/:id/access-level", security.AdminAccess,
-				controllers.AuthChangeUserAccessLevel)
-			router.Patch("/:id/display-name", security.AdminAccess,
-				controllers.AuthChangeUserDisplayName)
-		})
-	})
-
-	app.Get("/health", func(ctx *fiber.Ctx) error {
+func registerRoutes(api *fiber.App) {
+	api.Get("/health", func(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 			"status": "operational",
 		})
 	})
 
-	app.All("*", func(ctx *fiber.Ctx) error {
+	api.Post("/auth/login", controllers.AuthLogUserIn)
+	api.Post("/auth/logout", controllers.AuthLogUserOut)
+	api.Get("/auth/users/", security.AdminAccess, controllers.AuthGetAllUsers)
+	api.Put("/auth/users/", security.AdminAccess, controllers.AuthCreateNewUser)
+	api.Get("/auth/users/:id", security.AdminAccess, controllers.AuthGetUser)
+	api.Delete("/auth/users/:id", security.AdminAccess, controllers.AuthDeleteUser)
+	api.Patch("/auth/users/:id/password", security.AdminAccess, controllers.AuthChangeUserPassword)
+	api.Patch("/auth/users/:id/access-level", security.AdminAccess, controllers.AuthChangeUserAccessLevel)
+	api.Patch("/auth/users/:id/display-name", security.AdminAccess, controllers.AuthChangeUserDisplayName)
+
+	api.Get("/teams/", security.AdminAccess, websocket.New(controllers.AllTeamsSocket))
+	api.Get("/teams/:id", security.AdminAccess, websocket.New(controllers.TeamDetailsSocket))
+
+	api.All("*", func(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusNotFound)
 	})
 }
