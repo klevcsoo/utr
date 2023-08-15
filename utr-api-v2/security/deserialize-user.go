@@ -3,6 +3,7 @@ package security
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt"
 	"strings"
 	"utr-api-v2/ini"
@@ -19,7 +20,8 @@ func deserializeUser(ctx *fiber.Ctx, accessLevel int) error {
 	}
 
 	if tokenString == "" {
-		return ctx.SendStatus(fiber.StatusUnauthorized)
+		log.Warn("Failed to parse JWT token: Unauthenticated")
+		return ctx.Status(fiber.StatusUnauthorized).Send([]byte("Unauthenticated"))
 	}
 
 	config, _ := ini.LoadConfig(".")
@@ -30,24 +32,27 @@ func deserializeUser(ctx *fiber.Ctx, accessLevel int) error {
 
 		return []byte(config.JwtSecret), nil
 	})
-
 	if err != nil {
-		return ctx.SendStatus(fiber.StatusUnauthorized)
+		log.Warnf("Failed to parse JWT token: %s", err.Error())
+		return ctx.Status(fiber.StatusUnauthorized).Send([]byte("Invalid JWT signature"))
 	}
 
 	claims, ok := tokenByte.Claims.(jwt.MapClaims)
 	if !ok || !tokenByte.Valid {
-		return ctx.SendStatus(fiber.StatusUnauthorized)
+		log.Warn("Failed to parse JWT token: Invalid JWT token")
+		return ctx.Status(fiber.StatusUnauthorized).Send([]byte("Invalid JWT token"))
 	}
 
 	var user models.User
 	ini.DB.Where("id = ?", claims["sub"]).First(&user)
 
 	if user.ID.String() != claims["sub"] {
-		return ctx.SendStatus(fiber.StatusForbidden)
+		log.Warn("Failed to parse JWT token: Stolen JWT token")
+		return ctx.Status(fiber.StatusForbidden).Send([]byte("Stolen JWT token"))
 	}
 	if user.AccessLevel < accessLevel {
-		return ctx.SendStatus(fiber.StatusUnauthorized)
+		log.Warn("Failed to parse JWT token: Insufficient access level")
+		return ctx.Status(fiber.StatusForbidden).Send([]byte("Insufficient access level"))
 	}
 
 	ctx.Locals("user", models.FilterUserRecord(&user))
