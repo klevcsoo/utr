@@ -33,6 +33,7 @@ func AuthCreateNewUser(ctx *fiber.Ctx) error {
 
 	user := models.User{
 		Username:    payload.Username,
+		DisplayName: payload.DisplayName,
 		Password:    string(hashedPass),
 		AccessLevel: payload.AccessLevel,
 	}
