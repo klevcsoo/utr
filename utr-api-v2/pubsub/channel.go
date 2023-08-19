@@ -12,7 +12,7 @@ type Channel struct {
 
 func (channel *Channel) Broadcast(message *Message) {
 	for _, conn := range *channel.connections {
-		Whisper(message, conn)
+		Whisper(conn, message)
 	}
 }
 
@@ -35,7 +35,7 @@ func (channel *Channel) unregister(conn *websocket.Conn) {
 	}
 }
 
-func Whisper(message *Message, conn *websocket.Conn) {
+func Whisper(conn *websocket.Conn, message *Message) {
 	if err := conn.WriteJSON(message); err != nil {
 		log.Warnf("Failed to whisper message: %s", err.Error())
 	}
@@ -43,10 +43,10 @@ func Whisper(message *Message, conn *websocket.Conn) {
 
 func OnClientMessage(conn *websocket.Conn, callback func(payload url.Values)) {
 	sendError := func(err error) {
-		Whisper(&Message{
+		Whisper(conn, &Message{
 			Headers: "type=error",
 			Body:    err.Error(),
-		}, conn)
+		})
 	}
 
 	for {

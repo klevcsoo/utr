@@ -24,10 +24,10 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(&pubsub.Message{
+	pubsub.Whisper(conn, &pubsub.Message{
 		Headers: "type=list",
 		Body:    fetchTeams(),
-	}, conn)
+	})
 
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
 		if payload.Get("command") == "create" {
@@ -65,10 +65,10 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(&pubsub.Message{
+	pubsub.Whisper(conn, &pubsub.Message{
 		Headers: "type=object",
 		Body:    fetchTeam(),
-	}, conn)
+	})
 
 	// handle commands
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
