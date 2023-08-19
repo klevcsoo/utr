@@ -10,29 +10,24 @@ import (
 	"utr-api-v2/pubsub"
 )
 
-const channelName = "teams"
-
-func AllTeamsSocket(conn *websocket.Conn) {
-	// get channel
-	channel := pubsub.GetChannel(channelName)
-
-	// handle register & unregister
-	defer func() {
-		channel.Unregister(conn)
-	}()
-	channel.Register(conn)
-
-	sendData := func() {
+func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
+	fetchTeams := func() *[]models.Team {
 		var teams []models.Team
 		ini.DB.Find(&teams)
-		pubsub.Whisper(&pubsub.Message{
+		return &teams
+	}
+	broadcastTeams := func() {
+		channel.Broadcast(&pubsub.Message{
 			Headers: "type=list",
-			Body:    teams,
-		}, conn)
+			Body:    fetchTeams(),
+		})
 	}
 
 	// send initial data
-	sendData()
+	pubsub.Whisper(&pubsub.Message{
+		Headers: "type=list",
+		Body:    fetchTeams(),
+	}, conn)
 
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
 		if payload.Get("command") == "create" {
@@ -44,12 +39,12 @@ func AllTeamsSocket(conn *websocket.Conn) {
 			ini.DB.Create(&team)
 
 			// send back modified data to the client
-			sendData()
+			broadcastTeams()
 		}
 	})
 }
 
-func TeamDetailsSocket(conn *websocket.Conn) {
+func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	// parse team ID
 	teamID, err := strconv.Atoi(conn.Params("id"))
 	if err != nil {
@@ -57,26 +52,23 @@ func TeamDetailsSocket(conn *websocket.Conn) {
 		return
 	}
 
-	// get channel
-	channel := pubsub.GetChannel(channelName + "/" + string(rune(teamID)))
-
-	// handle register & unregister
-	defer func() {
-		channel.Unregister(conn)
-	}()
-	channel.Register(conn)
-
-	sendData := func() {
+	fetchTeam := func() *models.TeamWithSwimmers {
 		var team models.TeamWithSwimmers
 		ini.DB.First(&team, teamID)
-		pubsub.Whisper(&pubsub.Message{
+		return &team
+	}
+	broadcastTeam := func() {
+		channel.Broadcast(&pubsub.Message{
 			Headers: "type=object",
-			Body:    team,
-		}, conn)
+			Body:    fetchTeam(),
+		})
 	}
 
 	// send initial data
-	sendData()
+	pubsub.Whisper(&pubsub.Message{
+		Headers: "type=object",
+		Body:    fetchTeam(),
+	}, conn)
 
 	// handle commands
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
@@ -92,10 +84,10 @@ func TeamDetailsSocket(conn *websocket.Conn) {
 			}
 
 			ini.DB.Save(&team)
-			sendData()
+			broadcastTeam()
 		} else if payload.Get("command") == "delete" {
 			ini.DB.Delete(&models.Team{}, teamID)
-			sendData()
+			broadcastTeam()
 		}
 	})
 }

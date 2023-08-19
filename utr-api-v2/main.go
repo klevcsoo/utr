@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"log"
 	"utr-api-v2/controllers"
 	"utr-api-v2/ini"
+	"utr-api-v2/pubsub"
 	"utr-api-v2/security"
 )
 
@@ -56,8 +56,8 @@ func registerRoutes(api *fiber.App) {
 	api.Patch("/auth/users/:id/access-level", security.AdminAccess, controllers.AuthChangeUserAccessLevel)
 	api.Patch("/auth/users/:id/display-name", security.AdminAccess, controllers.AuthChangeUserDisplayName)
 
-	api.Get("/teams/", security.AdminAccess, websocket.New(controllers.AllTeamsSocket))
-	api.Get("/teams/:id", security.AdminAccess, websocket.New(controllers.TeamDetailsSocket))
+	api.Get("/teams/", security.AdminAccess, pubsub.NewSocketHandler(controllers.AllTeamsSocket))
+	api.Get("/teams/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.TeamDetailsSocket))
 
 	api.All("*", func(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusNotFound)

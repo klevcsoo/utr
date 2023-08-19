@@ -16,11 +16,11 @@ func (channel *Channel) Broadcast(message *Message) {
 	}
 }
 
-func (channel *Channel) Register(conn *websocket.Conn) {
+func (channel *Channel) register(conn *websocket.Conn) {
 	*channel.connections = append(*channel.connections, conn)
 }
 
-func (channel *Channel) Unregister(conn *websocket.Conn) {
+func (channel *Channel) unregister(conn *websocket.Conn) {
 	for i, c := range *channel.connections {
 		if c == conn {
 			*channel.connections = append(
