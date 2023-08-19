@@ -16,8 +16,8 @@ type User struct {
 	UpdatedAt   *time.Time `gorm:"not null;default:now()"`
 }
 
-func FilterUserRecord(user *User) schemas.UserPublicData {
-	return schemas.UserPublicData{
+func FilterUserRecord(user *User) *schemas.UserPublicData {
+	return &schemas.UserPublicData{
 		ID:          *user.ID,
 		Username:    user.Username,
 		AccessLevel: user.AccessLevel,

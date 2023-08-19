@@ -114,16 +114,7 @@ func AuthGetAllUsers(ctx *fiber.Ctx) error {
 	var users *[]models.User
 	ini.DB.Find(&users)
 
-	publicUsers := utils.Map(users, func(u *models.User) *schemas.UserPublicData {
-		return &schemas.UserPublicData{
-			ID:          *u.ID,
-			Username:    u.Username,
-			DisplayName: u.DisplayName,
-			AccessLevel: u.AccessLevel,
-			CreatedAt:   *u.CreatedAt,
-			UpdatedAt:   *u.UpdatedAt,
-		}
-	})
+	publicUsers := utils.Map(users, models.FilterUserRecord)
 
 	return ctx.Status(200).JSON(publicUsers)
 }
@@ -137,7 +128,7 @@ func AuthGetUser(ctx *fiber.Ctx) error {
 	var user models.User
 	ini.DB.Where(&user, "id = ?", id)
 
-	return ctx.Status(200).JSON(user)
+	return ctx.Status(200).JSON(models.FilterUserRecord(&user))
 }
 
 func AuthDeleteUser(ctx *fiber.Ctx) error {
