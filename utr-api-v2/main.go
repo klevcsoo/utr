@@ -47,6 +47,7 @@ func registerRoutes(api *fiber.App) {
 
 	api.Post("/auth/login", controllers.AuthLogUserIn)
 	api.Post("/auth/logout", controllers.AuthLogUserOut)
+	api.Get("/auth/users/me", security.AuthenticatedAccess, controllers.AuthGetMe)
 	api.Get("/auth/users/", security.AdminAccess, controllers.AuthGetAllUsers)
 	api.Put("/auth/users/", security.AdminAccess, controllers.AuthCreateNewUser)
 	api.Get("/auth/users/:id", security.AdminAccess, controllers.AuthGetUser)

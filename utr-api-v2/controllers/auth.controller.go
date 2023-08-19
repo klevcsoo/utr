@@ -110,6 +110,11 @@ func AuthLogUserOut(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusOK)
 }
 
+func AuthGetMe(ctx *fiber.Ctx) error {
+	user := ctx.Locals("user").(models.User)
+	return ctx.Status(fiber.StatusOK).JSON(models.FilterUserRecord(&user))
+}
+
 func AuthGetAllUsers(ctx *fiber.Ctx) error {
 	var users *[]models.User
 	ini.DB.Find(&users)
