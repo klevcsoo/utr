@@ -45,6 +45,7 @@ func runMigrations() {
 		&models.Swimmer{},
 		&models.SwimmingStyle{},
 		&models.Team{},
+		&models.TeamWithSwimmers{},
 	)
 
 	if err != nil {

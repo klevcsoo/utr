@@ -29,6 +29,13 @@ func AllTeamsSocket(conn *websocket.Conn) {
 		}, conn)
 	}
 
+	sendError := func(err error) {
+		channel.Whisper(&pubsub.Message{
+			Headers: "type=error",
+			Body:    err.Error(),
+		}, conn)
+	}
+
 	// send initial data
 	sendData()
 
@@ -37,10 +44,7 @@ func AllTeamsSocket(conn *websocket.Conn) {
 		_, msg, err := conn.ReadMessage()
 		if err != nil {
 			log.Warnf("Failed to read message: %s", err.Error())
-			channel.Whisper(&pubsub.Message{
-				Headers: "type=error",
-				Body:    err.Error(),
-			}, conn)
+			sendError(err)
 			break
 		}
 		log.Infof("Received WebSocket message: %s", msg)
@@ -49,10 +53,7 @@ func AllTeamsSocket(conn *websocket.Conn) {
 		payload, err := url.ParseQuery(string(msg))
 		if err != nil {
 			log.Warnf("Failed to parse client message: %s", err.Error())
-			channel.Whisper(&pubsub.Message{
-				Headers: "type=error",
-				Body:    err.Error(),
-			}, conn)
+			sendError(err)
 			continue
 		}
 
@@ -88,11 +89,18 @@ func TeamDetailsSocket(conn *websocket.Conn) {
 	}
 
 	sendData := func() {
-		var team models.Team
+		var team models.TeamWithSwimmers
 		ini.DB.First(&team, teamID)
 		channel.Whisper(&pubsub.Message{
 			Headers: "type=object",
 			Body:    team,
+		}, conn)
+	}
+
+	sendError := func(err error) {
+		channel.Whisper(&pubsub.Message{
+			Headers: "type=error",
+			Body:    err.Error(),
 		}, conn)
 	}
 
@@ -104,10 +112,7 @@ func TeamDetailsSocket(conn *websocket.Conn) {
 		_, msg, err := conn.ReadMessage()
 		if err != nil {
 			log.Warnf("Failed to read message: %s", err.Error())
-			channel.Whisper(&pubsub.Message{
-				Headers: "type=error",
-				Body:    err.Error(),
-			}, conn)
+			sendError(err)
 			break
 		}
 		log.Infof("Received WebSocket message: %s", msg)
@@ -116,10 +121,7 @@ func TeamDetailsSocket(conn *websocket.Conn) {
 		payload, err := url.ParseQuery(string(msg))
 		if err != nil {
 			log.Warnf("Failed to parse client message: %s", err.Error())
-			channel.Whisper(&pubsub.Message{
-				Headers: "type=error",
-				Body:    err.Error(),
-			}, conn)
+			sendError(err)
 			continue
 		}
 
