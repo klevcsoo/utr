@@ -32,6 +32,14 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			}
 			ini.DB.Create(&team)
 
+		} else if payload.Get("command") == "delete" {
+			teamID, err := strconv.Atoi(payload.Get("teamId"))
+			if err != nil {
+				log.Warnf("Failed to parse team ID: %s", err.Error())
+				return
+			}
+
+			ini.DB.Delete(&models.Team{}, teamID)
 		} else {
 			return
 		}
@@ -81,8 +89,6 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			}
 
 			ini.DB.Save(&team)
-		} else if payload.Get("command") == "delete" {
-			ini.DB.Delete(&models.Team{}, teamID)
 		} else if payload.Get("command") == "createSwimmer" {
 			yob, err := strconv.Atoi(payload.Get("yearOfBirth"))
 			if err != nil {
@@ -104,6 +110,14 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 					return
 				}
 			}
+		} else if payload.Get("command") == "deleteSwimmer" {
+			swimmerID, err := strconv.Atoi(payload.Get("swimmerId"))
+			if err != nil {
+				log.Warnf("Failed to parse swimmer ID: %s", err.Error())
+				return
+			}
+
+			ini.DB.Delete(&models.Swimmer{}, swimmerID)
 		} else {
 			return
 		}
