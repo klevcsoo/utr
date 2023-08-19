@@ -24,3 +24,7 @@ func IdorogzitoAccess(ctx *fiber.Ctx) error {
 func SpeakerAccess(ctx *fiber.Ctx) error {
 	return deserializeUser(ctx, AccessLevelSpeaker)
 }
+
+func AuthenticatedAccess(ctx *fiber.Ctx) error {
+	return deserializeUser(ctx, 0)
+}
