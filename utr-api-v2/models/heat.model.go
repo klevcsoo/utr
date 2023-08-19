@@ -9,3 +9,16 @@ type Heat struct {
 	EntryID int    `json:"-" gorm:"not null"`
 	Entry   *Entry `json:"entry"`
 }
+
+type HeatWithStarts struct {
+	Heat
+	Starts *[]*Start `json:"starts" gorm:"foreignKey:HeatID"`
+}
+
+func (Heat) TableName() string {
+	return "heats"
+}
+
+func (HeatWithStarts) TableName() string {
+	return "heats"
+}

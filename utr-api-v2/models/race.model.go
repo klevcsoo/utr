@@ -11,3 +11,16 @@ type Race struct {
 	SwimmingStyle   *SwimmingStyle `json:"swimmingStyle"`
 	Relay           int            `json:"relay" gorm:"type:smallint"`
 }
+
+type RaceWithEntries struct {
+	Race
+	Entries *[]*Entry `json:"entries" gorm:"foreignKey:RaceID"`
+}
+
+func (Race) TableName() string {
+	return "races"
+}
+
+func (RaceWithEntries) TableName() string {
+	return "races"
+}
