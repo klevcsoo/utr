@@ -10,9 +10,11 @@ import (
 	"utr-api-v2/pubsub"
 )
 
+const channelName = "teams"
+
 func AllTeamsSocket(conn *websocket.Conn) {
 	// get channel
-	channel := pubsub.GetChannel("team")
+	channel := pubsub.GetChannel(channelName)
 
 	// handle register & unregister
 	defer func() {
@@ -23,40 +25,16 @@ func AllTeamsSocket(conn *websocket.Conn) {
 	sendData := func() {
 		var teams []models.Team
 		ini.DB.Find(&teams)
-		channel.Whisper(&pubsub.Message{
+		pubsub.Whisper(&pubsub.Message{
 			Headers: "type=list",
 			Body:    teams,
-		}, conn)
-	}
-
-	sendError := func(err error) {
-		channel.Whisper(&pubsub.Message{
-			Headers: "type=error",
-			Body:    err.Error(),
 		}, conn)
 	}
 
 	// send initial data
 	sendData()
 
-	for {
-		// read message from the client
-		_, msg, err := conn.ReadMessage()
-		if err != nil {
-			log.Warnf("Failed to read message: %s", err.Error())
-			sendError(err)
-			break
-		}
-		log.Infof("Received WebSocket message: %s", msg)
-
-		// parse client message
-		payload, err := url.ParseQuery(string(msg))
-		if err != nil {
-			log.Warnf("Failed to parse client message: %s", err.Error())
-			sendError(err)
-			continue
-		}
-
+	pubsub.OnClientMessage(conn, func(payload url.Values) {
 		if payload.Get("command") == "create" {
 			// handle create command
 			team := &models.Team{
@@ -68,19 +46,10 @@ func AllTeamsSocket(conn *websocket.Conn) {
 			// send back modified data to the client
 			sendData()
 		}
-	}
+	})
 }
 
 func TeamDetailsSocket(conn *websocket.Conn) {
-	// get channel
-	channel := pubsub.GetChannel("team")
-
-	// handle register & unregister
-	defer func() {
-		channel.Unregister(conn)
-	}()
-	channel.Register(conn)
-
 	// parse team ID
 	teamID, err := strconv.Atoi(conn.Params("id"))
 	if err != nil {
@@ -88,44 +57,29 @@ func TeamDetailsSocket(conn *websocket.Conn) {
 		return
 	}
 
+	// get channel
+	channel := pubsub.GetChannel(channelName + "/" + string(rune(teamID)))
+
+	// handle register & unregister
+	defer func() {
+		channel.Unregister(conn)
+	}()
+	channel.Register(conn)
+
 	sendData := func() {
 		var team models.TeamWithSwimmers
 		ini.DB.First(&team, teamID)
-		channel.Whisper(&pubsub.Message{
+		pubsub.Whisper(&pubsub.Message{
 			Headers: "type=object",
 			Body:    team,
-		}, conn)
-	}
-
-	sendError := func(err error) {
-		channel.Whisper(&pubsub.Message{
-			Headers: "type=error",
-			Body:    err.Error(),
 		}, conn)
 	}
 
 	// send initial data
 	sendData()
 
-	for {
-		// read message from the client
-		_, msg, err := conn.ReadMessage()
-		if err != nil {
-			log.Warnf("Failed to read message: %s", err.Error())
-			sendError(err)
-			break
-		}
-		log.Infof("Received WebSocket message: %s", msg)
-
-		// parse client message
-		payload, err := url.ParseQuery(string(msg))
-		if err != nil {
-			log.Warnf("Failed to parse client message: %s", err.Error())
-			sendError(err)
-			continue
-		}
-
-		// handle commands
+	// handle commands
+	pubsub.OnClientMessage(conn, func(payload url.Values) {
 		if payload.Get("command") == "edit" {
 			var team models.Team
 			ini.DB.First(&team, teamID)
@@ -143,5 +97,5 @@ func TeamDetailsSocket(conn *websocket.Conn) {
 			ini.DB.Delete(&models.Team{}, teamID)
 			sendData()
 		}
-	}
+	})
 }

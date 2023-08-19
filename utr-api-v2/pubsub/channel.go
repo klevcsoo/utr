@@ -3,21 +3,16 @@ package pubsub
 import (
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2/log"
+	"net/url"
 )
 
 type Channel struct {
 	connections *[]*websocket.Conn
 }
 
-func (channel *Channel) Whisper(message *Message, conn *websocket.Conn) {
-	if err := conn.WriteJSON(message); err != nil {
-		log.Warnf("Failed to write message: %s", err.Error())
-	}
-}
-
 func (channel *Channel) Broadcast(message *Message) {
 	for _, conn := range *channel.connections {
-		channel.Whisper(message, conn)
+		Whisper(message, conn)
 	}
 }
 
@@ -40,12 +35,50 @@ func (channel *Channel) Unregister(conn *websocket.Conn) {
 	}
 }
 
+func Whisper(message *Message, conn *websocket.Conn) {
+	if err := conn.WriteJSON(message); err != nil {
+		log.Warnf("Failed to whisper message: %s", err.Error())
+	}
+}
+
+func OnClientMessage(conn *websocket.Conn, callback func(payload url.Values)) {
+	sendError := func(err error) {
+		Whisper(&Message{
+			Headers: "type=error",
+			Body:    err.Error(),
+		}, conn)
+	}
+
+	for {
+		// read message from the client
+		_, msg, err := conn.ReadMessage()
+		if err != nil {
+			log.Warnf("Failed to read message: %s", err.Error())
+			sendError(err)
+			break
+		}
+		log.Infof("Received WebSocket message: %s", msg)
+
+		// parse client message
+		payload, err := url.ParseQuery(string(msg))
+		if err != nil {
+			log.Warnf("Failed to parse client message: %s", err.Error())
+			sendError(err)
+			continue
+		}
+
+		callback(payload)
+	}
+}
+
 var channels = make(map[string]*Channel)
 
 func GetChannel(name string) *Channel {
 	channel := channels[name]
 	if channel == nil {
-		channels[name] = &Channel{connections: &[]*websocket.Conn{}}
+		channels[name] = &Channel{
+			connections: &[]*websocket.Conn{},
+		}
 	}
 
 	return channels[name]
