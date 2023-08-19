@@ -11,23 +11,17 @@ import (
 )
 
 func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
-	fetchTeams := func() *[]models.Team {
+	createTeamsMessage := func() *pubsub.Message {
 		var teams []models.Team
 		ini.DB.Find(&teams)
-		return &teams
-	}
-	broadcastTeams := func() {
-		channel.Broadcast(&pubsub.Message{
+		return &pubsub.Message{
 			Headers: "type=list",
-			Body:    fetchTeams(),
-		})
+			Body:    teams,
+		}
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, &pubsub.Message{
-		Headers: "type=list",
-		Body:    fetchTeams(),
-	})
+	pubsub.Whisper(conn, createTeamsMessage())
 
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
 		if payload.Get("command") == "create" {
@@ -38,9 +32,12 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			}
 			ini.DB.Create(&team)
 
-			// send back modified data to the client
-			broadcastTeams()
+		} else {
+			return
 		}
+
+		// send back modified data to the clients
+		channel.Broadcast(createTeamsMessage())
 	})
 }
 
@@ -52,23 +49,17 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 		return
 	}
 
-	fetchTeam := func() *models.TeamWithSwimmers {
+	createTeamMessage := func() *pubsub.Message {
 		var team models.TeamWithSwimmers
 		ini.DB.First(&team, teamID)
-		return &team
-	}
-	broadcastTeam := func() {
-		channel.Broadcast(&pubsub.Message{
+		return &pubsub.Message{
 			Headers: "type=object",
-			Body:    fetchTeam(),
-		})
+			Body:    team,
+		}
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, &pubsub.Message{
-		Headers: "type=object",
-		Body:    fetchTeam(),
-	})
+	pubsub.Whisper(conn, createTeamMessage())
 
 	// handle commands
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
@@ -84,10 +75,12 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			}
 
 			ini.DB.Save(&team)
-			broadcastTeam()
 		} else if payload.Get("command") == "delete" {
 			ini.DB.Delete(&models.Team{}, teamID)
-			broadcastTeam()
+		} else {
+			return
 		}
+
+		channel.Broadcast(createTeamMessage())
 	})
 }
