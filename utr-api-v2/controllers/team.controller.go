@@ -50,12 +50,18 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	createTeamMessage := func() *pubsub.Message {
-		var team models.TeamWithSwimmers
-		ini.DB.First(&team, teamID)
+		var team models.Team
+		ini.DB.Preload("Swimmers").Preload("Swimmers.Sex").First(&team, teamID)
 		return &pubsub.Message{
 			Headers: "type=object",
 			Body:    team,
 		}
+	}
+	whisperError := func(err error) {
+		pubsub.Whisper(conn, &pubsub.Message{
+			Headers: "type=error",
+			Body:    err.Error(),
+		})
 	}
 
 	// send initial data
@@ -77,6 +83,27 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			ini.DB.Save(&team)
 		} else if payload.Get("command") == "delete" {
 			ini.DB.Delete(&models.Team{}, teamID)
+		} else if payload.Get("command") == "createSwimmer" {
+			yob, err := strconv.Atoi(payload.Get("yearOfBirth"))
+			if err != nil {
+				log.Warnf("Failed to parse year of birth: %s", err.Error())
+				whisperError(err)
+				return
+			} else {
+				swimmer := models.Swimmer{
+					TeamID:      teamID,
+					Name:        payload.Get("name"),
+					YearOfBirth: uint(yob),
+					SexID:       payload.Get("sex"),
+				}
+
+				err := ini.DB.Create(&swimmer).Error
+				if err != nil {
+					log.Warn(err.Error())
+					whisperError(err)
+					return
+				}
+			}
 		} else {
 			return
 		}
