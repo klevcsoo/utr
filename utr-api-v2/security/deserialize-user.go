@@ -34,7 +34,7 @@ func deserializeUser(ctx *fiber.Ctx, accessLevel int) error {
 	})
 	if err != nil {
 		log.Warnf("Failed to parse JWT token: %s", err.Error())
-		return ctx.Status(fiber.StatusUnauthorized).Send([]byte("Invalid JWT signature"))
+		return ctx.Status(fiber.StatusUnauthorized).Send([]byte(err.Error()))
 	}
 
 	claims, ok := tokenByte.Claims.(jwt.MapClaims)
