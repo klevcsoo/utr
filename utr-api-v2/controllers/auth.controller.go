@@ -96,7 +96,7 @@ func AuthLogUserIn(ctx *fiber.Ctx) error {
 		Domain:   "localhost",
 	})
 
-	return ctx.SendStatus(fiber.StatusOK)
+	return ctx.Status(fiber.StatusOK).Send([]byte(tokenString))
 }
 
 func AuthLogUserOut(ctx *fiber.Ctx) error {
