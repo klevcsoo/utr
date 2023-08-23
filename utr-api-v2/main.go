@@ -56,6 +56,8 @@ func registerRoutes(api *fiber.App) {
 	api.Patch("/auth/users/:id/access-level", security.AdminAccess, controllers.AuthChangeUserAccessLevel)
 	api.Patch("/auth/users/:id/display-name", security.AdminAccess, controllers.AuthChangeUserDisplayName)
 
+	api.Get("/resolve-id", security.AuthenticatedAccess, pubsub.NewSocketHandler(controllers.ResolveIdSocket))
+
 	api.Get("/teams/", security.AdminAccess, pubsub.NewSocketHandler(controllers.AllTeamsSocket))
 	api.Get("/teams/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.TeamDetailsSocket))
 
