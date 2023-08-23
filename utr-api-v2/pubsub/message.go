@@ -1,6 +1,13 @@
 package pubsub
 
 type Message struct {
-	Headers string `json:"headers"`
-	Body    any    `json:"body"`
+	Type    string `json:"type"`
+	Content any    `json:"content"`
 }
+
+const (
+	MessageTypeObject = "object"
+	MessageTypeList   = "list"
+	MessageTypeText   = "text"
+	MessageTypeError  = "error"
+)

@@ -13,15 +13,15 @@ func ResolveIdSocket(_ *pubsub.Channel, conn *websocket.Conn) {
 	sendError := func(msg string) {
 		log.Warnf(msg)
 		pubsub.Whisper(conn, &pubsub.Message{
-			Headers: "type=error",
-			Body:    msg,
+			Type:    pubsub.MessageTypeError,
+			Content: msg,
 		})
 	}
 
 	sendResolvedString := func(name string) {
 		pubsub.Whisper(conn, &pubsub.Message{
-			Headers: "type=string",
-			Body:    name,
+			Type:    pubsub.MessageTypeText,
+			Content: name,
 		})
 	}
 

@@ -22,8 +22,8 @@ func SwimmerDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 		var swimmer models.Swimmer
 		ini.DB.Joins("Sex").First(&swimmer, swimmerID)
 		return &pubsub.Message{
-			Headers: "type=object",
-			Body:    swimmer,
+			Type:    pubsub.MessageTypeObject,
+			Content: swimmer,
 		}
 	}
 

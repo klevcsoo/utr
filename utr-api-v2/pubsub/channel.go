@@ -44,8 +44,8 @@ func Whisper(conn *websocket.Conn, message *Message) {
 func OnClientMessage(conn *websocket.Conn, callback func(payload url.Values)) {
 	sendError := func(err error) {
 		Whisper(conn, &Message{
-			Headers: "type=error",
-			Body:    err.Error(),
+			Type:    MessageTypeError,
+			Content: err.Error(),
 		})
 	}
 

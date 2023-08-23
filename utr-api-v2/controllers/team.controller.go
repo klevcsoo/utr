@@ -15,8 +15,8 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 		var teams []models.Team
 		ini.DB.Find(&teams)
 		return &pubsub.Message{
-			Headers: "type=list",
-			Body:    teams,
+			Type:    pubsub.MessageTypeList,
+			Content: teams,
 		}
 	}
 
@@ -61,14 +61,14 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 		var team models.Team
 		ini.DB.Preload("Swimmers").Preload("Swimmers.Sex").First(&team, teamID)
 		return &pubsub.Message{
-			Headers: "type=object",
-			Body:    team,
+			Type:    pubsub.MessageTypeObject,
+			Content: team,
 		}
 	}
 	whisperError := func(err error) {
 		pubsub.Whisper(conn, &pubsub.Message{
-			Headers: "type=error",
-			Body:    err.Error(),
+			Type:    pubsub.MessageTypeError,
+			Content: err.Error(),
 		})
 	}
 
