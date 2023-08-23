@@ -10,7 +10,7 @@ import (
 	"utr-api-v2/pubsub"
 )
 
-func SwimmerDetailsController(channel *pubsub.Channel, conn *websocket.Conn) {
+func SwimmerDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	// parse swimmer ID
 	swimmerID, err := strconv.Atoi(conn.Params("id"))
 	if err != nil {
