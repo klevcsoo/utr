@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/gofiber/contrib/websocket"
 	"gorm.io/datatypes"
 	"net/url"
 	"strconv"
@@ -11,7 +10,7 @@ import (
 	"utr-api-v2/pubsub"
 )
 
-func AllCompetitionsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
+func AllCompetitionsSocket(channel *pubsub.Channel, client *pubsub.Client) {
 	createCompetitionsMessage := func() *pubsub.Message {
 		var competitions []models.Competition
 		err := ini.DB.Find(&competitions).Error
@@ -29,11 +28,11 @@ func AllCompetitionsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, createCompetitionsMessage())
+	client.Whisper(createCompetitionsMessage())
 
-	pubsub.OnClientMessage(conn, func(payload url.Values) {
+	client.OnMessage(func(payload url.Values) {
 		if !payload.Has("command") {
-			pubsub.WhisperError(conn, "Missing command")
+			client.WhisperError("Missing command")
 			return
 		}
 
@@ -41,7 +40,7 @@ func AllCompetitionsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 		case "create":
 			date, err := time.Parse(time.DateOnly, payload.Get("date"))
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 
@@ -53,18 +52,18 @@ func AllCompetitionsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Create(competition).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		case "delete":
 			if !payload.Has("id") {
-				pubsub.WhisperError(conn, "Missing ID")
+				client.WhisperError("Missing ID")
 				return
 			}
 
 			err := ini.DB.Where("id = ?").Delete(&models.Competition{}).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		}
@@ -74,10 +73,10 @@ func AllCompetitionsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	})
 }
 
-func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
-	id, err := strconv.Atoi(conn.Params("id"))
+func CompetitionDetailsSocket(channel *pubsub.Channel, client *pubsub.Client) {
+	id, err := strconv.Atoi(client.Connection.Params("id"))
 	if err != nil {
-		pubsub.WhisperError(conn, "Failed to parse ID: "+err.Error())
+		client.WhisperError("Failed to parse ID: " + err.Error())
 		return
 	}
 
@@ -103,11 +102,11 @@ func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, createCompetitionMessage())
+	client.Whisper(createCompetitionMessage())
 
-	pubsub.OnClientMessage(conn, func(payload url.Values) {
+	client.OnMessage(func(payload url.Values) {
 		if !payload.Has("command") {
-			pubsub.WhisperError(conn, "Missing command")
+			client.WhisperError("Missing command")
 			return
 		}
 
@@ -116,7 +115,7 @@ func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			var competition models.Competition
 			err := ini.DB.Where("id = ?", id).First(&competition).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 
@@ -129,7 +128,7 @@ func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			if payload.Has("date") {
 				date, err := time.Parse(time.DateOnly, payload.Get("date"))
 				if err != nil {
-					pubsub.WhisperError(conn, err.Error())
+					client.WhisperError(err.Error())
 					return
 				}
 
@@ -138,13 +137,13 @@ func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Save(&competition).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		case "createRace":
 			length, err := strconv.Atoi(payload.Get("length"))
 			if err != nil {
-				pubsub.WhisperError(conn, "Failed to parse 'length': "+err.Error())
+				client.WhisperError("Failed to parse 'length': " + err.Error())
 				return
 			}
 
@@ -152,7 +151,7 @@ func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			if payload.Has("relay") {
 				relay, err = strconv.Atoi(payload.Get("relay"))
 				if err != nil {
-					pubsub.WhisperError(conn, "Failed to parse 'relay': "+err.Error())
+					client.WhisperError("Failed to parse 'relay': " + err.Error())
 					return
 				}
 			}
@@ -166,7 +165,7 @@ func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Create(&race).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		case "deleteRace":
@@ -176,7 +175,7 @@ func CompetitionDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 				Error
 
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		}

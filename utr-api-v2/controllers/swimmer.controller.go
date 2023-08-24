@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/gofiber/contrib/websocket"
 	"net/url"
 	"strconv"
 	"utr-api-v2/ini"
@@ -9,9 +8,9 @@ import (
 	"utr-api-v2/pubsub"
 )
 
-func SwimmerDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
+func SwimmerDetailsSocket(channel *pubsub.Channel, client *pubsub.Client) {
 	// parse swimmer ID
-	swimmerID := conn.Params("id")
+	swimmerID := client.Connection.Params("id")
 
 	createSwimmerMessage := func() *pubsub.Message {
 		var swimmer models.Swimmer
@@ -31,11 +30,11 @@ func SwimmerDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, createSwimmerMessage())
+	client.Whisper(createSwimmerMessage())
 
-	pubsub.OnClientMessage(conn, func(payload url.Values) {
+	client.OnMessage(func(payload url.Values) {
 		if !payload.Has("command") {
-			pubsub.WhisperError(conn, "Missing command")
+			client.WhisperError("Missing command")
 			return
 		}
 
@@ -44,7 +43,7 @@ func SwimmerDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			var swimmer models.Swimmer
 			err := ini.DB.First(&swimmer, swimmerID).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 
@@ -54,7 +53,7 @@ func SwimmerDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			if payload.Has("yearOfBirth") {
 				yob, err := strconv.Atoi(payload.Get("yearOfBirth"))
 				if err != nil {
-					pubsub.WhisperError(conn, "Failed to parse 'yearOfBirth': "+err.Error())
+					client.WhisperError("Failed to parse 'yearOfBirth': " + err.Error())
 					return
 				}
 
@@ -66,7 +65,7 @@ func SwimmerDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Save(&swimmer).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		default:

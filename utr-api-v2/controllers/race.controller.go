@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/gofiber/contrib/websocket"
 	"net/url"
 	"strconv"
 	"utr-api-v2/ini"
@@ -9,9 +8,9 @@ import (
 	"utr-api-v2/pubsub"
 )
 
-func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
+func RaceDetailsSocket(channel *pubsub.Channel, client *pubsub.Client) {
 	// parse race ID
-	raceID := conn.Params("id")
+	raceID := client.Connection.Params("id")
 
 	createRaceMessage := func() *pubsub.Message {
 		var race models.Race
@@ -34,11 +33,11 @@ func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, createRaceMessage())
+	client.Whisper(createRaceMessage())
 
-	pubsub.OnClientMessage(conn, func(payload url.Values) {
+	client.OnMessage(func(payload url.Values) {
 		if !payload.Has("command") {
-			pubsub.WhisperError(conn, "Missing command")
+			client.WhisperError("Missing command")
 			return
 		}
 
@@ -47,14 +46,14 @@ func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			var race models.Race
 			err := ini.DB.Where("id = ?", raceID).First(&race).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 
 			if payload.Has("length") {
 				length, err := strconv.Atoi(payload.Get("length"))
 				if err != nil {
-					pubsub.WhisperError(conn, "Failed to parse 'length': "+err.Error())
+					client.WhisperError("Failed to parse 'length': " + err.Error())
 					return
 				}
 
@@ -63,7 +62,7 @@ func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			if payload.Has("relay") {
 				relay, err := strconv.Atoi("relay")
 				if err != nil {
-					pubsub.WhisperError(conn, "Failed to parse 'relay': "+err.Error())
+					client.WhisperError("Failed to parse 'relay': " + err.Error())
 					return
 				}
 
@@ -75,7 +74,7 @@ func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Save(&race).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		default:

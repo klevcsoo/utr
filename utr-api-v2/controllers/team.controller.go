@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/gofiber/contrib/websocket"
 	"net/url"
 	"strconv"
 	"utr-api-v2/ini"
@@ -9,7 +8,7 @@ import (
 	"utr-api-v2/pubsub"
 )
 
-func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
+func AllTeamsSocket(channel *pubsub.Channel, client *pubsub.Client) {
 	createTeamsMessage := func() *pubsub.Message {
 		var teams []models.Team
 		err := ini.DB.Find(&teams).Error
@@ -27,11 +26,11 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, createTeamsMessage())
+	client.Whisper(createTeamsMessage())
 
-	pubsub.OnClientMessage(conn, func(payload url.Values) {
+	client.OnMessage(func(payload url.Values) {
 		if !payload.Has("command") {
-			pubsub.WhisperError(conn, "Missing command")
+			client.WhisperError("Missing command")
 		}
 
 		switch payload.Get("command") {
@@ -43,19 +42,19 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err := ini.DB.Create(&team).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		case "delete":
 			teamID, err := strconv.Atoi(payload.Get("team"))
 			if err != nil {
-				pubsub.WhisperError(conn, "Failed to parse team ID: "+err.Error())
+				client.WhisperError("Failed to parse team ID: " + err.Error())
 				return
 			}
 
 			err = ini.DB.Where("id = ?", teamID).Delete(&models.Team{}).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		default:
@@ -67,11 +66,11 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	})
 }
 
-func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
+func TeamDetailsSocket(channel *pubsub.Channel, client *pubsub.Client) {
 	// parse team ID
-	teamID, err := strconv.Atoi(conn.Params("id"))
+	teamID, err := strconv.Atoi(client.Connection.Params("id"))
 	if err != nil {
-		pubsub.WhisperError(conn, "Failed to parse team ID: "+err.Error())
+		client.WhisperError("Failed to parse team ID: " + err.Error())
 		return
 	}
 
@@ -85,11 +84,11 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	}
 
 	// send initial data
-	pubsub.Whisper(conn, createTeamMessage())
+	client.Whisper(createTeamMessage())
 
-	pubsub.OnClientMessage(conn, func(payload url.Values) {
+	client.OnMessage(func(payload url.Values) {
 		if !payload.Has("command") {
-			pubsub.WhisperError(conn, "Missing command")
+			client.WhisperError("Missing command")
 		}
 
 		switch payload.Get("command") {
@@ -97,7 +96,7 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			var team models.Team
 			err := ini.DB.Where("id = ?", teamID).First(&team).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 
@@ -110,13 +109,13 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Save(&team).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		case "createSwimmer":
 			yob, err := strconv.Atoi(payload.Get("yearOfBirth"))
 			if err != nil {
-				pubsub.WhisperError(conn, "Failed to parse year of birth: "+err.Error())
+				client.WhisperError("Failed to parse year of birth: " + err.Error())
 				return
 			}
 
@@ -129,19 +128,19 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Create(&swimmer).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		case "deleteSwimmer":
 			swimmerID, err := strconv.Atoi(payload.Get("swimmerId"))
 			if err != nil {
-				pubsub.WhisperError(conn, "Failed to parse swimmer ID: "+err.Error())
+				client.WhisperError("Failed to parse swimmer ID: " + err.Error())
 				return
 			}
 
 			err = ini.DB.Where("id = ?", swimmerID).Delete(&models.Swimmer{}).Error
 			if err != nil {
-				pubsub.WhisperError(conn, err.Error())
+				client.WhisperError(err.Error())
 				return
 			}
 		default:

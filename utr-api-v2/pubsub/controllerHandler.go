@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type SocketController func(channel *Channel, conn *websocket.Conn)
+type SocketController func(channel *Channel, client *Client)
 
 func NewSocketHandler(controller SocketController) fiber.Handler {
 	return websocket.New(func(conn *websocket.Conn) {
@@ -15,14 +15,17 @@ func NewSocketHandler(controller SocketController) fiber.Handler {
 		chName := strings.Replace(path, "/api/v2/", "", -1)
 		channel := GetChannel(chName)
 
+		// create client
+		client := NewClient(conn)
+
 		// handle register & unregister
 		defer func() {
-			channel.unregister(conn)
+			channel.unregister(&client)
 		}()
-		channel.register(conn)
+		channel.register(&client)
 
 		// call controller function
-		controller(channel, conn)
+		controller(channel, &client)
 	}, websocket.Config{Filter: func(ctx *fiber.Ctx) bool {
 		ctx.Locals("requestPath", ctx.Path())
 		return true
