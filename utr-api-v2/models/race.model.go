@@ -7,7 +7,7 @@ type Race struct {
 	CompetitionID   int            `json:"-" gorm:"not null"`
 	Competition     *Competition   `json:"competition"`
 	Length          int            `json:"length" gorm:"type:smallint;not null"`
-	SwimmingStyleID int            `json:"-" gorm:"not null"`
+	SwimmingStyleID string         `json:"-" gorm:"not null"`
 	SwimmingStyle   *SwimmingStyle `json:"swimmingStyle"`
 	Relay           int            `json:"relay" gorm:"type:smallint"`
 	Entries         *[]*Entry      `json:"entries" gorm:"foreignKey:RaceID"`

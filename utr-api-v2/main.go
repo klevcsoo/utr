@@ -63,6 +63,9 @@ func registerRoutes(api *fiber.App) {
 
 	api.Get("/swimmers/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.SwimmerDetailsSocket))
 
+	api.Get("/competitions/", security.AdminAccess, pubsub.NewSocketHandler(controllers.AllCompetitionsSocket))
+	api.Get("/competitions/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.CompetitionDetailsSocket))
+
 	api.All("*", func(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusNotFound)
 	})
