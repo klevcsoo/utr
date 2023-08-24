@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"github.com/gofiber/contrib/websocket"
-	"github.com/gofiber/fiber/v2/log"
 	"net/url"
 	"strconv"
 	"utr-api-v2/ini"
@@ -32,33 +31,30 @@ func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 				Content: race,
 			}
 		}
-
 	}
 
-	sendError := func(msg string) {
-		log.Warn(msg)
-		pubsub.Whisper(conn, &pubsub.Message{
-			Type:    pubsub.MessageTypeError,
-			Content: msg,
-		})
-	}
-
+	// send initial data
 	pubsub.Whisper(conn, createRaceMessage())
 
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
+		if !payload.Has("command") {
+			pubsub.WhisperError(conn, "Missing command")
+			return
+		}
+
 		switch payload.Get("command") {
 		case "edit":
 			var race models.Race
 			err := ini.DB.Where("id = ?", raceID).First(&race).Error
 			if err != nil {
-				sendError(err.Error())
+				pubsub.WhisperError(conn, err.Error())
 				return
 			}
 
 			if payload.Has("length") {
 				length, err := strconv.Atoi(payload.Get("length"))
 				if err != nil {
-					sendError("Failed to parse 'length': " + err.Error())
+					pubsub.WhisperError(conn, "Failed to parse 'length': "+err.Error())
 					return
 				}
 
@@ -67,7 +63,7 @@ func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			if payload.Has("relay") {
 				relay, err := strconv.Atoi("relay")
 				if err != nil {
-					sendError("Failed to parse 'relay': " + err.Error())
+					pubsub.WhisperError(conn, "Failed to parse 'relay': "+err.Error())
 					return
 				}
 
@@ -79,7 +75,7 @@ func RaceDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 
 			err = ini.DB.Save(&race).Error
 			if err != nil {
-				sendError(err.Error())
+				pubsub.WhisperError(conn, err.Error())
 				return
 			}
 		default:

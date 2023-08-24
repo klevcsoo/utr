@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"github.com/gofiber/contrib/websocket"
-	"github.com/gofiber/fiber/v2/log"
 	"net/url"
 	"utr-api-v2/ini"
 	"utr-api-v2/models"
@@ -10,14 +9,6 @@ import (
 )
 
 func ResolveIdSocket(_ *pubsub.Channel, conn *websocket.Conn) {
-	sendError := func(msg string) {
-		log.Warnf(msg)
-		pubsub.Whisper(conn, &pubsub.Message{
-			Type:    pubsub.MessageTypeError,
-			Content: msg,
-		})
-	}
-
 	sendResolvedString := func(name string) {
 		pubsub.Whisper(conn, &pubsub.Message{
 			Type:    pubsub.MessageTypeText,
@@ -27,7 +18,7 @@ func ResolveIdSocket(_ *pubsub.Channel, conn *websocket.Conn) {
 
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
 		if !payload.Has("type") || !payload.Has("id") {
-			sendError("Missing type or ID")
+			pubsub.WhisperError(conn, "Missing type or ID")
 			return
 		}
 
@@ -36,11 +27,21 @@ func ResolveIdSocket(_ *pubsub.Channel, conn *websocket.Conn) {
 		switch payload.Get("type") {
 		case "team":
 			var team models.Team
-			ini.DB.Where("id = ?", id).First(&team)
+			err := ini.DB.Where("id = ?", id).First(&team).Error
+			if err != nil {
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
+
 			sendResolvedString(team.Name)
 		case "swimmer":
 			var swimmer models.Swimmer
-			ini.DB.Where("id = ?", id).First(&swimmer)
+			err := ini.DB.Where("id = ?", id).First(&swimmer).Error
+			if err != nil {
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
+
 			sendResolvedString(swimmer.Name)
 		}
 	})

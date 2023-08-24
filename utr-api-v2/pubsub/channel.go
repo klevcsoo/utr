@@ -41,20 +41,21 @@ func Whisper(conn *websocket.Conn, message *Message) {
 	}
 }
 
-func OnClientMessage(conn *websocket.Conn, callback func(payload url.Values)) {
-	sendError := func(err error) {
-		Whisper(conn, &Message{
-			Type:    MessageTypeError,
-			Content: err.Error(),
-		})
-	}
+func WhisperError(conn *websocket.Conn, errorMessage string) {
+	log.Warn(errorMessage)
+	Whisper(conn, &Message{
+		Type:    MessageTypeError,
+		Content: errorMessage,
+	})
+}
 
+func OnClientMessage(conn *websocket.Conn, callback func(payload url.Values)) {
 	for {
 		// read message from the client
 		_, msg, err := conn.ReadMessage()
 		if err != nil {
 			log.Warnf("Failed to read message: %s", err.Error())
-			sendError(err)
+			WhisperError(conn, err.Error())
 			break
 		}
 		log.Infof("Received WebSocket message: %s", msg)
@@ -63,7 +64,7 @@ func OnClientMessage(conn *websocket.Conn, callback func(payload url.Values)) {
 		payload, err := url.ParseQuery(string(msg))
 		if err != nil {
 			log.Warnf("Failed to parse client message: %s", err.Error())
-			sendError(err)
+			WhisperError(conn, err.Error())
 			continue
 		}
 

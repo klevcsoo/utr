@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"github.com/gofiber/contrib/websocket"
-	"github.com/gofiber/fiber/v2/log"
 	"net/url"
 	"strconv"
 	"utr-api-v2/ini"
@@ -13,10 +12,17 @@ import (
 func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	createTeamsMessage := func() *pubsub.Message {
 		var teams []models.Team
-		ini.DB.Find(&teams)
-		return &pubsub.Message{
-			Type:    pubsub.MessageTypeList,
-			Content: teams,
+		err := ini.DB.Find(&teams).Error
+		if err != nil {
+			return &pubsub.Message{
+				Type:    pubsub.MessageTypeError,
+				Content: err.Error(),
+			}
+		} else {
+			return &pubsub.Message{
+				Type:    pubsub.MessageTypeList,
+				Content: teams,
+			}
 		}
 	}
 
@@ -24,23 +30,35 @@ func AllTeamsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	pubsub.Whisper(conn, createTeamsMessage())
 
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
-		if payload.Get("command") == "create" {
-			// handle create command
+		if !payload.Has("command") {
+			pubsub.WhisperError(conn, "Missing command")
+		}
+
+		switch payload.Get("command") {
+		case "create":
 			team := &models.Team{
 				Name: payload.Get("name"),
 				City: payload.Get("city"),
 			}
-			ini.DB.Create(&team)
 
-		} else if payload.Get("command") == "delete" {
-			teamID, err := strconv.Atoi(payload.Get("teamId"))
+			err := ini.DB.Create(&team).Error
 			if err != nil {
-				log.Warnf("Failed to parse team ID: %s", err.Error())
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
+		case "delete":
+			teamID, err := strconv.Atoi(payload.Get("team"))
+			if err != nil {
+				pubsub.WhisperError(conn, "Failed to parse team ID: "+err.Error())
 				return
 			}
 
-			ini.DB.Delete(&models.Team{}, teamID)
-		} else {
+			err = ini.DB.Where("id = ?", teamID).Delete(&models.Team{}).Error
+			if err != nil {
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
+		default:
 			return
 		}
 
@@ -53,7 +71,7 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 	// parse team ID
 	teamID, err := strconv.Atoi(conn.Params("id"))
 	if err != nil {
-		log.Warnf("Failed to parse team ID: %s", err.Error())
+		pubsub.WhisperError(conn, "Failed to parse team ID: "+err.Error())
 		return
 	}
 
@@ -65,21 +83,23 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 			Content: team,
 		}
 	}
-	whisperError := func(err error) {
-		pubsub.Whisper(conn, &pubsub.Message{
-			Type:    pubsub.MessageTypeError,
-			Content: err.Error(),
-		})
-	}
 
 	// send initial data
 	pubsub.Whisper(conn, createTeamMessage())
 
-	// handle commands
 	pubsub.OnClientMessage(conn, func(payload url.Values) {
-		if payload.Get("command") == "edit" {
+		if !payload.Has("command") {
+			pubsub.WhisperError(conn, "Missing command")
+		}
+
+		switch payload.Get("command") {
+		case "edit":
 			var team models.Team
-			ini.DB.First(&team, teamID)
+			err := ini.DB.Where("id = ?", teamID).First(&team).Error
+			if err != nil {
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
 
 			if payload.Has("name") {
 				team.Name = payload.Get("name")
@@ -88,40 +108,47 @@ func TeamDetailsSocket(channel *pubsub.Channel, conn *websocket.Conn) {
 				team.City = payload.Get("city")
 			}
 
-			ini.DB.Save(&team)
-		} else if payload.Get("command") == "createSwimmer" {
+			err = ini.DB.Save(&team).Error
+			if err != nil {
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
+		case "createSwimmer":
 			yob, err := strconv.Atoi(payload.Get("yearOfBirth"))
 			if err != nil {
-				log.Warnf("Failed to parse year of birth: %s", err.Error())
-				whisperError(err)
+				pubsub.WhisperError(conn, "Failed to parse year of birth: "+err.Error())
 				return
-			} else {
-				swimmer := models.Swimmer{
-					TeamID:      teamID,
-					Name:        payload.Get("name"),
-					YearOfBirth: uint(yob),
-					SexID:       payload.Get("sex"),
-				}
-
-				err := ini.DB.Create(&swimmer).Error
-				if err != nil {
-					log.Warn(err.Error())
-					whisperError(err)
-					return
-				}
 			}
-		} else if payload.Get("command") == "deleteSwimmer" {
+
+			swimmer := models.Swimmer{
+				TeamID:      teamID,
+				Name:        payload.Get("name"),
+				YearOfBirth: uint(yob),
+				SexID:       payload.Get("sex"),
+			}
+
+			err = ini.DB.Create(&swimmer).Error
+			if err != nil {
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
+		case "deleteSwimmer":
 			swimmerID, err := strconv.Atoi(payload.Get("swimmerId"))
 			if err != nil {
-				log.Warnf("Failed to parse swimmer ID: %s", err.Error())
+				pubsub.WhisperError(conn, "Failed to parse swimmer ID: "+err.Error())
 				return
 			}
 
-			ini.DB.Delete(&models.Swimmer{}, swimmerID)
-		} else {
+			err = ini.DB.Where("id = ?", swimmerID).Delete(&models.Swimmer{}).Error
+			if err != nil {
+				pubsub.WhisperError(conn, err.Error())
+				return
+			}
+		default:
 			return
 		}
 
+		// send back modified data
 		channel.Broadcast(createTeamMessage())
 	})
 }
