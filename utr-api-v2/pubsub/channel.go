@@ -45,3 +45,17 @@ func GetChannel(name string) *Channel {
 
 	return channels[name]
 }
+
+func PublishUpdateOnChannel(channel string) {
+	message, err := getChannelUpdateMessage(channel)
+	if err != nil {
+		log.Warnf("Failed to publish on channel: %s", err.Error())
+		return
+	}
+
+	for _, client := range clients {
+		if _, subscribed := client.subscriptions[channel]; subscribed {
+			client.Whisper(message)
+		}
+	}
+}

@@ -16,7 +16,7 @@ func NewSocketHandler(controller SocketController) fiber.Handler {
 		channel := GetChannel(chName)
 
 		// create client
-		client := NewClient(conn)
+		client := NewClient(conn, nil)
 
 		// handle register & unregister
 		defer func() {

@@ -45,6 +45,8 @@ func registerRoutes(api *fiber.App) {
 		})
 	})
 
+	api.Get("/pubsub/admin", security.AdminAccess, controllers.PubSubSocketController())
+
 	api.Post("/auth/login", controllers.AuthLogUserIn)
 	api.Post("/auth/logout", controllers.AuthLogUserOut)
 	api.Get("/auth/users/me", security.AuthenticatedAccess, controllers.AuthGetMe)
