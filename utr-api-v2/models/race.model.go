@@ -1,6 +1,9 @@
 package models
 
-import "utr-api-v2/utils"
+import (
+	"utr-api-v2/schemas"
+	"utr-api-v2/utils"
+)
 
 type Race struct {
 	utils.BaseModel
@@ -11,4 +14,13 @@ type Race struct {
 	SwimmingStyle   *SwimmingStyle `json:"swimmingStyle"`
 	Relay           int            `json:"relay" gorm:"type:smallint"`
 	Entries         *[]*Entry      `json:"entries" gorm:"foreignKey:RaceID"`
+}
+
+func NewRace(request *schemas.CreateRaceRequest) Race {
+	return Race{
+		CompetitionID:   request.Competition,
+		Length:          request.Length,
+		SwimmingStyleID: request.SwimmingStyle,
+		Relay:           request.Relay,
+	}
 }
