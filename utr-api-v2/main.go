@@ -47,28 +47,26 @@ func registerRoutes(api *fiber.App) {
 
 	api.Get("/pubsub/admin", security.AdminAccess, controllers.PubSubSocketController())
 
-	api.Post("/auth/login", controllers.AuthLogUserIn)
-	api.Post("/auth/logout", controllers.AuthLogUserOut)
-	api.Get("/auth/users/me", security.AuthenticatedAccess, controllers.AuthGetMe)
-	api.Get("/auth/users/", security.AdminAccess, controllers.AuthGetAllUsers)
-	api.Put("/auth/users/", security.AdminAccess, controllers.AuthCreateNewUser)
-	api.Get("/auth/users/:id", security.AdminAccess, controllers.AuthGetUser)
-	api.Delete("/auth/users/:id", security.AdminAccess, controllers.AuthDeleteUser)
-	api.Patch("/auth/users/:id/password", security.AdminAccess, controllers.AuthChangeUserPassword)
-	api.Patch("/auth/users/:id/access-level", security.AdminAccess, controllers.AuthChangeUserAccessLevel)
-	api.Patch("/auth/users/:id/display-name", security.AdminAccess, controllers.AuthChangeUserDisplayName)
-
-	api.Get("/resolve-id", security.AuthenticatedAccess, pubsub.NewSocketHandler(controllers.ResolveIdSocket))
-
-	api.Get("/teams/", security.AdminAccess, pubsub.NewSocketHandler(controllers.AllTeamsSocket))
-	api.Get("/teams/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.TeamDetailsSocket))
-
-	api.Get("/swimmers/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.SwimmerDetailsSocket))
-
-	api.Get("/competitions/", security.AdminAccess, pubsub.NewSocketHandler(controllers.AllCompetitionsSocket))
-	api.Get("/competitions/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.CompetitionDetailsSocket))
-
-	api.Get("/races/:id", security.AdminAccess, pubsub.NewSocketHandler(controllers.RaceDetailsSocket))
+	api.Post("/auth/login",
+		controllers.LogUserIn)
+	api.Post("/auth/logout",
+		controllers.LogUserOut)
+	api.Get("/auth/users/me",
+		security.AuthenticatedAccess, controllers.GetMe)
+	api.Get("/auth/users/",
+		security.AdminAccess, controllers.GetUserList)
+	api.Put("/auth/users/",
+		security.AdminAccess, controllers.CreateUser)
+	api.Get("/auth/users/:id",
+		security.AdminAccess, controllers.GetUser)
+	api.Delete("/auth/users/:id",
+		security.AdminAccess, controllers.DeleteUser)
+	api.Patch("/auth/users/:id/password",
+		security.AdminAccess, controllers.ChangePassword)
+	api.Patch("/auth/users/:id/access-level",
+		security.AdminAccess, controllers.ChangeAccessLevel)
+	api.Patch("/auth/users/:id/display-name",
+		security.AdminAccess, controllers.ChangeDisplayName)
 
 	api.All("*", func(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusNotFound)
