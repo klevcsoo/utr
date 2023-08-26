@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"strings"
 	"utr-api-v2/schemas"
-	"utr-api-v2/security"
 )
 
 type Client struct {
@@ -15,15 +14,6 @@ type Client struct {
 	User          *schemas.UserPublicData
 	Connection    *websocket.Conn
 	subscriptions map[string]struct{}
-}
-
-func NewClient(conn *websocket.Conn, user *schemas.UserPublicData) Client {
-	return Client{
-		ID:            uuid.New(),
-		User:          user,
-		Connection:    conn,
-		subscriptions: make(map[string]struct{}),
-	}
 }
 
 func (client *Client) listen() {
@@ -56,13 +46,13 @@ func (client *Client) listen() {
 		// handle subscription commands
 		switch payload.Get("command") {
 		case "subscribe":
-			if payload.Has("channel") {
-				client.subscribe(payload.Get("channel"))
+			if payload.Has("space") {
+				client.subscribe(payload.Get("space"))
 			}
 
 		case "unsubscribe":
-			if payload.Has("channel") {
-				client.unsubscribe(payload.Get("channel"))
+			if payload.Has("space") {
+				client.unsubscribe(payload.Get("space"))
 			}
 		default:
 			client.WhisperError("Unknown command: " + payload.Get("command"))
@@ -70,25 +60,26 @@ func (client *Client) listen() {
 	}
 }
 
-func (client *Client) subscribe(channel string) {
-	// clients can only subscribe to channels with registered handlers
-	if !DoesChannelExist(channel) {
-		client.WhisperError("Channel does not exist")
+func (client *Client) subscribe(spaceName string) {
+	// clients can only subscribe to spaces with registered handlers
+	space, exists := spaces[spaceName]
+	if !exists {
+		client.WhisperError("Space does not exist")
 		return
 	}
 
-	// non-admin users can only subscribe to the "live" channel
-	if channel != "live" && client.User.AccessLevel < security.AccessLevelAdmin {
+	// non-admin users can only subscribe to the "live" spaceName
+	if space.AccessLevelNeeded > client.User.AccessLevel {
 		client.WhisperError("Permission denied")
 		return
 	}
 
-	// add channel to subscriptions
-	if _, exists := client.subscriptions[channel]; !exists {
-		client.subscriptions[channel] = struct{}{}
+	// add spaceName to subscriptions
+	if _, exists := client.subscriptions[spaceName]; !exists {
+		client.subscriptions[spaceName] = struct{}{}
 		client.Whisper(&Message{
 			Type:    MessageTypeText,
-			Content: "Subscription added: " + channel,
+			Content: "Subscription added: " + spaceName,
 		})
 	}
 }
@@ -102,6 +93,11 @@ func (client *Client) unsubscribe(channel string) {
 			Content: "Subscription removed: " + channel,
 		})
 	}
+}
+
+func (client *Client) isSubscribed(spaceName string) bool {
+	_, exists := client.subscriptions[spaceName]
+	return exists
 }
 
 func (client *Client) Whisper(message *Message) {
@@ -118,24 +114,11 @@ func (client *Client) WhisperError(errorMessage string) {
 	})
 }
 
-func (client *Client) OnMessage(callback func(payload url.Values)) {
-	for {
-		// read message from the client
-		_, msg, err := client.Connection.ReadMessage()
-		if err != nil {
-			client.WhisperError("Failed to read message: " + err.Error())
-			break
-		}
-
-		log.Infof("Received WebSocket message: %s", msg)
-
-		// parse client message
-		payload, err := url.ParseQuery(string(msg))
-		if err != nil {
-			client.WhisperError("Failed to parse client message: " + err.Error())
-			continue
-		}
-
-		callback(payload)
+func NewClient(conn *websocket.Conn, user *schemas.UserPublicData) Client {
+	return Client{
+		ID:            uuid.New(),
+		User:          user,
+		Connection:    conn,
+		subscriptions: make(map[string]struct{}),
 	}
 }
