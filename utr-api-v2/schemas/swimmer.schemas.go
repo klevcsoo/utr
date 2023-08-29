@@ -10,6 +10,6 @@ type CreateSwimmerRequest struct {
 type EditSwimmerRequest struct {
 	Team        int    `json:"team,omitempty"`
 	Name        string `json:"name,omitempty"`
-	YearOfBirth int    `json:"year_of_birth,omitempty"`
+	YearOfBirth uint   `json:"year_of_birth,omitempty"`
 	Sex         string `json:"sex,omitempty"`
 }

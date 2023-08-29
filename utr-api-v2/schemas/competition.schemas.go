@@ -1,15 +1,13 @@
 package schemas
 
-import "gorm.io/datatypes"
-
 type CreateCompetitionRequest struct {
-	Name     string         `json:"name,omitempty" validate:"required"`
-	Location string         `json:"location,omitempty"`
-	Date     datatypes.Date `json:"date" validate:"required"`
+	Name     string `json:"name,omitempty" validate:"required"`
+	Location string `json:"location,omitempty"`
+	Date     string `json:"date,omitempty" validate:"required"`
 }
 
 type EditCompetitionRequest struct {
-	Name     string         `json:"name,omitempty"`
-	Location string         `json:"location,omitempty"`
-	Date     datatypes.Date `json:"date"`
+	Name     string `json:"name,omitempty"`
+	Location string `json:"location,omitempty"`
+	Date     string `json:"date,omitempty"`
 }

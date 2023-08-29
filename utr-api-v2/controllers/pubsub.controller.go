@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"utr-api-v2/pubsub"
 	"utr-api-v2/schemas"
+	"utr-api-v2/utils"
 )
 
 func PubSubSocketController() fiber.Handler {
@@ -17,4 +18,9 @@ func PubSubSocketController() fiber.Handler {
 		}()
 		pubsub.RegisterClient(&client)
 	})
+}
+
+func GetAvailableWebSocketSpaces(ctx *fiber.Ctx) error {
+	return ctx.Status(fiber.StatusOK).
+		JSON(utils.NewListResponseMessage(pubsub.GetRegisteredSpaceNames()))
 }

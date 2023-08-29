@@ -12,9 +12,9 @@ type Team struct {
 	Swimmers []Swimmer `json:"swimmers" gorm:"foreignKey:TeamID"`
 }
 
-func NewTeam(request *schemas.CreateTeamRequest) Team {
+func NewTeam(request schemas.CreateTeamRequest) Team {
 	return Team{
 		Name: request.Name,
-		City: request.Location,
+		City: request.City,
 	}
 }

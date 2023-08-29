@@ -14,9 +14,9 @@ type Swimmer struct {
 	YearOfBirth uint   `json:"yearOfBirth" gorm:"type:integer;not null"`
 }
 
-func NewSwimmer(request *schemas.CreateSwimmerRequest) Swimmer {
+func NewSwimmer(teamID int, request schemas.CreateSwimmerRequest) Swimmer {
 	return Swimmer{
-		TeamID:      request.Team,
+		TeamID:      teamID,
 		Name:        request.Name,
 		YearOfBirth: request.YearOfBirth,
 		SexID:       request.Sex,

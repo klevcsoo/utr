@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 	"utr-api-v2/schemas"
+	"utr-api-v2/utils"
 )
 
 type Client struct {
@@ -24,7 +25,7 @@ func (client *Client) listen() {
 			if strings.Contains(err.Error(), "close 1000") {
 				log.Infof("Websocket connection for client %s closed", client.ID.String())
 			} else {
-				client.WhisperError("Failed to read message: " + err.Error())
+				client.whisperError("Failed to read message: " + err.Error())
 			}
 
 			break
@@ -35,11 +36,12 @@ func (client *Client) listen() {
 		// parse client message
 		payload, err := url.ParseQuery(string(msg))
 		if err != nil {
-			client.WhisperError("Failed to parse client message: " + err.Error())
+			client.whisperError("Failed to parse client message: " + err.Error())
 			continue
 		}
 
 		if !payload.Has("command") {
+			client.whisperError("Missing command")
 			continue
 		}
 
@@ -48,50 +50,56 @@ func (client *Client) listen() {
 		case "subscribe":
 			if payload.Has("space") {
 				client.subscribe(payload.Get("space"))
+			} else {
+				client.whisperError("Missing Space")
 			}
 
 		case "unsubscribe":
 			if payload.Has("space") {
 				client.unsubscribe(payload.Get("space"))
+			} else {
+				client.whisperError("Missing Space")
 			}
 		default:
-			client.WhisperError("Unknown command: " + payload.Get("command"))
+			client.whisperError("Unknown command: " + payload.Get("command"))
 		}
 	}
 }
 
 func (client *Client) subscribe(spaceName string) {
+	spaceRoute, ids, err := deconstructSpaceName(spaceName)
+	if err != nil {
+		log.Warnf("Failed to deconstruct space name: %s", err.Error())
+	}
+
 	// clients can only subscribe to spaces with registered handlers
-	space, exists := spaces[spaceName]
+	space, exists := spaces[spaceRoute]
 	if !exists {
-		client.WhisperError("Space does not exist")
+		client.whisperError("Space does not exist")
 		return
 	}
 
 	// non-admin users can only subscribe to the "live" spaceName
 	if space.AccessLevelNeeded > client.User.AccessLevel {
-		client.WhisperError("Permission denied")
+		client.whisperError("Permission denied")
 		return
 	}
 
 	// add spaceName to subscriptions
 	if _, exists := client.subscriptions[spaceName]; !exists {
+		message := space.handler(ids)
+
 		client.subscriptions[spaceName] = struct{}{}
-		client.Whisper(&Message{
-			Type:    MessageTypeText,
-			Content: "Subscription added: " + spaceName,
-		})
+		client.whisper(&message)
 	}
 }
 
-func (client *Client) unsubscribe(channel string) {
-	// remove channel from subscriptions
-	if _, exists := client.subscriptions[channel]; exists {
-		delete(client.subscriptions, channel)
-		client.Whisper(&Message{
-			Type:    MessageTypeText,
-			Content: "Subscription removed: " + channel,
-		})
+func (client *Client) unsubscribe(space string) {
+	// remove Space from subscriptions
+	if _, exists := client.subscriptions[space]; exists {
+		delete(client.subscriptions, space)
+		msg := utils.NewTextResponseMessage("Subscription removed: " + space)
+		client.whisper(&msg)
 	}
 }
 
@@ -100,16 +108,16 @@ func (client *Client) isSubscribed(spaceName string) bool {
 	return exists
 }
 
-func (client *Client) Whisper(message *Message) {
+func (client *Client) whisper(message *utils.ResponseMessage) {
 	if err := client.Connection.WriteJSON(message); err != nil {
 		log.Warnf("Failed to whisper message: %s", err.Error())
 	}
 }
 
-func (client *Client) WhisperError(errorMessage string) {
+func (client *Client) whisperError(errorMessage string) {
 	log.Warn(errorMessage)
-	client.Whisper(&Message{
-		Type:    MessageTypeError,
+	client.whisper(&utils.ResponseMessage{
+		Type:    utils.ResponseMessageTypeError,
 		Content: errorMessage,
 	})
 }

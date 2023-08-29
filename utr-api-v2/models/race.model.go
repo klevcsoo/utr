@@ -16,11 +16,16 @@ type Race struct {
 	Entries         *[]*Entry      `json:"entries" gorm:"foreignKey:RaceID"`
 }
 
-func NewRace(request *schemas.CreateRaceRequest) Race {
-	return Race{
-		CompetitionID:   request.Competition,
+func NewRace(competitionID int, request schemas.CreateRaceRequest) Race {
+	race := Race{
+		CompetitionID:   competitionID,
 		Length:          request.Length,
 		SwimmingStyleID: request.SwimmingStyle,
-		Relay:           request.Relay,
 	}
+
+	if request.RelayEnabled {
+		race.Relay = request.Relay
+	}
+
+	return race
 }
