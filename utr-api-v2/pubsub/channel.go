@@ -7,14 +7,14 @@ import (
 	"utr-api-v2/utils"
 )
 
-type Space struct {
+type Channel struct {
 	Name              string
 	AccessLevelNeeded int
 	handler           func(map[string]int) utils.ResponseMessage
 }
 
 var clients = make(map[string]Client)
-var spaces = make(map[string]Space)
+var channels = make(map[string]Channel)
 
 func RegisterClient(client *Client) {
 	clients[client.ID.String()] = *client
@@ -28,51 +28,51 @@ func UnregisterClient(client *Client) {
 	}
 }
 
-func RegisterSpace(
+func RegisterChannel(
 	name string, access int, handler func(IDs map[string]int) utils.ResponseMessage,
 ) {
-	space := Space{
+	channel := Channel{
 		Name:              name,
 		AccessLevelNeeded: access,
 		handler:           handler,
 	}
 
-	spaces[space.Name] = space
+	channels[channel.Name] = channel
 }
 
-func PublishUpdate(spaceName string) {
-	routeName, ids, err := deconstructSpaceName(spaceName)
+func PublishUpdate(channelName string) {
+	routeName, ids, err := deconstructChannelName(channelName)
 	if err != nil {
 		log.Warnf("failed to publish: invalid ID, %s", err.Error())
 		return
 	}
 
-	space, exists := spaces[routeName]
+	channel, exists := channels[routeName]
 	if !exists {
-		log.Warnf("failed to publish: Space does not exist (%s)", routeName)
+		log.Warnf("failed to publish: channel does not exist (%s)", routeName)
 		return
 	}
 
-	message := space.handler(ids)
+	message := channel.handler(ids)
 
 	for _, client := range clients {
-		if client.isSubscribed(spaceName) {
+		if client.isSubscribed(channelName) {
 			client.whisper(&message)
 		}
 	}
 
-	log.Infof("Published update to Space : %s", routeName)
+	log.Infof("Published update to channel : %s", routeName)
 }
 
-func GetRegisteredSpaceNames() []string {
+func GetRegisteredChannelNames() []string {
 	var names []string
-	for k := range spaces {
+	for k := range channels {
 		names = append(names, k)
 	}
 	return names
 }
 
-func deconstructSpaceName(name string) (string, map[string]int, error) {
+func deconstructChannelName(name string) (string, map[string]int, error) {
 	slices := strings.Split(name, "/")
 	ids := make(map[string]int)
 	for i := 0; i < len(slices); i++ {
@@ -90,21 +90,21 @@ func deconstructSpaceName(name string) (string, map[string]int, error) {
 		}
 	}
 
-	spaceRoute := name
+	route := name
 	for k, v := range ids {
 		oldPair := k + "/" + strconv.Itoa(v)
 		newPair := k + "/?"
-		spaceRoute = strings.Replace(spaceRoute, oldPair, newPair, -1)
+		route = strings.Replace(route, oldPair, newPair, -1)
 	}
 
-	return spaceRoute, ids, nil
+	return route, ids, nil
 }
 
 const (
-	SpaceNameTeamList           = "team/"
-	SpaceNameTeamDetails        = "team/?"
-	SpaceNameSwimmerDetails     = "swimmer/"
-	SpaceNameCompetitionList    = "competition/"
-	SpaceNameCompetitionDetails = "competition/?"
-	SpaceNameRaceDetails        = "race/?"
+	ChannelNameTeamList           = "team/"
+	ChannelNameTeamDetails        = "team/?"
+	ChannelNameSwimmerDetails     = "swimmer/"
+	ChannelNameCompetitionList    = "competition/"
+	ChannelNameCompetitionDetails = "competition/?"
+	ChannelNameRaceDetails        = "race/?"
 )

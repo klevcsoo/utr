@@ -48,17 +48,17 @@ func (client *Client) listen() {
 		// handle subscription commands
 		switch payload.Get("command") {
 		case "subscribe":
-			if payload.Has("space") {
-				client.subscribe(payload.Get("space"))
+			if payload.Has("channel") {
+				client.subscribe(payload.Get("channel"))
 			} else {
-				client.whisperError("Missing Space")
+				client.whisperError("Missing Channel")
 			}
 
 		case "unsubscribe":
-			if payload.Has("space") {
-				client.unsubscribe(payload.Get("space"))
+			if payload.Has("channel") {
+				client.unsubscribe(payload.Get("channel"))
 			} else {
-				client.whisperError("Missing Space")
+				client.whisperError("Missing Channel")
 			}
 		default:
 			client.whisperError("Unknown command: " + payload.Get("command"))
@@ -66,45 +66,45 @@ func (client *Client) listen() {
 	}
 }
 
-func (client *Client) subscribe(spaceName string) {
-	spaceRoute, ids, err := deconstructSpaceName(spaceName)
+func (client *Client) subscribe(channelName string) {
+	route, ids, err := deconstructChannelName(channelName)
 	if err != nil {
-		log.Warnf("Failed to deconstruct space name: %s", err.Error())
+		log.Warnf("Failed to deconstruct channel name: %s", err.Error())
 	}
 
-	// clients can only subscribe to spaces with registered handlers
-	space, exists := spaces[spaceRoute]
+	// clients can only subscribe to channels with registered handlers
+	channel, exists := channels[route]
 	if !exists {
-		client.whisperError("Space does not exist")
+		client.whisperError("Channel does not exist")
 		return
 	}
 
-	// non-admin users can only subscribe to the "live" spaceName
-	if space.AccessLevelNeeded > client.User.AccessLevel {
+	// non-admin users can only subscribe to the "live" channelName
+	if channel.AccessLevelNeeded > client.User.AccessLevel {
 		client.whisperError("Permission denied")
 		return
 	}
 
-	// add spaceName to subscriptions
-	if _, exists := client.subscriptions[spaceName]; !exists {
-		message := space.handler(ids)
+	// add channel to subscriptions
+	if _, exists := client.subscriptions[channelName]; !exists {
+		message := channel.handler(ids)
 
-		client.subscriptions[spaceName] = struct{}{}
+		client.subscriptions[channelName] = struct{}{}
 		client.whisper(&message)
 	}
 }
 
-func (client *Client) unsubscribe(space string) {
-	// remove Space from subscriptions
-	if _, exists := client.subscriptions[space]; exists {
-		delete(client.subscriptions, space)
-		msg := utils.NewTextResponseMessage("Subscription removed: " + space)
+func (client *Client) unsubscribe(channelName string) {
+	// remove channel from subscriptions
+	if _, exists := client.subscriptions[channelName]; exists {
+		delete(client.subscriptions, channelName)
+		msg := utils.NewTextResponseMessage("Subscription removed: " + channelName)
 		client.whisper(&msg)
 	}
 }
 
-func (client *Client) isSubscribed(spaceName string) bool {
-	_, exists := client.subscriptions[spaceName]
+func (client *Client) isSubscribed(channelName string) bool {
+	_, exists := client.subscriptions[channelName]
 	return exists
 }
 

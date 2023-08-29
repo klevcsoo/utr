@@ -30,10 +30,10 @@ func CreateSwimmer(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to space
-	space := strings.Replace(
-		pubsub.SpaceNameTeamDetails, "?", strconv.Itoa(teamID), 1)
-	pubsub.PublishUpdate(space)
+	// publish changes to channel
+	channel := strings.Replace(
+		pubsub.ChannelNameTeamDetails, "?", strconv.Itoa(teamID), 1)
+	pubsub.PublishUpdate(channel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)
@@ -97,13 +97,13 @@ func EditSwimmerDetails(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to spaces
-	teamSpace := strings.Replace(
-		pubsub.SpaceNameTeamDetails, "?", teamID, 1)
-	pubsub.PublishUpdate(teamSpace)
-	swimmerSpace := strings.Replace(
-		pubsub.SpaceNameSwimmerDetails, "?", swimmerID, 1)
-	pubsub.PublishUpdate(swimmerSpace)
+	// publish changes to channels
+	teamChannel := strings.Replace(
+		pubsub.ChannelNameTeamDetails, "?", teamID, 1)
+	pubsub.PublishUpdate(teamChannel)
+	swimmerChannel := strings.Replace(
+		pubsub.ChannelNameSwimmerDetails, "?", swimmerID, 1)
+	pubsub.PublishUpdate(swimmerChannel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)
@@ -122,13 +122,13 @@ func DeleteSwimmer(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to spaces
-	teamSpace := strings.Replace(
-		pubsub.SpaceNameTeamDetails, "?", teamID, 1)
-	pubsub.PublishUpdate(teamSpace)
-	swimmerSpace := strings.Replace(
-		pubsub.SpaceNameSwimmerDetails, "?", swimmerID, 1)
-	pubsub.PublishUpdate(swimmerSpace)
+	// publish changes to channels
+	teamChannels := strings.Replace(
+		pubsub.ChannelNameTeamDetails, "?", teamID, 1)
+	pubsub.PublishUpdate(teamChannels)
+	swimmerChannels := strings.Replace(
+		pubsub.ChannelNameSwimmerDetails, "?", swimmerID, 1)
+	pubsub.PublishUpdate(swimmerChannels)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)

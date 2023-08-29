@@ -36,7 +36,7 @@ func CreateTeam(ctx *fiber.Ctx) error {
 	}
 
 	// publish update and respond
-	pubsub.PublishUpdate(pubsub.SpaceNameTeamList)
+	pubsub.PublishUpdate(pubsub.ChannelNameTeamList)
 	return ctx.SendStatus(fiber.StatusCreated)
 }
 
@@ -94,10 +94,10 @@ func EditTeamDetails(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to space
-	pubsub.PublishUpdate(pubsub.SpaceNameTeamList)
-	space := strings.Replace(pubsub.SpaceNameTeamDetails, "?", id, 1)
-	pubsub.PublishUpdate(space)
+	// publish changes to channel
+	pubsub.PublishUpdate(pubsub.ChannelNameTeamList)
+	channel := strings.Replace(pubsub.ChannelNameTeamDetails, "?", id, 1)
+	pubsub.PublishUpdate(channel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)
@@ -116,9 +116,9 @@ func DeleteTeam(ctx *fiber.Ctx) error {
 	}
 
 	// publish changes
-	pubsub.PublishUpdate(pubsub.SpaceNameTeamList)
-	spaceName := strings.Replace(pubsub.SpaceNameTeamDetails, "?", id, 1)
-	pubsub.PublishUpdate(spaceName)
+	pubsub.PublishUpdate(pubsub.ChannelNameTeamList)
+	channel := strings.Replace(pubsub.ChannelNameTeamDetails, "?", id, 1)
+	pubsub.PublishUpdate(channel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)

@@ -37,7 +37,7 @@ func CreateCompetition(ctx *fiber.Ctx) error {
 	}
 
 	// publish update and respond
-	pubsub.PublishUpdate(pubsub.SpaceNameCompetitionList)
+	pubsub.PublishUpdate(pubsub.ChannelNameCompetitionList)
 	return ctx.SendStatus(fiber.StatusCreated)
 }
 
@@ -104,10 +104,10 @@ func EditCompetitionDetails(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to space
-	pubsub.PublishUpdate(pubsub.SpaceNameCompetitionList)
-	space := strings.Replace(pubsub.SpaceNameCompetitionDetails, "?", id, 1)
-	pubsub.PublishUpdate(space)
+	// publish changes to channel
+	pubsub.PublishUpdate(pubsub.ChannelNameCompetitionList)
+	channel := strings.Replace(pubsub.ChannelNameCompetitionDetails, "?", id, 1)
+	pubsub.PublishUpdate(channel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)
@@ -126,9 +126,9 @@ func DeleteCompetition(ctx *fiber.Ctx) error {
 	}
 
 	// publish changes
-	pubsub.PublishUpdate(pubsub.SpaceNameCompetitionList)
-	spaceName := strings.Replace(pubsub.SpaceNameCompetitionDetails, "?", id, 1)
-	pubsub.PublishUpdate(spaceName)
+	pubsub.PublishUpdate(pubsub.ChannelNameCompetitionList)
+	channel := strings.Replace(pubsub.ChannelNameCompetitionDetails, "?", id, 1)
+	pubsub.PublishUpdate(channel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)

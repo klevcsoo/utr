@@ -20,7 +20,7 @@ func PubSubSocketController() fiber.Handler {
 	})
 }
 
-func GetAvailableWebSocketSpaces(ctx *fiber.Ctx) error {
+func GetAvailableWebSocketChannels(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).
-		JSON(utils.NewListResponseMessage(pubsub.GetRegisteredSpaceNames()))
+		JSON(utils.NewListResponseMessage(pubsub.GetRegisteredChannelNames()))
 }

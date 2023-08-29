@@ -20,7 +20,7 @@ func init() {
 	}
 	ini.ConnectDB(&config)
 
-	pubsub.CreateWebSocketSpaces()
+	pubsub.CreateWebSocketChannels()
 }
 
 func main() {
@@ -51,9 +51,9 @@ func registerRoutes(api *fiber.App) {
 	})
 
 	// WebSocket-related endpoints
-	api.Get("/pubsub/spaces",
+	api.Get("/pubsub/channels",
 		security.AuthenticatedAccess,
-		controllers.GetAvailableWebSocketSpaces)
+		controllers.GetAvailableWebSocketChannels)
 	api.Get("/pubsub/admin",
 		security.AdminAccess,
 		controllers.PubSubSocketController())

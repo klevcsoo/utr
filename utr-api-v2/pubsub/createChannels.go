@@ -8,11 +8,11 @@ import (
 	"utr-api-v2/utils"
 )
 
-func CreateWebSocketSpaces() {
+func CreateWebSocketChannels() {
 	const admin = security.AccessLevelAdmin
 
 	// competition list
-	RegisterSpace(SpaceNameCompetitionList, admin,
+	RegisterChannel(ChannelNameCompetitionList, admin,
 		func(IDs map[string]int) utils.ResponseMessage {
 			var competitions []models.Competition
 			err := ini.DB.Find(&competitions).Error
@@ -24,9 +24,9 @@ func CreateWebSocketSpaces() {
 		})
 
 	// competition details
-	RegisterSpace(SpaceNameCompetitionDetails, admin,
+	RegisterChannel(ChannelNameCompetitionDetails, admin,
 		func(IDs map[string]int) utils.ResponseMessage {
-			id := IDs[strings.Split(SpaceNameCompetitionDetails, "/")[0]]
+			id := IDs[strings.Split(ChannelNameCompetitionDetails, "/")[0]]
 
 			var competition models.Competition
 			err := ini.DB.
@@ -44,9 +44,9 @@ func CreateWebSocketSpaces() {
 		})
 
 	// race details
-	RegisterSpace(SpaceNameRaceDetails, admin,
+	RegisterChannel(ChannelNameRaceDetails, admin,
 		func(IDs map[string]int) utils.ResponseMessage {
-			id := IDs[strings.Split(SpaceNameRaceDetails, "/")[0]]
+			id := IDs[strings.Split(ChannelNameRaceDetails, "/")[0]]
 
 			var race models.Race
 			err := ini.DB.
@@ -62,7 +62,7 @@ func CreateWebSocketSpaces() {
 		})
 
 	// team list
-	RegisterSpace(SpaceNameTeamList, admin,
+	RegisterChannel(ChannelNameTeamList, admin,
 		func(IDs map[string]int) utils.ResponseMessage {
 			var teams []models.Team
 			err := ini.DB.Find(&teams).Error
@@ -74,9 +74,9 @@ func CreateWebSocketSpaces() {
 		})
 
 	// team details
-	RegisterSpace(SpaceNameTeamDetails, admin,
+	RegisterChannel(ChannelNameTeamDetails, admin,
 		func(IDs map[string]int) utils.ResponseMessage {
-			id := IDs[strings.Split(SpaceNameTeamDetails, "/")[0]]
+			id := IDs[strings.Split(ChannelNameTeamDetails, "/")[0]]
 
 			var team models.Team
 			err := ini.DB.
@@ -91,9 +91,9 @@ func CreateWebSocketSpaces() {
 		})
 
 	// swimmer details
-	RegisterSpace(SpaceNameSwimmerDetails, admin,
+	RegisterChannel(ChannelNameSwimmerDetails, admin,
 		func(IDs map[string]int) utils.ResponseMessage {
-			id := IDs[strings.Split(SpaceNameSwimmerDetails, "/")[0]]
+			id := IDs[strings.Split(ChannelNameSwimmerDetails, "/")[0]]
 
 			var swimmer models.Swimmer
 			err := ini.DB.Joins("Sex").First(&swimmer, id).Error

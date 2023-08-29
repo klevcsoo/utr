@@ -30,10 +30,10 @@ func CreateRace(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to space
-	space := strings.Replace(
-		pubsub.SpaceNameCompetitionDetails, "?", strconv.Itoa(competitionID), 1)
-	pubsub.PublishUpdate(space)
+	// publish changes to channel
+	channel := strings.Replace(
+		pubsub.ChannelNameCompetitionDetails, "?", strconv.Itoa(competitionID), 1)
+	pubsub.PublishUpdate(channel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)
@@ -100,13 +100,13 @@ func EditRaceDetails(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to spaces
-	competitionSpace := strings.Replace(
-		pubsub.SpaceNameCompetitionDetails, "?", competitionID, 1)
-	pubsub.PublishUpdate(competitionSpace)
-	raceSpace := strings.Replace(
-		pubsub.SpaceNameRaceDetails, "?", raceID, 1)
-	pubsub.PublishUpdate(raceSpace)
+	// publish changes to channels
+	competitionChannel := strings.Replace(
+		pubsub.ChannelNameCompetitionDetails, "?", competitionID, 1)
+	pubsub.PublishUpdate(competitionChannel)
+	raceChannel := strings.Replace(
+		pubsub.ChannelNameRaceDetails, "?", raceID, 1)
+	pubsub.PublishUpdate(raceChannel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)
@@ -125,13 +125,13 @@ func DeleteRace(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// publish changes to spaces
-	competitionSpace := strings.Replace(
-		pubsub.SpaceNameCompetitionDetails, "?", competitionID, 1)
-	pubsub.PublishUpdate(competitionSpace)
-	raceSpace := strings.Replace(
-		pubsub.SpaceNameRaceDetails, "?", raceID, 1)
-	pubsub.PublishUpdate(raceSpace)
+	// publish changes to channels
+	competitionChannel := strings.Replace(
+		pubsub.ChannelNameCompetitionDetails, "?", competitionID, 1)
+	pubsub.PublishUpdate(competitionChannel)
+	raceChannel := strings.Replace(
+		pubsub.ChannelNameRaceDetails, "?", raceID, 1)
+	pubsub.PublishUpdate(raceChannel)
 
 	// respond
 	return ctx.SendStatus(fiber.StatusOK)
