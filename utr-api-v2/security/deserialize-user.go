@@ -11,6 +11,8 @@ import (
 )
 
 func deserializeUser(ctx *fiber.Ctx, accessLevel int) error {
+	log.Info("Deserializing user...")
+
 	var tokenString string
 	authorization := ctx.Get("Authorization")
 	if strings.HasPrefix(authorization, "Bearer ") {
@@ -56,6 +58,7 @@ func deserializeUser(ctx *fiber.Ctx, accessLevel int) error {
 	}
 
 	ctx.Locals("user", models.FilterUserRecord(&user))
+	log.Infof("User deserialized: %s (%s)", user.Username, user.ID.String())
 
 	return ctx.Next()
 }

@@ -1,186 +1,135 @@
 package controllers
 
 import (
-	"gorm.io/datatypes"
-	"net/url"
-	"strconv"
+	"github.com/gofiber/fiber/v2"
+	"strings"
 	"time"
 	"utr-api-v2/ini"
 	"utr-api-v2/models"
 	"utr-api-v2/pubsub"
+	"utr-api-v2/schemas"
+	"utr-api-v2/utils"
 )
 
-func AllCompetitionsSocket(channel *pubsub.Channel, client *pubsub.Client) {
-	createCompetitionsMessage := func() *pubsub.Message {
-		var competitions []models.Competition
-		err := ini.DB.Find(&competitions).Error
-		if err != nil {
-			return &pubsub.Message{
-				Type:    pubsub.MessageTypeError,
-				Content: err.Error(),
-			}
-		} else {
-			return &pubsub.Message{
-				Type:    pubsub.MessageTypeList,
-				Content: competitions,
-			}
-		}
+// GetCompetitionList handles the following endpoint: GET competitions/
+func GetCompetitionList(ctx *fiber.Ctx) error {
+	// fetch list
+	var competitions []models.Competition
+	err := ini.DB.Find(&competitions).Error
+	if err != nil {
+		return ctx.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	// send initial data
-	client.Whisper(createCompetitionsMessage())
-
-	client.OnMessage(func(payload url.Values) {
-		if !payload.Has("command") {
-			client.WhisperError("Missing command")
-			return
-		}
-
-		switch payload.Get("command") {
-		case "create":
-			date, err := time.Parse(time.DateOnly, payload.Get("date"))
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
-
-			competition := &models.Competition{
-				Name:     payload.Get("name"),
-				Location: payload.Get("location"),
-				Date:     datatypes.Date(date),
-			}
-
-			err = ini.DB.Create(competition).Error
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
-		case "delete":
-			if !payload.Has("id") {
-				client.WhisperError("Missing ID")
-				return
-			}
-
-			err := ini.DB.Where("id = ?").Delete(&models.Competition{}).Error
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
-		}
-
-		// send modified data back
-		channel.Broadcast(createCompetitionsMessage())
-	})
+	return ctx.Status(fiber.StatusOK).JSON(utils.NewListResponseMessage(competitions))
 }
 
-func CompetitionDetailsSocket(channel *pubsub.Channel, client *pubsub.Client) {
-	id, err := strconv.Atoi(client.Connection.Params("id"))
+// CreateCompetition handles the following endpoint: PUT competitions/
+func CreateCompetition(ctx *fiber.Ctx) error {
+	// parse payload
+	payload := ctx.Locals("payload").(schemas.CreateCompetitionRequest)
+
+	// create competition
+	competition := models.NewCompetition(payload)
+	err := ini.DB.Create(&competition).Error
 	if err != nil {
-		client.WhisperError("Failed to parse ID: " + err.Error())
-		return
+		return ctx.Status(fiber.StatusInternalServerError).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	createCompetitionMessage := func() *pubsub.Message {
-		var competition models.Competition
-		err := ini.DB.
-			Preload("Races").
-			Preload("Races.SwimmingStyle").
-			Where("id = ?", id).
-			First(&competition).Error
+	// publish update and respond
+	pubsub.PublishUpdate(pubsub.ChannelNameCompetitionList)
+	return ctx.SendStatus(fiber.StatusCreated)
+}
 
-		if err != nil {
-			return &pubsub.Message{
-				Type:    pubsub.MessageTypeError,
-				Content: err.Error(),
-			}
-		} else {
-			return &pubsub.Message{
-				Type:    pubsub.MessageTypeObject,
-				Content: competition,
-			}
-		}
+// GetCompetitionDetails handles the following endpoint: GET competitions/:id
+func GetCompetitionDetails(ctx *fiber.Ctx) error {
+	// get competition ID
+	id := ctx.Params("id")
+
+	// fetch details
+	var competition models.Competition
+	err := ini.DB.
+		Preload("Races").
+		Preload("Races.SwimmingStyle").
+		Where("id = ?", id).
+		First(&competition).Error
+
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// send initial data
-	client.Whisper(createCompetitionMessage())
+	// respond
+	return ctx.Status(fiber.StatusOK).
+		JSON(utils.NewObjectResponseMessage(competition))
+}
 
-	client.OnMessage(func(payload url.Values) {
-		if !payload.Has("command") {
-			client.WhisperError("Missing command")
-			return
-		}
+// EditCompetitionDetails handles the following endpoint: PATCH competitions/:id
+func EditCompetitionDetails(ctx *fiber.Ctx) error {
+	// get competition ID
+	id := ctx.Params("id")
 
-		switch payload.Get("command") {
-		case "edit":
-			var competition models.Competition
-			err := ini.DB.Where("id = ?", id).First(&competition).Error
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
+	// parse request body
+	payload := ctx.Locals("payload").(schemas.EditCompetitionRequest)
 
-			if payload.Has("name") {
-				competition.Name = payload.Get("name")
-			}
-			if payload.Has("location") {
-				competition.Location = payload.Get("location")
-			}
-			if payload.Has("date") {
-				date, err := time.Parse(time.DateOnly, payload.Get("date"))
-				if err != nil {
-					client.WhisperError(err.Error())
-					return
-				}
+	// fetch competition
+	var competition models.Competition
+	err := ini.DB.
+		Preload("Races").
+		Preload("Races.SwimmingStyle").
+		Where("id = ?", id).
+		First(&competition).Error
 
-				competition.Date = datatypes.Date(date)
-			}
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
 
-			err = ini.DB.Save(&competition).Error
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
-		case "createRace":
-			length, err := strconv.Atoi(payload.Get("length"))
-			if err != nil {
-				client.WhisperError("Failed to parse 'length': " + err.Error())
-				return
-			}
+	// edit fields
+	if payload.Name != "" {
+		competition.Name = payload.Name
+	}
+	if payload.Location != "" {
+		competition.Location = payload.Location
+	}
+	if payload.Date != "" {
+		date, _ := time.Parse(time.DateOnly, payload.Date)
+		competition.Date = date
+	}
 
-			var relay int
-			if payload.Has("relay") {
-				relay, err = strconv.Atoi(payload.Get("relay"))
-				if err != nil {
-					client.WhisperError("Failed to parse 'relay': " + err.Error())
-					return
-				}
-			}
+	// save object
+	err = ini.DB.Save(&competition).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
 
-			race := &models.Race{
-				Length:          length,
-				Relay:           relay,
-				SwimmingStyleID: payload.Get("style"),
-				CompetitionID:   id,
-			}
+	// publish changes to channel
+	pubsub.PublishUpdate(pubsub.ChannelNameCompetitionList)
+	channel := strings.Replace(pubsub.ChannelNameCompetitionDetails, "?", id, 1)
+	pubsub.PublishUpdate(channel)
 
-			err = ini.DB.Create(&race).Error
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
-		case "deleteRace":
-			err := ini.DB.
-				Where("id = ?", payload.Get("race")).
-				Delete(&models.Race{}).
-				Error
+	// respond
+	return ctx.SendStatus(fiber.StatusOK)
+}
 
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
-		}
+// DeleteCompetition handles the following endpoint: DELETE competitions/:id
+func DeleteCompetition(ctx *fiber.Ctx) error {
+	// get competition ID
+	id := ctx.Params("id")
 
-		// send back modified data
-		channel.Broadcast(createCompetitionMessage())
-	})
+	// delete object
+	err := ini.DB.Where("id = ?", id).Delete(&models.Competition{}).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
+
+	// publish changes
+	pubsub.PublishUpdate(pubsub.ChannelNameCompetitionList)
+	channel := strings.Replace(pubsub.ChannelNameCompetitionDetails, "?", id, 1)
+	pubsub.PublishUpdate(channel)
+
+	// respond
+	return ctx.SendStatus(fiber.StatusOK)
 }

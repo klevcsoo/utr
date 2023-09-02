@@ -2,46 +2,109 @@ package pubsub
 
 import (
 	"github.com/gofiber/fiber/v2/log"
+	"strconv"
+	"strings"
+	"utr-api-v2/utils"
 )
 
 type Channel struct {
-	clients []*Client
+	Name              string
+	AccessLevelNeeded int
+	handler           func(map[string]int) utils.ResponseMessage
 }
 
-func (channel *Channel) Broadcast(message *Message) {
-	for _, client := range channel.clients {
-		client.Whisper(message)
+var clients = make(map[string]Client)
+var channels = make(map[string]Channel)
+
+func RegisterClient(client *Client) {
+	clients[client.ID.String()] = *client
+	client.listen()
+}
+
+func UnregisterClient(client *Client) {
+	id := client.ID.String()
+	if _, exists := clients[id]; exists {
+		delete(clients, id)
 	}
 }
 
-func (channel *Channel) register(client *Client) {
-	channel.clients = append(channel.clients, client)
+func RegisterChannel(
+	name string, access int, handler func(IDs map[string]int) utils.ResponseMessage,
+) {
+	channel := Channel{
+		Name:              name,
+		AccessLevelNeeded: access,
+		handler:           handler,
+	}
+
+	channels[channel.Name] = channel
 }
 
-func (channel *Channel) unregister(client *Client) {
-	for i, c := range channel.clients {
-		if c == client {
-			channel.clients = append(
-				(channel.clients)[:i],
-				(channel.clients)[i+1:]...,
-			)
+func PublishUpdate(channelName string) {
+	routeName, ids, err := deconstructChannelName(channelName)
+	if err != nil {
+		log.Warnf("failed to publish: invalid ID, %s", err.Error())
+		return
+	}
+
+	channel, exists := channels[routeName]
+	if !exists {
+		log.Warnf("failed to publish: channel does not exist (%s)", routeName)
+		return
+	}
+
+	message := channel.handler(ids)
+
+	for _, client := range clients {
+		if client.isSubscribed(channelName) {
+			client.whisper(&message)
 		}
 	}
 
-	if err := client.Connection.Close(); err != nil {
-		log.Warnf("Failed to close connection: %s", err.Error())
-	}
+	log.Infof("Published update to channel : %s", routeName)
 }
 
-var channels = make(map[string]*Channel)
+func GetRegisteredChannelNames() []string {
+	var names []string
+	for k := range channels {
+		names = append(names, k)
+	}
+	return names
+}
 
-func GetChannel(name string) *Channel {
-	channel := channels[name]
-	if channel == nil {
-		channels[name] = &Channel{
-			clients: make([]*Client, 0),
+func deconstructChannelName(name string) (string, map[string]int, error) {
+	slices := strings.Split(name, "/")
+	ids := make(map[string]int)
+	for i := 0; i < len(slices); i++ {
+		if i%2 == 0 {
+			ids[slices[i]] = -1
+		} else if slices[i] == "" {
+			ids[slices[i-1]] = -1
+		} else {
+			id, err := strconv.Atoi(slices[i])
+			if err != nil {
+				return "", nil, err
+			}
+
+			ids[slices[i-1]] = id
 		}
 	}
 
-	return channels[name]
+	route := name
+	for k, v := range ids {
+		oldPair := k + "/" + strconv.Itoa(v)
+		newPair := k + "/?"
+		route = strings.Replace(route, oldPair, newPair, -1)
+	}
+
+	return route, ids, nil
 }
+
+const (
+	ChannelNameTeamList           = "team/"
+	ChannelNameTeamDetails        = "team/?"
+	ChannelNameSwimmerDetails     = "swimmer/"
+	ChannelNameCompetitionList    = "competition/"
+	ChannelNameCompetitionDetails = "competition/?"
+	ChannelNameRaceDetails        = "race/?"
+)

@@ -14,7 +14,7 @@ import (
 	"utr-api-v2/utils"
 )
 
-func AuthCreateNewUser(ctx *fiber.Ctx) error {
+func CreateUser(ctx *fiber.Ctx) error {
 	var payload *schemas.NewUserRequest
 
 	if err := ctx.BodyParser(&payload); err != nil {
@@ -48,7 +48,7 @@ func AuthCreateNewUser(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusCreated)
 }
 
-func AuthLogUserIn(ctx *fiber.Ctx) error {
+func LogUserIn(ctx *fiber.Ctx) error {
 	var payload *schemas.LoginRequest
 
 	if err := ctx.BodyParser(&payload); err != nil {
@@ -99,7 +99,7 @@ func AuthLogUserIn(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).Send([]byte(tokenString))
 }
 
-func AuthLogUserOut(ctx *fiber.Ctx) error {
+func LogUserOut(ctx *fiber.Ctx) error {
 	expired := time.Now().Add(-time.Hour * 24)
 	ctx.Cookie(&fiber.Cookie{
 		Name:    "token",
@@ -110,12 +110,12 @@ func AuthLogUserOut(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusOK)
 }
 
-func AuthGetMe(ctx *fiber.Ctx) error {
+func GetMe(ctx *fiber.Ctx) error {
 	user := ctx.Locals("user").(*schemas.UserPublicData)
 	return ctx.Status(fiber.StatusOK).JSON(user)
 }
 
-func AuthGetAllUsers(ctx *fiber.Ctx) error {
+func GetUserList(ctx *fiber.Ctx) error {
 	var users *[]models.User
 	ini.DB.Find(&users)
 
@@ -124,7 +124,7 @@ func AuthGetAllUsers(ctx *fiber.Ctx) error {
 	return ctx.Status(200).JSON(publicUsers)
 }
 
-func AuthGetUser(ctx *fiber.Ctx) error {
+func GetUser(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	if id == "" {
 		return ctx.SendStatus(fiber.StatusBadRequest)
@@ -136,7 +136,7 @@ func AuthGetUser(ctx *fiber.Ctx) error {
 	return ctx.Status(200).JSON(models.FilterUserRecord(&user))
 }
 
-func AuthDeleteUser(ctx *fiber.Ctx) error {
+func DeleteUser(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	if id == "" {
 		return ctx.SendStatus(fiber.StatusBadRequest)
@@ -147,7 +147,7 @@ func AuthDeleteUser(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusOK)
 }
 
-func AuthChangeUserPassword(ctx *fiber.Ctx) error {
+func ChangePassword(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	if id == "" {
 		return ctx.SendStatus(fiber.StatusBadRequest)
@@ -191,7 +191,7 @@ func AuthChangeUserPassword(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(200)
 }
 
-func AuthChangeUserAccessLevel(ctx *fiber.Ctx) error {
+func ChangeAccessLevel(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	if id == "" {
 		return ctx.SendStatus(fiber.StatusBadRequest)
@@ -215,7 +215,7 @@ func AuthChangeUserAccessLevel(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusOK)
 }
 
-func AuthChangeUserDisplayName(ctx *fiber.Ctx) error {
+func ChangeDisplayName(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	if id == "" {
 		return ctx.SendStatus(fiber.StatusBadRequest)

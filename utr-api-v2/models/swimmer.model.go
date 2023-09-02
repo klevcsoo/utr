@@ -1,6 +1,9 @@
 package models
 
-import "utr-api-v2/utils"
+import (
+	"utr-api-v2/schemas"
+	"utr-api-v2/utils"
+)
 
 type Swimmer struct {
 	utils.BaseModel
@@ -9,4 +12,13 @@ type Swimmer struct {
 	SexID       string `json:"-"`
 	Sex         *Sex   `json:"sex"`
 	YearOfBirth uint   `json:"yearOfBirth" gorm:"type:integer;not null"`
+}
+
+func NewSwimmer(teamID int, request schemas.CreateSwimmerRequest) Swimmer {
+	return Swimmer{
+		TeamID:      teamID,
+		Name:        request.Name,
+		YearOfBirth: request.YearOfBirth,
+		SexID:       request.Sex,
+	}
 }

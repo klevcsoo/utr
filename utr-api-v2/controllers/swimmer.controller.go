@@ -1,77 +1,135 @@
 package controllers
 
 import (
-	"net/url"
+	"github.com/gofiber/fiber/v2"
 	"strconv"
+	"strings"
 	"utr-api-v2/ini"
 	"utr-api-v2/models"
 	"utr-api-v2/pubsub"
+	"utr-api-v2/schemas"
+	"utr-api-v2/utils"
 )
 
-func SwimmerDetailsSocket(channel *pubsub.Channel, client *pubsub.Client) {
-	// parse swimmer ID
-	swimmerID := client.Connection.Params("id")
-
-	createSwimmerMessage := func() *pubsub.Message {
-		var swimmer models.Swimmer
-		err := ini.DB.Joins("Sex").First(&swimmer, swimmerID).Error
-
-		if err != nil {
-			return &pubsub.Message{
-				Type:    pubsub.MessageTypeError,
-				Content: err.Error(),
-			}
-		} else {
-			return &pubsub.Message{
-				Type:    pubsub.MessageTypeObject,
-				Content: swimmer,
-			}
-		}
+// CreateSwimmer handles the following endpoint: PUT /teams/:id/swimmers/
+func CreateSwimmer(ctx *fiber.Ctx) error {
+	teamID, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	// send initial data
-	client.Whisper(createSwimmerMessage())
+	// parse payload
+	payload := ctx.Locals("payload").(schemas.CreateSwimmerRequest)
 
-	client.OnMessage(func(payload url.Values) {
-		if !payload.Has("command") {
-			client.WhisperError("Missing command")
-			return
-		}
+	// create swimmer
+	swimmer := models.NewSwimmer(teamID, payload)
+	err = ini.DB.Create(&swimmer).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
 
-		switch payload.Get("command") {
-		case "edit":
-			var swimmer models.Swimmer
-			err := ini.DB.First(&swimmer, swimmerID).Error
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
+	// publish changes to channel
+	channel := strings.Replace(
+		pubsub.ChannelNameTeamDetails, "?", strconv.Itoa(teamID), 1)
+	pubsub.PublishUpdate(channel)
 
-			if payload.Has("name") {
-				swimmer.Name = payload.Get("name")
-			}
-			if payload.Has("yearOfBirth") {
-				yob, err := strconv.Atoi(payload.Get("yearOfBirth"))
-				if err != nil {
-					client.WhisperError("Failed to parse 'yearOfBirth': " + err.Error())
-					return
-				}
+	// respond
+	return ctx.SendStatus(fiber.StatusOK)
+}
 
-				swimmer.YearOfBirth = uint(yob)
-			}
-			if payload.Has("sex") {
-				swimmer.SexID = payload.Get("sex")
-			}
+// GetSwimmerDetails handles the following endpoint: GET /teams/:tid/swimmers/:sid
+func GetSwimmerDetails(ctx *fiber.Ctx) error {
+	// get swimmer ID
+	swimmerID := ctx.Params("sid")
 
-			err = ini.DB.Save(&swimmer).Error
-			if err != nil {
-				client.WhisperError(err.Error())
-				return
-			}
-		default:
-			return
-		}
+	// fetch details
+	var race models.Swimmer
+	err := ini.DB.Joins("Sex").First(&race, swimmerID).Error
 
-		channel.Broadcast(createSwimmerMessage())
-	})
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
+
+	// respond
+	return ctx.Status(fiber.StatusOK).
+		JSON(utils.NewObjectResponseMessage(race))
+}
+
+// EditSwimmerDetails handles the following endpoint: PATCH /teams/:tid/swimmers/:sid
+func EditSwimmerDetails(ctx *fiber.Ctx) error {
+	// parse team and swimmer ID
+	teamID := ctx.Params("tid")
+	swimmerID := ctx.Params("sid")
+
+	// parse request body
+	payload := ctx.Locals("payload").(schemas.EditSwimmerRequest)
+
+	// fetch details
+	var swimmer models.Swimmer
+	err := ini.DB.Joins("Sex").First(&swimmer, teamID).Error
+
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
+
+	// edit fields
+	if &payload.Name != nil {
+		swimmer.Name = payload.Name
+	}
+	if &payload.YearOfBirth != nil {
+		swimmer.YearOfBirth = payload.YearOfBirth
+	}
+	if &payload.Sex != nil {
+		swimmer.SexID = payload.Sex
+	}
+	if &payload.Team != nil {
+		swimmer.TeamID = payload.Team
+	}
+
+	// save object
+	err = ini.DB.Save(&swimmer).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
+
+	// publish changes to channels
+	teamChannel := strings.Replace(
+		pubsub.ChannelNameTeamDetails, "?", teamID, 1)
+	pubsub.PublishUpdate(teamChannel)
+	swimmerChannel := strings.Replace(
+		pubsub.ChannelNameSwimmerDetails, "?", swimmerID, 1)
+	pubsub.PublishUpdate(swimmerChannel)
+
+	// respond
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+// DeleteSwimmer handles the following endpoint: DELETE /teams/:tid/swimmers/:sid
+func DeleteSwimmer(ctx *fiber.Ctx) error {
+	// parse team and swimmer ID
+	teamID := ctx.Params("tid")
+	swimmerID := ctx.Params("tid")
+
+	// delete object
+	err := ini.DB.Where("id = ?", swimmerID).Delete(&models.Swimmer{}).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
+
+	// publish changes to channels
+	teamChannels := strings.Replace(
+		pubsub.ChannelNameTeamDetails, "?", teamID, 1)
+	pubsub.PublishUpdate(teamChannels)
+	swimmerChannels := strings.Replace(
+		pubsub.ChannelNameSwimmerDetails, "?", swimmerID, 1)
+	pubsub.PublishUpdate(swimmerChannels)
+
+	// respond
+	return ctx.SendStatus(fiber.StatusOK)
 }
