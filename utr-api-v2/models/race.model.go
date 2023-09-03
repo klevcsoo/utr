@@ -21,10 +21,7 @@ func NewRace(competitionID int, request schemas.CreateRaceRequest) Race {
 		CompetitionID:   competitionID,
 		Length:          request.Length,
 		SwimmingStyleID: request.SwimmingStyle,
-	}
-
-	if request.RelayEnabled {
-		race.Relay = request.Relay
+		Relay:           request.Relay,
 	}
 
 	return race

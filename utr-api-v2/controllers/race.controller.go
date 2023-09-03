@@ -73,7 +73,6 @@ func EditRaceDetails(ctx *fiber.Ctx) error {
 	// fetch details
 	var race models.Race
 	err := ini.DB.
-		Joins("Competition").Joins("SwimmingStyle").Joins("Entries").
 		Where("\"races\".\"id\" = ?", raceID).First(&race).
 		Error
 
@@ -89,7 +88,7 @@ func EditRaceDetails(ctx *fiber.Ctx) error {
 	if payload.SwimmingStyle != "" {
 		race.SwimmingStyleID = payload.SwimmingStyle
 	}
-	if payload.RelayEnabled == true {
+	if payload.Relay != 0 {
 		race.Relay = payload.Relay
 	}
 
