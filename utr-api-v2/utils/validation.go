@@ -1,9 +1,11 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"strings"
 )
 
 var validate = validator.New()
@@ -39,8 +41,11 @@ func RequestBodyValidation[T interface{}](_ T) fiber.Handler {
 		}
 		errors := ValidateStruct(&payload)
 		if errors != nil {
+			errorText := strings.Join(Map(&errors, func(t **StructValidationErrorResponse) string {
+				return fmt.Sprintf("FIELD = %s, TAG = %s", (*t).Field, (*t).Tag)
+			}), ";")
 			return ctx.Status(fiber.StatusBadRequest).
-				JSON(NewErrorResponseMessage("failed to validate request body"))
+				JSON(NewErrorResponseMessage(errorText))
 		}
 
 		ctx.Locals("payload", payload)
