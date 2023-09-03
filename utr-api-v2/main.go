@@ -159,6 +159,11 @@ func registerRoutes(api *fiber.App) {
 		security.AdminAccess,
 		controllers.DeleteSwimmer)
 
+	// support endpoints
+	api.Get("/support/env",
+		security.AdminAccess,
+		controllers.GetEnvironmentVariables)
+
 	// Not-Found endpoint
 	api.All("*", controllers.NotFoundController)
 }
