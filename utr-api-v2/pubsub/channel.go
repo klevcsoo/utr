@@ -107,4 +107,5 @@ const (
 	ChannelNameCompetitionList    = "competition/"
 	ChannelNameCompetitionDetails = "competition/?"
 	ChannelNameRaceDetails        = "race/?"
+	ChannelNameEntryDetails       = "entry/?"
 )
