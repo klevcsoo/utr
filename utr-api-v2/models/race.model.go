@@ -13,7 +13,7 @@ type Race struct {
 	SwimmingStyleID string         `json:"-" gorm:"not null"`
 	SwimmingStyle   *SwimmingStyle `json:"swimmingStyle"`
 	Relay           int            `json:"relay" gorm:"type:smallint"`
-	Entries         *[]*Entry      `json:"entries" gorm:"foreignKey:RaceID"`
+	Entries         []*Entry       `json:"entries" gorm:"foreignKey:RaceID"`
 }
 
 func NewRace(competitionID int, request schemas.CreateRaceRequest) Race {

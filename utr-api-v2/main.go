@@ -93,7 +93,7 @@ func registerRoutes(api *fiber.App) {
 		security.AdminAccess,
 		controllers.ChangeDisplayName)
 
-	// competition and race endpoints
+	// competition, race and entry endpoints
 	api.Get("/competitions/",
 		security.AdminAccess,
 		controllers.GetCompetitionList)
@@ -125,6 +125,20 @@ func registerRoutes(api *fiber.App) {
 	api.Delete("/competitions/:cid/races/:rid",
 		security.AdminAccess,
 		controllers.DeleteRace)
+	api.Put("/competitions/:cid/races/:rid/entries/",
+		security.AdminAccess,
+		utils.RequestBodyValidation(schemas.CreateEntryRequest{}),
+		controllers.CreateEntry)
+	api.Get("/competitions/:cid/races/:rid/entries/:eid",
+		security.AdminAccess,
+		controllers.GetEntryDetails)
+	api.Patch("/competitions/:cid/races/:rid/entries/:eid",
+		security.AdminAccess,
+		utils.RequestBodyValidation(schemas.EditEntryRequest{}),
+		controllers.EditEntryDetails)
+	api.Delete("/competitions/:cid/races/:rid/entries/:eid",
+		security.AdminAccess,
+		controllers.DeleteEntry)
 
 	// team and swimmer endpoints
 	api.Get("/teams/",

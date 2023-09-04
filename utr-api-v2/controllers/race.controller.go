@@ -47,7 +47,7 @@ func GetRaceDetails(ctx *fiber.Ctx) error {
 	// fetch details
 	var race models.Race
 	err := ini.DB.
-		Joins("Competition").Joins("SwimmingStyle").Joins("Entries").
+		Joins("Competition").Joins("SwimmingStyle").
 		Where("\"races\".\"id\" = ?", raceID).First(&race).
 		Error
 
@@ -55,6 +55,19 @@ func GetRaceDetails(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusNotFound).
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
+
+	// for some reason, trying to join "entries" to "races" results in
+	// panic: reflect: call of reflect.Value.Field on slice Value
+	// error. the issue for this is #77
+	var entries []*models.Entry
+	err = ini.DB.Where("race_id = ?", raceID).
+		Joins("Swimmer").Joins("Swimmer.Team").
+		Find(&entries).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).
+			JSON(utils.NewErrorResponseMessage(err.Error()))
+	}
+	race.Entries = entries
 
 	// respond
 	return ctx.Status(fiber.StatusOK).
