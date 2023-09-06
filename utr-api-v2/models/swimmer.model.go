@@ -18,8 +18,8 @@ type Swimmer struct {
 func NewSwimmer(teamID int, request schemas.CreateSwimmerRequest) Swimmer {
 	return Swimmer{
 		TeamID:      teamID,
-		Name:        request.Name,
-		YearOfBirth: request.YearOfBirth,
-		SexID:       request.Sex,
+		Name:        *request.Name,
+		YearOfBirth: *request.YearOfBirth,
+		SexID:       *request.Sex,
 	}
 }

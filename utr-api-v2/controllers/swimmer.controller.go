@@ -77,17 +77,17 @@ func EditSwimmerDetails(ctx *fiber.Ctx) error {
 	}
 
 	// edit fields
-	if &payload.Name != nil {
-		swimmer.Name = payload.Name
+	if payload.Name != nil {
+		swimmer.Name = *payload.Name
 	}
-	if &payload.YearOfBirth != nil {
-		swimmer.YearOfBirth = payload.YearOfBirth
+	if payload.YearOfBirth != nil {
+		swimmer.YearOfBirth = *payload.YearOfBirth
 	}
-	if &payload.Sex != nil {
-		swimmer.SexID = payload.Sex
+	if payload.Sex != nil {
+		swimmer.SexID = *payload.Sex
 	}
-	if &payload.Team != nil {
-		swimmer.TeamID = payload.Team
+	if payload.Team != nil {
+		swimmer.TeamID = *payload.Team
 	}
 
 	// save object

@@ -80,11 +80,11 @@ func EditTeamDetails(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	if &payload.Name != nil {
-		team.Name = payload.Name
+	if payload.Name != nil {
+		team.Name = *payload.Name
 	}
-	if &payload.City != nil {
-		team.City = payload.City
+	if payload.City != nil {
+		team.City = *payload.City
 	}
 
 	// save object

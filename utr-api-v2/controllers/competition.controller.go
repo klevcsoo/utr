@@ -86,14 +86,14 @@ func EditCompetitionDetails(ctx *fiber.Ctx) error {
 	}
 
 	// edit fields
-	if payload.Name != "" {
-		competition.Name = payload.Name
+	if payload.Name != nil {
+		competition.Name = *payload.Name
 	}
-	if payload.Location != "" {
-		competition.Location = payload.Location
+	if payload.Location != nil {
+		competition.Location = *payload.Location
 	}
-	if payload.Date != "" {
-		date, _ := time.Parse(time.DateOnly, payload.Date)
+	if payload.Date != nil {
+		date, _ := time.Parse(time.DateOnly, *payload.Date)
 		competition.Date = date
 	}
 

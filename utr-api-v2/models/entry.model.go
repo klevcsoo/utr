@@ -19,8 +19,8 @@ type Entry struct {
 func NewEntry(raceID int, request schemas.CreateEntryRequest) Entry {
 	return Entry{
 		RaceID:    raceID,
-		SwimmerID: request.Swimmer,
-		EntryTime: request.EntryTime,
+		SwimmerID: *request.Swimmer,
+		EntryTime: *request.EntryTime,
 		Present:   true,
 	}
 }

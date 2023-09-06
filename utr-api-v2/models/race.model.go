@@ -19,9 +19,9 @@ type Race struct {
 func NewRace(competitionID int, request schemas.CreateRaceRequest) Race {
 	race := Race{
 		CompetitionID:   competitionID,
-		Length:          request.Length,
-		SwimmingStyleID: request.SwimmingStyle,
-		Relay:           request.Relay,
+		Length:          *request.Length,
+		SwimmingStyleID: *request.SwimmingStyle,
+		Relay:           *request.Relay,
 	}
 
 	return race

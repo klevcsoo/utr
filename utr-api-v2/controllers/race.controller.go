@@ -95,14 +95,14 @@ func EditRaceDetails(ctx *fiber.Ctx) error {
 	}
 
 	// edit fields
-	if payload.Length != 0 {
-		race.Length = payload.Length
+	if payload.Length != nil {
+		race.Length = *payload.Length
 	}
-	if payload.SwimmingStyle != "" {
-		race.SwimmingStyleID = payload.SwimmingStyle
+	if payload.SwimmingStyle != nil {
+		race.SwimmingStyleID = *payload.SwimmingStyle
 	}
-	if payload.Relay != 0 {
-		race.Relay = payload.Relay
+	if payload.Relay != nil {
+		race.Relay = *payload.Relay
 	}
 
 	// save object

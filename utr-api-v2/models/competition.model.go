@@ -16,11 +16,11 @@ type Competition struct {
 }
 
 func NewCompetition(request schemas.CreateCompetitionRequest) Competition {
-	date, _ := time.Parse(time.DateOnly, request.Date)
+	date, _ := time.Parse(time.DateOnly, *request.Date)
 
 	return Competition{
-		Name:     request.Name,
-		Location: request.Location,
+		Name:     *request.Name,
+		Location: *request.Location,
 		Date:     date,
 	}
 }

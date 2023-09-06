@@ -83,14 +83,14 @@ func EditEntryDetails(ctx *fiber.Ctx) error {
 			JSON(utils.NewErrorResponseMessage(err.Error()))
 	}
 
-	if payload.EntryTime != 0 {
-		entry.EntryTime = payload.EntryTime
+	if payload.EntryTime != nil {
+		entry.EntryTime = *payload.EntryTime
 	}
-	if payload.TimeResult != 0 {
-		entry.TimeResult = payload.TimeResult
+	if payload.TimeResult != nil {
+		entry.TimeResult = *payload.TimeResult
 	}
-	if payload.Present != 0 {
-		entry.Present = payload.Present > 0
+	if payload.Present != nil {
+		entry.Present = *payload.Present
 	}
 
 	// save object

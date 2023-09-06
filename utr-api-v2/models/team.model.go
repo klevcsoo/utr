@@ -14,7 +14,7 @@ type Team struct {
 
 func NewTeam(request schemas.CreateTeamRequest) Team {
 	return Team{
-		Name: request.Name,
-		City: request.City,
+		Name: *request.Name,
+		City: *request.City,
 	}
 }
