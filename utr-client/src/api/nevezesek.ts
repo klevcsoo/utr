@@ -1,7 +1,8 @@
 import {AuthUser} from "../types/AuthUser";
-import {apiRequest, createAllStringObject} from "../lib/utils";
+import {createAllStringObject} from "../lib/utils";
 import {Nevezes} from "../types/model/Nevezes";
 import {NevezesCreationData} from "../types/request/NevezesCreationData";
+import {apiRequest} from "../lib/api/http";
 
 export async function getAllNevezesek(user: AuthUser, versenyszamId: number) {
     const params = new URLSearchParams({versenyszamId: String(versenyszamId)});

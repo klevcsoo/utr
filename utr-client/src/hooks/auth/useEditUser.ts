@@ -1,6 +1,6 @@
 import {useCallback} from "react";
 import {useAuthUser} from "./useAuthUser";
-import {editUser} from "../../api/auth";
+import {editUser} from "../../lib/api/auth";
 import {UserEditData} from "../../types/request/UserEditData";
 import {MessageResponse} from "../../types/response/MessageResponse";
 

@@ -1,6 +1,6 @@
 import {DisplayedUser} from "../../types/DisplayedUser";
 import {useEffect, useState} from "react";
-import {getAllUsers} from "../../api/auth";
+import {getAllUsers} from "../../lib/api/auth";
 import {useAuthUser} from "./useAuthUser";
 
 export function useUsersList(): DisplayedUser[] {

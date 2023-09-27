@@ -1,7 +1,8 @@
 import {AuthUser} from "../types/AuthUser";
-import {apiRequest, createAllStringObject} from "../lib/utils";
+import {createAllStringObject} from "../lib/utils";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {VersenyszamCreationData} from "../types/request/VersenyszamCreationData";
+import {apiRequest} from "../lib/api/http";
 
 export async function getVersenyszamokInVerseny(user: AuthUser, versenyId: number) {
     const params = new URLSearchParams({versenyId: String(versenyId)});

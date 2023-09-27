@@ -1,30 +1,27 @@
-import {serverURL} from "../lib/config";
-import {UserRole} from "../types/UserRole";
-import {LoginResponse} from "../types/response/LoginResponse";
-import {AuthUser} from "../types/AuthUser";
+import {serverURL} from "../config";
+import {UserRole} from "../../types/UserRole";
+import {AuthUser} from "../../types/AuthUser";
 import {createContext} from "react";
-import {apiRequest} from "../lib/utils";
-import {DisplayedUser} from "../types/DisplayedUser";
-import {UserCreationData} from "../types/request/UserCreationData";
-import {MessageResponse} from "../types/response/MessageResponse";
-import {UserEditData} from "../types/request/UserEditData";
+import {DisplayedUser} from "../../types/DisplayedUser";
+import {UserCreationData} from "../../types/request/UserCreationData";
+import {MessageResponse} from "../../types/response/MessageResponse";
+import {UserEditData} from "../../types/request/UserEditData";
+import {apiRequest} from "./http";
+import {UserRecord} from "../../types/UserRecord";
 
-const userRoleMap: { [key: string]: UserRole } = {
-    "ROLE_ADMIN": "admin",
-    "ROLE_ALLITOBIRO": "allitobiro",
-    "ROLE_IDOROGZITO": "idorogzito",
-    "ROLE_SPEAKER": "speaker",
-};
-
-let userDetails: AuthUser;
 export const AuthContext = createContext<{
-    user: AuthUser | undefined
-    login(username: string, password: string): Promise<AuthUser>
+    user: UserRecord | undefined
+    login(username: string, password: string): Promise<void>
     logout(): Promise<void>
-}>({user: undefined, login: login, logout: logout});
+}>({
+    user: undefined,
+    async login() {
+    },
+    logout: logout
+});
 
-export async function login(role: UserRole, password: string): Promise<AuthUser> {
-    const response: LoginResponse = await fetch(`${serverURL}/api/auth/login`, {
+export async function login(role: UserRole, password: string) {
+    const response = await fetch(`${serverURL}/api/v2/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -32,21 +29,23 @@ export async function login(role: UserRole, password: string): Promise<AuthUser>
         body: JSON.stringify({
             "username": role,
             "password": password
-        })
-    }).then(res => res.json());
+        }),
+        credentials: "include"
+    });
 
-    userDetails = {
-        displayName: response.displayName,
-        roles: response.roles.map(role => userRoleMap[role]),
-        id: response.id,
-        jwtToken: response.token
-    };
+    if (!response.ok) {
+        throw new Error(`Login failed ${await response.text()}`);
+    }
 
-    return {...userDetails};
+    return await response.json() as UserRecord;
 }
 
 export async function logout() {
     sessionStorage.removeItem("auth_data");
+}
+
+export async function getMe() {
+    return apiRequest<DisplayedUser>(null, "auth/users/me", "GET");
 }
 
 export async function getAllUsers(user: AuthUser) {
@@ -60,7 +59,7 @@ export async function getUser(user: AuthUser, id: number) {
 export async function createUser(user: AuthUser, data: UserCreationData) {
     const locale = window.localStorage.getItem("locale") ?? "hu";
 
-    const response: MessageResponse = await fetch(`${serverURL}/api/auth/users/`, {
+    const response: MessageResponse = await fetch(`${serverURL}/api/v2/auth/users/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -93,7 +92,7 @@ export async function editUser(user: AuthUser, id: number, options: UserEditData
 
     if (!!options.password) {
         const locale = window.localStorage.getItem("locale") ?? "hu";
-        const url = `${serverURL}/api/auth/users/${id}/password`;
+        const url = `${serverURL}/api/v2/auth/users/${id}/password`;
         const response: MessageResponse = await fetch(url, {
             method: "PATCH",
             headers: {

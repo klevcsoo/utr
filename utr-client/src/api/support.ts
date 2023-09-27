@@ -1,5 +1,5 @@
-import {apiRequest} from "../lib/utils";
 import {AuthUser} from "../types/AuthUser";
+import {apiRequest} from "../lib/api/http";
 
 export async function getApiServerEnvVars(user: AuthUser) {
     return apiRequest<{ [key: string]: string }>(user, "/support/env", "GET");

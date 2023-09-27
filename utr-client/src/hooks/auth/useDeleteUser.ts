@@ -1,5 +1,5 @@
 import {useCallback} from "react";
-import {deleteUser} from "../../api/auth";
+import {deleteUser} from "../../lib/api/auth";
 import {useAuthUser} from "./useAuthUser";
 import {MessageResponse} from "../../types/response/MessageResponse";
 

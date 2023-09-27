@@ -1,7 +1,8 @@
 import {AuthUser} from "../types/AuthUser";
 import {Uszo} from "../types/model/Uszo";
 import {MessageResponse} from "../types/response/MessageResponse";
-import {apiRequest, createAllStringObject} from "../lib/utils";
+import {createAllStringObject} from "../lib/utils";
+import {apiRequest} from "../lib/api/http";
 
 export async function getAllUszokInCsapat(
     user: AuthUser, csapatId: number

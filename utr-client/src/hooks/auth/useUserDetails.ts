@@ -1,7 +1,7 @@
 import {DisplayedUser} from "../../types/DisplayedUser";
 import {useEffect, useState} from "react";
 import {useAuthUser} from "./useAuthUser";
-import {getUser} from "../../api/auth";
+import {getUser} from "../../lib/api/auth";
 
 export function useUserDetails(userId: number): [DisplayedUser | undefined, boolean] {
     const user = useAuthUser()!;
