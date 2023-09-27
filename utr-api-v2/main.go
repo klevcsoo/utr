@@ -27,15 +27,15 @@ func main() {
 	app := fiber.New()
 	api := fiber.New()
 
-	app.Mount("/api/v2", api)
 	app.Use(logger.New())
 	api.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowHeaders:     "Origin, Content-Type, Accept",
-		AllowMethods:     "GET, POST, PUT",
+		AllowOrigins:     "http://localhost:3000,https://utr.hu",
+		AllowHeaders:     "Origin,Content-Type,Accept,Access-Control-Allow-Origin",
+		AllowMethods:     "GET,POST,PUT,PATCH,DELETE,OPTIONS",
 		AllowCredentials: true,
 	}))
+	app.Mount("/api/v2", api)
 
 	registerRoutes(api)
 

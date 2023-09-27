@@ -87,22 +87,23 @@ func LogUserIn(ctx *fiber.Ctx) error {
 	}
 
 	ctx.Cookie(&fiber.Cookie{
-		Name:     "token",
+		Name:     "UTR-AccessToken",
 		Value:    tokenString,
 		Path:     "/",
 		MaxAge:   config.JwtMaxAge * 60,
 		Secure:   false,
 		HTTPOnly: true,
 		Domain:   "localhost",
+		SameSite: "strict",
 	})
 
-	return ctx.Status(fiber.StatusOK).Send([]byte(tokenString))
+	return ctx.SendStatus(fiber.StatusOK)
 }
 
 func LogUserOut(ctx *fiber.Ctx) error {
 	expired := time.Now().Add(-time.Hour * 24)
 	ctx.Cookie(&fiber.Cookie{
-		Name:    "token",
+		Name:    "UTR-AccessToken",
 		Value:   "",
 		Expires: expired,
 	})

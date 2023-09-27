@@ -17,8 +17,8 @@ func deserializeUser(ctx *fiber.Ctx, accessLevel int) error {
 	authorization := ctx.Get("Authorization")
 	if strings.HasPrefix(authorization, "Bearer ") {
 		tokenString = strings.TrimPrefix(authorization, "Bearer ")
-	} else if ctx.Cookies("token") != "" {
-		tokenString = ctx.Cookies("token")
+	} else if ctx.Cookies("UTR-AccessToken") != "" {
+		tokenString = ctx.Cookies("UTR-AccessToken")
 	}
 
 	if tokenString == "" {
