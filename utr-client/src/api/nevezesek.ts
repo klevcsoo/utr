@@ -1,28 +1,27 @@
-import {AuthUser} from "../types/AuthUser";
 import {createAllStringObject} from "../lib/utils";
 import {Nevezes} from "../types/model/Nevezes";
 import {NevezesCreationData} from "../types/request/NevezesCreationData";
 import {apiRequest} from "../lib/api/http";
 
-export async function getAllNevezesek(user: AuthUser, versenyszamId: number) {
+export async function getAllNevezesek(versenyszamId: number) {
     const params = new URLSearchParams({versenyszamId: String(versenyszamId)});
-    return apiRequest<Nevezes[]>(user, `/nevezesek/?${params}`, "GET");
+    return apiRequest<Nevezes[]>(`/nevezesek/?${params}`, "GET");
 }
 
-export async function getNevezes(user: AuthUser, id: number) {
-    return await apiRequest<Nevezes>(user, `/nevezesek/${id}`, "GET");
+export async function getNevezes(id: number) {
+    return await apiRequest<Nevezes>(`/nevezesek/${id}`, "GET");
 }
 
-export async function createNevezes(user: AuthUser, data: NevezesCreationData) {
+export async function createNevezes(data: NevezesCreationData) {
     const params = new URLSearchParams(createAllStringObject(data));
-    return apiRequest(user, `/nevezesek/?${params}`, "PUT");
+    return apiRequest(`/nevezesek/?${params}`, "PUT");
 }
 
-export async function editNevezes(user: AuthUser, id: number, data: Partial<NevezesCreationData>) {
+export async function editNevezes(id: number, data: Partial<NevezesCreationData>) {
     const params = new URLSearchParams(createAllStringObject(data));
-    return apiRequest(user, `/nevezesek/${id}?${params}`, "PATCH");
+    return apiRequest(`/nevezesek/${id}?${params}`, "PATCH");
 }
 
-export async function deleteNevezes(user: AuthUser, id: number) {
-    return apiRequest(user, `/nevezesek/${id}`, "DELETE");
+export async function deleteNevezes(id: number) {
+    return apiRequest(`/nevezesek/${id}`, "DELETE");
 }

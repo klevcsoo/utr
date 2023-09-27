@@ -1,6 +1,5 @@
 import {serverURL} from "../config";
 import {UserRole} from "../../types/UserRole";
-import {AuthUser} from "../../types/AuthUser";
 import {createContext} from "react";
 import {DisplayedUser} from "../../types/DisplayedUser";
 import {UserCreationData} from "../../types/request/UserCreationData";
@@ -9,6 +8,7 @@ import {UserEditData} from "../../types/request/UserEditData";
 import {apiRequest} from "./http";
 import {UserRecord} from "../../types/UserRecord";
 
+// noinspection JSUnusedGlobalSymbols
 export const
     ACCESS_LEVEL_SPEAKER = 1,
     ACCESS_LEVEL_IDOROGZITO = 2,
@@ -51,25 +51,24 @@ export async function logout() {
 }
 
 export async function getMe() {
-    return apiRequest<DisplayedUser>(null, "auth/users/me", "GET");
+    return apiRequest<DisplayedUser>("auth/users/me", "GET");
 }
 
-export async function getAllUsers(user: AuthUser) {
-    return apiRequest<DisplayedUser[]>(user, "/auth/users/", "GET");
+export async function getAllUsers() {
+    return apiRequest<DisplayedUser[]>("/auth/users/", "GET");
 }
 
-export async function getUser(user: AuthUser, id: number) {
-    return apiRequest<DisplayedUser>(user, `/auth/users/${id}`, "GET");
+export async function getUser(id: number) {
+    return apiRequest<DisplayedUser>(`/auth/users/${id}`, "GET");
 }
 
-export async function createUser(user: AuthUser, data: UserCreationData) {
+export async function createUser(data: UserCreationData) {
     const locale = window.localStorage.getItem("locale") ?? "hu";
 
     const response: MessageResponse = await fetch(`${serverURL}/api/v2/auth/users/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authentication": `Bearer ${user.jwtToken}`,
             "Accept-Language": locale
         },
         body: JSON.stringify(data)
@@ -78,22 +77,22 @@ export async function createUser(user: AuthUser, data: UserCreationData) {
     return response;
 }
 
-export async function deleteUser(user: AuthUser, id: number) {
-    return apiRequest(user, `/auth/users/${id}`, "DELETE");
+export async function deleteUser(id: number) {
+    return apiRequest(`/auth/users/${id}`, "DELETE");
 }
 
-export async function editUser(user: AuthUser, id: number, options: UserEditData) {
+export async function editUser(id: number, options: UserEditData) {
     const messages: MessageResponse[] = [];
 
     if (!!options.roles) {
         const params = new URLSearchParams();
         options.roles.forEach(role => params.append("role", role));
-        messages.push(await apiRequest(user, `/auth/users/${id}/roles?${params}`, "PATCH"));
+        messages.push(await apiRequest(`/auth/users/${id}/roles?${params}`, "PATCH"));
     }
 
     if (!!options.displayName) {
         const params = new URLSearchParams({displayName: options.displayName});
-        messages.push(await apiRequest(user, `/auth/users/${id}/display-name?${params}`, "PATCH"));
+        messages.push(await apiRequest(`/auth/users/${id}/display-name?${params}`, "PATCH"));
     }
 
     if (!!options.password) {
@@ -103,7 +102,6 @@ export async function editUser(user: AuthUser, id: number, options: UserEditData
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "Authentication": `Bearer ${user.jwtToken}`,
                 "Accept-Language": locale
             },
             body: JSON.stringify(options.password)

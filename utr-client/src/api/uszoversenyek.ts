@@ -1,49 +1,43 @@
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {createAllStringObject} from "../lib/utils";
-import {AuthUser} from "../types/AuthUser";
 import {MessageResponse} from "../types/response/MessageResponse";
 import {apiRequest} from "../lib/api/http";
 
-export async function getAllUszoversenyekList(user: AuthUser): Promise<Uszoverseny[]> {
-    const data = await apiRequest<Uszoverseny[]>(user, "/uszoversenyek/", "GET");
+export async function getAllUszoversenyekList(): Promise<Uszoverseny[]> {
+    const data = await apiRequest<Uszoverseny[]>("/uszoversenyek/", "GET");
     for (const verseny of data) {
         verseny.datum = new Date(verseny.datum);
     }
     return data;
 }
 
-export async function getUszoverseny(user: AuthUser, id: number): Promise<Uszoverseny> {
-    const data = await apiRequest<Uszoverseny>(user, `/uszoversenyek/${id}`, "GET");
+export async function getUszoverseny(id: number): Promise<Uszoverseny> {
+    const data = await apiRequest<Uszoverseny>(`/uszoversenyek/${id}`, "GET");
     data.datum = new Date(data.datum);
     return data;
 }
 
-export async function createUszoverseny(
-    user: AuthUser, data: Omit<Uszoverseny, "id">
-): Promise<MessageResponse> {
+export async function createUszoverseny(data: Omit<Uszoverseny, "id">): Promise<MessageResponse> {
     const params = new URLSearchParams(createAllStringObject(data));
-    return apiRequest<MessageResponse>(user, `/uszoversenyek/?${params}`, "PUT");
+    return apiRequest<MessageResponse>(`/uszoversenyek/?${params}`, "PUT");
 }
 
 export async function editUszoverseny(
-    user: AuthUser, id: number, data: Partial<Omit<Uszoverseny, "id">>
-): Promise<MessageResponse> {
+    id: number, data: Partial<Omit<Uszoverseny, "id">>
+):
+    Promise<MessageResponse> {
     const params = new URLSearchParams(createAllStringObject(data));
-    return apiRequest(user, `/uszoversenyek/${id}?${params}`, "PATCH");
+    return apiRequest(`/uszoversenyek/${id}?${params}`, "PATCH");
 }
 
-export async function deleteUszoverseny(
-    user: AuthUser, id: number
-): Promise<MessageResponse> {
-    return apiRequest(user, `/uszoversenyek/${id}`, "DELETE");
+export async function deleteUszoverseny(id: number): Promise<MessageResponse> {
+    return apiRequest(`/uszoversenyek/${id}`, "DELETE");
 }
 
-export async function openUszoverseny(
-    user: AuthUser, id: number
-): Promise<MessageResponse> {
-    return apiRequest(user, `/uszoversenyek/${id}/megnyitas`, "POST");
+export async function openUszoverseny(id: number): Promise<MessageResponse> {
+    return apiRequest(`/uszoversenyek/${id}/megnyitas`, "POST");
 }
 
-export async function closeUszoverseny(user: AuthUser): Promise<MessageResponse> {
-    return apiRequest(user, "/nyitott/lezaras", "POST");
+export async function closeUszoverseny(): Promise<MessageResponse> {
+    return apiRequest("/nyitott/lezaras", "POST");
 }

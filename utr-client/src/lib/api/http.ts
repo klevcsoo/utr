@@ -1,10 +1,8 @@
 import {MessageResponse} from "../../types/response/MessageResponse";
-import {AuthUser} from "../../types/AuthUser";
 import {artificialAPIDelay, serverURL} from "../config";
 import {sleep} from "../utils";
 
 export async function apiRequest<T extends object = MessageResponse>(
-    _user: AuthUser | null,
     path: string,
     method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 ): Promise<T> {
