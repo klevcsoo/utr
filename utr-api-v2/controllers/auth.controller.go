@@ -97,7 +97,8 @@ func LogUserIn(ctx *fiber.Ctx) error {
 		SameSite: "strict",
 	})
 
-	return ctx.SendStatus(fiber.StatusOK)
+	userRecord := models.FilterUserRecord(&user)
+	return ctx.Status(fiber.StatusOK).JSON(userRecord)
 }
 
 func LogUserOut(ctx *fiber.Ctx) error {

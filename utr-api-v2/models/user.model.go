@@ -20,6 +20,7 @@ func FilterUserRecord(user *User) *schemas.UserPublicData {
 	return &schemas.UserPublicData{
 		ID:          *user.ID,
 		Username:    user.Username,
+		DisplayName: user.DisplayName,
 		AccessLevel: user.AccessLevel,
 		CreatedAt:   *user.CreatedAt,
 		UpdatedAt:   *user.UpdatedAt,
