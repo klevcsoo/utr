@@ -5,7 +5,6 @@ import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DateInput} from "../components/inputs/DateInput";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
-import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {DestructiveButton} from "../components/buttons";
 import {
@@ -23,6 +22,7 @@ import {
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {DateChip} from "../components/DateChip";
+import {createUszoverseny} from "../api/uszoversenyek";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
@@ -138,7 +138,6 @@ function UszoversenyekList() {
 function NewUszoversenyModal() {
     const t = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
-    const createUszoverseny = useCreateUszoverseny();
 
     const [nev, setNev] = useState("");
     const [helyszin, setHelyszin] = useState("");
@@ -173,7 +172,7 @@ function NewUszoversenyModal() {
                 setOpen(false);
             }).catch(console.error);
         }
-    }, [nev, helyszin, createUszoverseny, datum, setOpen]);
+    }, [nev, helyszin, datum, setOpen]);
 
     return (
         <Dialog open={open} handler={setOpen}>

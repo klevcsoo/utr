@@ -1,4 +1,3 @@
-import {AuthUser} from "../types/AuthUser";
 import {Csapat} from "../types/model/Csapat";
 import {MessageResponse} from "../types/response/MessageResponse";
 
@@ -12,22 +11,18 @@ export async function getCsapat(id: number): Promise<Csapat> {
     return apiRequest<Csapat>(`/csapatok/${id}`, "GET");
 }
 
-export async function createCsapat(
-    user: AuthUser, data: Omit<Csapat, "id">
-): Promise<MessageResponse> {
+export async function createCsapat(data: Omit<Csapat, "id">): Promise<MessageResponse> {
     const params = new URLSearchParams(data);
     return apiRequest<MessageResponse>(`/csapatok/?${params}`, "PUT");
 }
 
 export async function editCsapat(
-    user: AuthUser, id: number, data: Partial<Omit<Csapat, "id">>
+    id: number, data: Partial<Omit<Csapat, "id">>
 ): Promise<MessageResponse> {
     const params = new URLSearchParams(data);
     return apiRequest(`/csapatok/${id}?${params}`, "PATCH");
 }
 
-export async function deleteCsapat(
-    user: AuthUser, id: number
-): Promise<MessageResponse> {
+export async function deleteCsapat(id: number): Promise<MessageResponse> {
     return apiRequest(`/csapatok/${id}`, "DELETE");
 }

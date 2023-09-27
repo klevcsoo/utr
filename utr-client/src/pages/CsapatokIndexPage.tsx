@@ -105,7 +105,7 @@ function NewCsapatDialog() {
 
     const doComplete = useCallback(() => {
         if (!!user && !!nev && !!varos) {
-            createCsapat(user, {nev: nev, varos: varos}).then(({message}) => {
+            createCsapat({nev: nev, varos: varos}).then(({message}) => {
                 console.log(message);
                 setSearchParams(prevState => {
                     prevState.delete("modal");

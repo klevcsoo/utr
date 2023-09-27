@@ -4,6 +4,7 @@ import {Link, NavLink} from "react-router-dom";
 import {Fragment} from "react";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {Button, Spinner} from "@material-tailwind/react";
+import {ACCESS_LEVEL_ADMIN} from "../lib/api/auth";
 
 export function LiveViewPage() {
     const t = useTranslation();
@@ -18,7 +19,7 @@ export function LiveViewPage() {
         <div className="w-screen h-screen grid place-items-center place-content-center
         gap-4">
             <p>{t("error.page.no_open_uszoverseny")}</p>
-            {user?.roles.includes("admin") ? (
+            {user?.accessLevel ?? 0 >= ACCESS_LEVEL_ADMIN ? (
                 <Link to="/admin/uszoversenyek">
                     <Button color="blue">
                         {t("actions.uszoverseny.continue_to_uszoversenyek")}
@@ -37,7 +38,7 @@ export function LiveViewPage() {
                     <p>·</p>
                     <p><b>{uszoverseny.datum.toDateString()}</b></p>
                 </div>
-                {user?.roles.includes("admin") ? (
+                {user?.accessLevel ?? 0 >= ACCESS_LEVEL_ADMIN ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
                         <Button color="blue">{t("actions.generic.open")}</Button>
                         <Link to={`/admin/uszoversenyek/${uszoverseny.id}`}>
@@ -51,7 +52,7 @@ export function LiveViewPage() {
                     <div key={index}>{JSON.stringify(value)}</div>
                 ))}
             </div>
-            {user?.roles.includes("admin") ? (
+            {user?.accessLevel ?? 0 >= ACCESS_LEVEL_ADMIN ? (
                 <NavLink to="/admin" className="bottom-4 right-4 fixed">
                     <Button color="blue">{t("generic_label.admin_layout")}</Button>
                 </NavLink>

@@ -2,17 +2,13 @@ import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useVersenyszamDetails} from "../hooks/versenyszamok/useVersenyszamDetails";
 import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
-import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 import {CsapatSelect, UszoSelect} from "../components/selects";
-import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
-import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
@@ -32,9 +28,10 @@ import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {PencilSquareIcon, PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
-import {useEditNevezes} from "../hooks/nevezesek/useEditNevezes";
 import {useNevezesDetails} from "../hooks/nevezesek/useNevezesDetails";
 import {EntryTimeInput} from "../components/inputs/EntryTimeInput";
+import {deleteVersenyszam, editVersenyszam} from "../api/versenyszamok";
+import {createNevezes, deleteNevezes, editNevezes} from "../api/nevezesek";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";
@@ -80,7 +77,6 @@ export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
     const t = useTranslation();
     const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
     const getUszasnemElnevezes = useGetUszasnemElnevezes();
-    const deleteVersenyszam = useDeleteVersenyszam();
     const navigate = useNavigate();
 
     const [valto, setValto] = useState<number>(props.versenyszam.valto ?? 0);
@@ -110,7 +106,6 @@ export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
         );
     }, [hossz, nem, props.versenyszam, uszasnem, valto]);
 
-    const editVersenyszam = useEditVersenyszam();
 
     const doCommitChanges = useCallback(() => {
         editVersenyszam(props.versenyszam.id, {
@@ -119,7 +114,7 @@ export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
             hossz: hossz,
             uszasnemId: uszasnem
         }).then(console.log).catch(console.error);
-    }, [editVersenyszam, hossz, nem, props.versenyszam, uszasnem, valto]);
+    }, [hossz, nem, props.versenyszam, uszasnem, valto]);
 
     const doDeleteVersenyszam = useCallback(() => {
         if (!!props.versenyszam && window.confirm(t("confirm.generic.delete"))) {
@@ -128,7 +123,7 @@ export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
                 navigate("..");
             }).catch(console.error);
         }
-    }, [deleteVersenyszam, navigate, t, props.versenyszam]);
+    }, [navigate, t, props.versenyszam]);
 
     return (
         <Card className="w-full mt-6">
@@ -165,7 +160,6 @@ export function NevezesekList(props: { versenyszam: Versenyszam }) {
     const t = useTranslation();
 
     const [nevezesek, loadingNevezesek] = useNevezesekList(props.versenyszam.id);
-    const deleteNevezes = useDeleteNevezes();
     const [, setSearchParams] = useSearchParams();
 
     const displayedNevezesek = useMemo<Omit<DisplayedNevezes, "megjelent">[]>(() => {
@@ -183,7 +177,7 @@ export function NevezesekList(props: { versenyszam: Versenyszam }) {
 
     const doDeleteNevezes = useCallback((id: number) => {
         deleteNevezes(id).then(console.log).catch(console.error);
-    }, [deleteNevezes]);
+    }, []);
 
     const doOpenCreateNevezesDialog = useCallback(() => {
         setSearchParams(prevState => {
@@ -272,7 +266,6 @@ function CreateNevezesModal(props: { versenyszam: Versenyszam }) {
     const t = useTranslation();
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const createNevezes = useCreateNevezes();
 
     const [csapat, setCsapat] = useState<number>(NaN);
     const [uszo, setUszo] = useState<number>(NaN);
@@ -315,7 +308,7 @@ function CreateNevezesModal(props: { versenyszam: Versenyszam }) {
             console.log(message);
             setOpen(false);
         }).catch(console.error);
-    }, [canComplete, createNevezes, setOpen, nevezesiIdo, props.versenyszam, uszo]);
+    }, [canComplete, setOpen, nevezesiIdo, props.versenyszam, uszo]);
 
     useEffect(() => {
         setUszo(NaN);
@@ -365,8 +358,6 @@ function EditNevezesModal() {
         searchParams.get(NEVEZES_ID_PARAM_KEY) ?? "-1"
     ));
 
-    const editNevezes = useEditNevezes();
-
     const [nevezesiIdo, setNevezesiIdo] = useState<string>();
 
     const open = useMemo(() => {
@@ -399,7 +390,7 @@ function EditNevezesModal() {
                 setOpen(false);
             });
         }
-    }, [editNevezes, nevezes, nevezesiIdo, setOpen]);
+    }, [nevezes, nevezesiIdo, setOpen]);
 
     useEffect(() => {
         if (!!nevezes) {
