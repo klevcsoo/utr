@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 import {getApiServerEnvVars} from "../../api/support";
 import {Identifiable} from "../../types/Identifiable";
 import {KeyValueObject} from "../../types/KeyValueObject";
 
-export function useServerEnvVars(): [Identifiable<KeyValueObject<string>>[], boolean] {
+export default function useServerEnvVars(): [Identifiable<KeyValueObject<string>>[], boolean] {
     const user = useAuthUser();
     const [variableMap, setVariableMap] = useState<Identifiable<KeyValueObject<string>>[]>([]);
     const [loading, setLoading] = useState(true);

@@ -1,4 +1,4 @@
-import {useTranslation} from "../hooks/translations/useTranslation";
+import {useTranslation} from "../hooks/translations";
 import {useMemo} from "react";
 import {packageVersion} from "../lib/config";
 

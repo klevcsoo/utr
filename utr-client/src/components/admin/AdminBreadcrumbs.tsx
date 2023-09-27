@@ -2,7 +2,7 @@ import {Link, useLocation} from "react-router-dom";
 import {useCallback, useMemo} from "react";
 import {Breadcrumbs} from "@material-tailwind/react";
 import {HomeIcon} from "@heroicons/react/24/solid";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
 
 export function AdminBreadcrumbs() {
     const t = useTranslation();

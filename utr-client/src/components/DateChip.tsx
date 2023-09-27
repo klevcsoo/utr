@@ -1,6 +1,6 @@
 import {useMemo} from "react";
 import {Chip} from "@material-tailwind/react";
-import {useTranslation} from "../hooks/translations/useTranslation";
+import {useTranslation} from "../hooks/translations";
 
 export interface DateChipProps {
     date: number | Date;

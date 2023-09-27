@@ -1,8 +1,8 @@
-import {useTranslation} from "./translations/useTranslation";
+import {useTranslation} from "./translations";
 import {useCallback, useMemo} from "react";
 import {UszasnemId} from "../types/UszasnemId";
 
-export function useGetUszasnemElnevezes() {
+export default function useGetUszasnemElnevezes() {
     const t = useTranslation();
 
     const elnevezesMap = useMemo<{ [key in UszasnemId]: string }>(() => {

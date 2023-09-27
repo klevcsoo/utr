@@ -1,10 +1,10 @@
 import {useCallback, useState} from "react";
 import {Csapat} from "../../types/model/Csapat";
 import {getAllCsapatokList} from "../../api/csapatok";
-import {useAuthUser} from "../auth/useAuthUser";
-import {useApiPolling} from "../useApiPolling";
+import {useAuthUser} from "../auth";
+import {useApiPolling} from "..";
 
-export function useCsapatokList(): [Csapat[], boolean] {
+export default function useCsapatokList(): [Csapat[], boolean] {
     const user = useAuthUser();
     const [list, setList] = useState<Csapat[]>([]);
     const [loading, setLoading] = useState(true);

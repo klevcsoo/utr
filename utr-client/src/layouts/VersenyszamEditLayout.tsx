@@ -1,7 +1,7 @@
 import {Fragment} from "react";
 import {NumberInput} from "../components/inputs";
 import {UszasnemSelect, VersenyszamNemSelect} from "../components/selects";
-import {useTranslation} from "../hooks/translations/useTranslation";
+import {useTranslation} from "../hooks/translations";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 

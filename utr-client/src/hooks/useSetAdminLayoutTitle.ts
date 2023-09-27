@@ -1,7 +1,7 @@
 import {useContext, useEffect} from "react";
 import {AdminLayoutTitleContext} from "../layouts/AdminLayout";
 
-export function useSetAdminLayoutTitle(title: string, disableNavigation?: boolean) {
+export default function useSetAdminLayoutTitle(title: string, disableNavigation?: boolean) {
     const setTitle = useContext(AdminLayoutTitleContext);
 
     useEffect(() => {

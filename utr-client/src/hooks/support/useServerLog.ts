@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
 import {getApiServerLog} from "../../api/support";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 
-export function useServerLog(): [string[], boolean, () => void] {
+export default function useServerLog(): [string[], boolean, () => void] {
     const user = useAuthUser();
     const [lines, setLines] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);

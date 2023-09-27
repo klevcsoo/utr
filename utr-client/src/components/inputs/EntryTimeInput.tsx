@@ -1,7 +1,7 @@
 import {Checkbox} from "@material-tailwind/react";
 import {IntervalMaskedInput} from "./IntervalMaskedInput";
 import {useEffect, useState} from "react";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
 
 export interface EntryTimeInputProps {
     value: string | undefined;

@@ -2,7 +2,7 @@ import {DisplayedUser} from "../../types/DisplayedUser";
 import {useEffect, useState} from "react";
 import {getUser} from "../../lib/api/auth";
 
-export function useUserDetails(userId: number): [DisplayedUser | undefined, boolean] {
+export default function useUserDetails(userId: number): [DisplayedUser | undefined, boolean] {
     const [details, setDetails] = useState<DisplayedUser>();
     const [loading, setLoading] = useState(true);
 

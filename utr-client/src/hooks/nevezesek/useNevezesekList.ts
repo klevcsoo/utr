@@ -1,10 +1,10 @@
 import {useCallback, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 import {Nevezes} from "../../types/model/Nevezes";
 import {getAllNevezesek} from "../../api/nevezesek";
-import {useApiPolling} from "../useApiPolling";
+import {useApiPolling} from "..";
 
-export function useNevezesekList(versenyszamId: number | undefined): [Nevezes[], boolean] {
+export default function useNevezesekList(versenyszamId: number | undefined): [Nevezes[], boolean] {
     const user = useAuthUser();
     const [list, setList] = useState<Nevezes[]>([]);
     const [loading, setLoading] = useState(true);

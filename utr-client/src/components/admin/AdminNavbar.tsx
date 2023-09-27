@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import {AppLogo} from "../icons/AppLogo";
 import {Link, useLocation} from "react-router-dom";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
 import {createElement, FunctionComponent, useMemo, useState} from "react";
 import {
     ArrowRightOnRectangleIcon,
@@ -18,9 +18,9 @@ import {
     CubeTransparentIcon,
     TableCellsIcon
 } from "@heroicons/react/24/solid";
-import {useAuthLogout} from "../../hooks/auth/useAuthLogout";
-import {useNyitottVerseny} from "../../hooks/nyitottVerseny/useNyitottVerseny";
 import {AdminBreadcrumbs} from "./AdminBreadcrumbs";
+import {useNyitottVerseny} from "../../hooks/nyitottVerseny";
+import {useAuthLogout} from "../../hooks/auth";
 
 export function AdminNavbar() {
     const t = useTranslation();

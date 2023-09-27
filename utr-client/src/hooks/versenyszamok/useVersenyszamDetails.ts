@@ -1,10 +1,10 @@
 import {useCallback, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {getVersenyszam} from "../../api/versenyszamok";
-import {useApiPolling} from "../useApiPolling";
+import {useApiPolling} from "..";
 
-export function useVersenyszamDetails(id: number): [Versenyszam | undefined, boolean] {
+export default function useVersenyszamDetails(id: number): [Versenyszam | undefined, boolean] {
     const user = useAuthUser();
     const [uszo, setUszo] = useState<Versenyszam>();
     const [loading, setLoading] = useState(true);

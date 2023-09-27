@@ -2,7 +2,7 @@ import {useCallback, useState} from "react";
 import {AuthContext, login} from "../../lib/api/auth";
 import {UserRole} from "../../types/UserRole";
 import {CommonChildrenOnlyProps} from "../../types/componentProps/common/CommonChildrenOnlyProps";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
 import {UserRecord} from "../../types/UserRecord";
 
 const AUTH_DATA_KEY = "auth_data";

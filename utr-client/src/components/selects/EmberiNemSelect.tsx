@@ -2,8 +2,8 @@ import {EmberiNemId} from "../../types/EmberiNemId";
 import {useMemo} from "react";
 import {GenericSelect} from "./GenericSelect";
 import {CommonSelectProps} from "./CommonSelectProps";
-import {useGetEmberiNemElnevezes} from "../../hooks/useGetEmberiNemElnevezes";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
+import {useGetEmberiNemElnevezes} from "../../hooks";
 
 export function EmberiNemSelect(props: CommonSelectProps<EmberiNemId>) {
     const t = useTranslation();

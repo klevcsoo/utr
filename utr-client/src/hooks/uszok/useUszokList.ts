@@ -1,10 +1,10 @@
 import {Uszo} from "../../types/model/Uszo";
 import {useCallback, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 import {getAllUszokInCsapat} from "../../api/uszok";
-import {useApiPolling} from "../useApiPolling";
+import {useApiPolling} from "..";
 
-export function useUszokList(csapatId: number | undefined): [Uszo[], boolean] {
+export default function useUszokList(csapatId: number | undefined): [Uszo[], boolean] {
     const user = useAuthUser();
     const [list, setList] = useState<Uszo[]>([]);
     const [loading, setLoading] = useState(false);

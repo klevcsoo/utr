@@ -1,10 +1,10 @@
 import {useCallback, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getAllUszoversenyekList} from "../../api/uszoversenyek";
-import {useApiPolling} from "../useApiPolling";
+import {useApiPolling} from "..";
 
-export function useUszoversenyekList(): [Uszoverseny[], boolean] {
+export default function useUszoversenyekList(): [Uszoverseny[], boolean] {
     const user = useAuthUser();
     const [list, setList] = useState<Uszoverseny[]>([]);
     const [loading, setLoading] = useState(true);

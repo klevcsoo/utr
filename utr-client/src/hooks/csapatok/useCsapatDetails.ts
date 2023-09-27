@@ -1,10 +1,10 @@
 import {Csapat} from "../../types/model/Csapat";
 import {useCallback, useState} from "react";
 import {getCsapat} from "../../api/csapatok";
-import {useApiPolling} from "../useApiPolling";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useApiPolling} from "..";
+import {useAuthUser} from "../auth";
 
-export function useCsapatDetails(id: number): [Csapat | undefined, boolean] {
+export default function useCsapatDetails(id: number): [Csapat | undefined, boolean] {
     const user = useAuthUser();
     const [csapat, setCsapat] = useState<Csapat>();
     const [loading, setLoading] = useState(true);

@@ -1,10 +1,10 @@
 import {useCallback, useState} from "react";
 import {Uszo} from "../../types/model/Uszo";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 import {getUszo} from "../../api/uszok";
-import {useApiPolling} from "../useApiPolling";
+import {useApiPolling} from "..";
 
-export function useUszoDetails(id: number): [Uszo | undefined, boolean] {
+export default function useUszoDetails(id: number): [Uszo | undefined, boolean] {
     const user = useAuthUser();
     const [uszo, setUszo] = useState<Uszo>();
     const [loading, setLoading] = useState(true);

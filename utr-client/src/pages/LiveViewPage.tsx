@@ -1,10 +1,10 @@
-import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
 import {Link, NavLink} from "react-router-dom";
 import {Fragment} from "react";
-import {useTranslation} from "../hooks/translations/useTranslation";
+import {useTranslation} from "../hooks/translations";
 import {Button, Spinner} from "@material-tailwind/react";
 import {ACCESS_LEVEL_ADMIN} from "../lib/api/auth";
-import {useAuthUserAccess} from "../hooks/auth/useAuthUserAccess";
+import {useAuthUserAccess} from "../hooks/auth";
+import {useNyitottVerseny} from "../hooks/nyitottVerseny";
 
 export function LiveViewPage() {
     const t = useTranslation();

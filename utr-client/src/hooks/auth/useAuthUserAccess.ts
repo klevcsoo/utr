@@ -1,6 +1,6 @@
-import {useAuthUser} from "./useAuthUser";
+import {useAuthUser} from ".";
 
-export function useAuthUserAccess(accessLevel?: number): boolean {
+export default function useAuthUserAccess(accessLevel?: number): boolean {
     const user = useAuthUser();
     return (user?.accessLevel ?? 0) >= (accessLevel ?? 0);
 }

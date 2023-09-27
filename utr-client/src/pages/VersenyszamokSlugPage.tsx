@@ -1,17 +1,12 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {useVersenyszamDetails} from "../hooks/versenyszamok/useVersenyszamDetails";
-import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 import {CsapatSelect, UszoSelect} from "../components/selects";
-import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {useTranslation} from "../hooks/translations/useTranslation";
-import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
-import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
+import {useTranslation} from "../hooks/translations";
 import {
     Button,
     Card,
@@ -28,10 +23,13 @@ import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {PencilSquareIcon, PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
-import {useNevezesDetails} from "../hooks/nevezesek/useNevezesDetails";
 import {EntryTimeInput} from "../components/inputs/EntryTimeInput";
 import {deleteVersenyszam, editVersenyszam} from "../api/versenyszamok";
 import {createNevezes, deleteNevezes, editNevezes} from "../api/nevezesek";
+import {useVersenyszamDetails} from "../hooks/versenyszamok";
+import {useUszoversenyDetails} from "../hooks/uszoversenyek";
+import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../hooks";
+import {useNevezesDetails, useNevezesekList} from "../hooks/nevezesek";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";

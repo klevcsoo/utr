@@ -1,13 +1,8 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Uszoverseny} from "../types/model/Uszoverseny";
-import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
 import {DateInput} from "../components/inputs/DateInput";
-import {useTranslation} from "../hooks/translations/useTranslation";
-import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
-import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
+import {useTranslation} from "../hooks/translations";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {
     Button,
@@ -35,6 +30,13 @@ import {
     openUszoverseny
 } from "../api/uszoversenyek";
 import {createVersenyszam, deleteVersenyszam} from "../api/versenyszamok";
+import {
+    useGetUszasnemElnevezes,
+    useGetVersenyszamNemElnevezes,
+    useSetAdminLayoutTitle
+} from "../hooks";
+import {useVersenyszamokList} from "../hooks/versenyszamok";
+import {useUszoversenyDetails} from "../hooks/uszoversenyek";
 
 const CREATE_RACE_PARAM_KEY = "race";
 

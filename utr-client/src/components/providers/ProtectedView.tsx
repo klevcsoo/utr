@@ -1,8 +1,7 @@
 import {Fragment} from "react";
-import {useAuthUser} from "../../hooks/auth/useAuthUser";
 import {Navigate} from "react-router-dom";
 import {CommonChildrenOnlyProps} from "../../types/componentProps/common/CommonChildrenOnlyProps";
-import {useAuthUserAccess} from "../../hooks/auth/useAuthUserAccess";
+import {useAuthUser, useAuthUserAccess} from "../../hooks/auth";
 
 export interface ProtectedViewProps extends CommonChildrenOnlyProps {
     accessLevel?: number;
