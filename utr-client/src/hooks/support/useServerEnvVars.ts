@@ -11,7 +11,7 @@ export function useServerEnvVars(): [Identifiable<KeyValueObject<string>>[], boo
 
     useEffect(() => {
         if (!!user) {
-            getApiServerEnvVars(user)
+            getApiServerEnvVars()
                 .then(map => {
                     setVariableMap(Object.keys(map).map((key, index) => {
                         return {

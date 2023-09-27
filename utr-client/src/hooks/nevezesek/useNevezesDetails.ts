@@ -11,7 +11,7 @@ export function useNevezesDetails(id: number): [Nevezes | undefined, boolean] {
 
     const doFetch = useCallback(() => {
         if (!!user && id !== -1) {
-            getNevezes(user, id).then(setNevezes).catch(console.error).finally(() => {
+            getNevezes(id).then(setNevezes).catch(console.error).finally(() => {
                 setLoading(false);
             });
         }

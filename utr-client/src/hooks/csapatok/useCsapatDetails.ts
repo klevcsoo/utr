@@ -1,8 +1,8 @@
 import {Csapat} from "../../types/model/Csapat";
 import {useCallback, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
 import {getCsapat} from "../../api/csapatok";
 import {useApiPolling} from "../useApiPolling";
+import {useAuthUser} from "../auth/useAuthUser";
 
 export function useCsapatDetails(id: number): [Csapat | undefined, boolean] {
     const user = useAuthUser();
@@ -11,7 +11,7 @@ export function useCsapatDetails(id: number): [Csapat | undefined, boolean] {
 
     const doFetch = useCallback(() => {
         if (!!user && id !== -1) {
-            getCsapat(user, id).then(setCsapat).catch(reason => {
+            getCsapat(id).then(setCsapat).catch(reason => {
                 console.error(reason);
             }).finally(() => {
                 setLoading(false);

@@ -11,7 +11,7 @@ export function useUszoversenyDetails(id: number): [Uszoverseny | undefined, boo
 
     const doFetch = useCallback(() => {
         if (!!user && id !== -1) {
-            getUszoverseny(user, id).then(setUszoverseny).catch(console.error).finally(() => {
+            getUszoverseny(id).then(setUszoverseny).catch(console.error).finally(() => {
                 setLoading(false);
             });
         }

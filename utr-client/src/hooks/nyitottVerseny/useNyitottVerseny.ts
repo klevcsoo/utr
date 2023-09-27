@@ -15,10 +15,10 @@ export function useNyitottVerseny():
 
     const doFetch = useCallback(() => {
         if (!!user) {
-            getOpenUszoverseny(user).then(setUszoverseny).catch(reason => {
+            getOpenUszoverseny().then(setUszoverseny).catch(reason => {
                 console.error(reason);
             }).finally(() => setLoading(false));
-            getOpenVersenyszamok(user).then(setVersenyszamok).catch(reason => {
+            getOpenVersenyszamok().then(setVersenyszamok).catch(reason => {
                 console.error(reason);
             }).finally(() => setLoading(false));
         }

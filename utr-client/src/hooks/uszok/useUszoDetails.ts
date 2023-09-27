@@ -11,7 +11,7 @@ export function useUszoDetails(id: number): [Uszo | undefined, boolean] {
 
     const doFetch = useCallback(() => {
         if (!!user && id !== -1) {
-            getUszo(user, id).then(setUszo).catch(console.error).finally(() => {
+            getUszo(id).then(setUszo).catch(console.error).finally(() => {
                 setLoading(false);
             });
         }

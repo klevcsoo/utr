@@ -11,7 +11,7 @@ export function useNevezesekList(versenyszamId: number | undefined): [Nevezes[],
 
     const doFetch = useCallback(() => {
         if (!!versenyszamId && !!user) {
-            getAllNevezesek(user, versenyszamId).then(setList).catch(reason => {
+            getAllNevezesek(versenyszamId).then(setList).catch(reason => {
                 console.error(reason);
             }).finally(() => {
                 setLoading(false);

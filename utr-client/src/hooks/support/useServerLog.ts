@@ -10,7 +10,7 @@ export function useServerLog(): [string[], boolean, () => void] {
     const doLoad = useCallback(() => {
         if (!!user) {
             setLoading(true);
-            getApiServerLog(user).then(setLines).catch(console.error).finally(() => {
+            getApiServerLog().then(setLines).catch(console.error).finally(() => {
                 setLoading(false);
             });
         }

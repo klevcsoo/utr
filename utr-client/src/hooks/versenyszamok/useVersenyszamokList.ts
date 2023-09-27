@@ -11,7 +11,7 @@ export function useVersenyszamokList(uszoversenyId: number | undefined): [Versen
 
     const doFetch = useCallback(() => {
         if (!!uszoversenyId && !!user) {
-            getVersenyszamokInVerseny(user, uszoversenyId).then(setList).catch(reason => {
+            getVersenyszamokInVerseny(uszoversenyId).then(setList).catch(reason => {
                 console.error(reason);
             }).finally(() => {
                 setLoading(false);

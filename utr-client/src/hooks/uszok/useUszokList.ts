@@ -11,7 +11,7 @@ export function useUszokList(csapatId: number | undefined): [Uszo[], boolean] {
 
     const doFetch = useCallback(() => {
         if (!!csapatId && !!user) {
-            getAllUszokInCsapat(user, csapatId).then(setList).catch(reason => {
+            getAllUszokInCsapat(csapatId).then(setList).catch(reason => {
                 console.error(reason);
             }).finally(() => {
                 setLoading(false);

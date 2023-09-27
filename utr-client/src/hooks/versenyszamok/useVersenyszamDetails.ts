@@ -11,7 +11,7 @@ export function useVersenyszamDetails(id: number): [Versenyszam | undefined, boo
 
     const doFetch = useCallback(() => {
         if (!!user && id !== -1) {
-            getVersenyszam(user, id).then(setUszo).catch(console.error).finally(() => {
+            getVersenyszam(id).then(setUszo).catch(console.error).finally(() => {
                 setLoading(false);
             });
         }

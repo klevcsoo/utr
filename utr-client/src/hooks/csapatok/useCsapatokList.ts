@@ -11,7 +11,7 @@ export function useCsapatokList(): [Csapat[], boolean] {
 
     const doFetch = useCallback(() => {
         if (!!user) {
-            getAllCsapatokList(user).then(response => {
+            getAllCsapatokList().then(response => {
                 setList(response);
             }).catch(reason => {
                 console.error(reason);

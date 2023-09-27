@@ -11,7 +11,7 @@ export function useUszoversenyekList(): [Uszoverseny[], boolean] {
 
     const doFetch = useCallback(() => {
         if (!!user) {
-            getAllUszoversenyekList(user).then(response => {
+            getAllUszoversenyekList().then(response => {
                 setList(response);
             }).catch(reason => {
                 console.error(reason);
