@@ -7,7 +7,7 @@ import {UserRecord} from "../../types/UserRecord";
 
 const AUTH_DATA_KEY = "auth_data";
 
-function AuthProvider(props: CommonChildrenOnlyProps) {
+export function AuthProvider(props: CommonChildrenOnlyProps) {
     const t = useTranslation();
 
     const [user, setUser] = useState<UserRecord | undefined>(
@@ -44,5 +44,3 @@ function AuthProvider(props: CommonChildrenOnlyProps) {
         </AuthContext.Provider>
     );
 }
-
-export default AuthProvider;

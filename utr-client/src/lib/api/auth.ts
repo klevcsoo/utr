@@ -9,6 +9,12 @@ import {UserEditData} from "../../types/request/UserEditData";
 import {apiRequest} from "./http";
 import {UserRecord} from "../../types/UserRecord";
 
+export const
+    ACCESS_LEVEL_SPEAKER = 1,
+    ACCESS_LEVEL_IDOROGZITO = 2,
+    ACCESS_LEVEL_ALLITOBIRO = 4,
+    ACCESS_LEVEL_ADMIN = 8;
+
 export const AuthContext = createContext<{
     user: UserRecord | undefined
     login(username: string, password: string): Promise<void>

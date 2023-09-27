@@ -2,8 +2,7 @@ import React from 'react';
 import {Navigate, Outlet, Route, Routes} from "react-router-dom";
 import {LoginPage} from "./pages/LoginPage";
 import {CsapatokIndexPage} from "./pages/CsapatokIndexPage";
-import {UnprotectedView} from "./components/providers/UnprotectedView";
-import {ProtectedView} from "./components/providers/ProtectedView";
+import {ProtectedView, UnprotectedView} from "./components/providers";
 import {LiveViewPage} from "./pages/LiveViewPage";
 import {AdminLayout} from "./layouts/AdminLayout";
 import {CsapatokSlugPage} from "./pages/CsapatokSlugPage";
@@ -14,6 +13,7 @@ import {VersenyszamokSlugPage} from "./pages/VersenyszamokSlugPage";
 import {Error404Page} from "./pages/Error404Page";
 import {SupportPage} from "./pages/SupportPage";
 import {SettingsPage} from "./pages/SettingsPage";
+import {ACCESS_LEVEL_ADMIN} from "./lib/api/auth";
 
 function App() {
     return (
@@ -26,7 +26,7 @@ function App() {
                 <Route index element={<Navigate to="live" relative="path"/>}/>
                 <Route path="live" element={<LiveViewPage/>}/>
                 <Route path="admin" element={
-                    <ProtectedView role="admin">
+                    <ProtectedView accessLevel={ACCESS_LEVEL_ADMIN}>
                         <AdminLayout/>
                     </ProtectedView>
                 }>
