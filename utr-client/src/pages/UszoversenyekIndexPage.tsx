@@ -24,7 +24,7 @@ import {useSetAdminLayoutTitle} from "../hooks";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny";
 import {useUszoversenyekList} from "../hooks/uszoversenyek";
 
-export function UszoversenyekIndexPage() {
+export default function UszoversenyekIndexPage() {
     const t = useTranslation();
 
     useSetAdminLayoutTitle(t("title.admin_layout.uszoversenyek"));

@@ -6,7 +6,7 @@ export interface DateChipProps {
     date: number | Date;
 }
 
-export function DateChip(props: DateChipProps) {
+export default function DateChip(props: DateChipProps) {
     const t = useTranslation();
 
     const date = useMemo(() => {

@@ -28,7 +28,7 @@ export interface AdminSidebarProps {
     toggleExpanded(): void;
 }
 
-export function AdminSidebar({expanded, toggleExpanded}: AdminSidebarProps) {
+export default function AdminSidebar({expanded, toggleExpanded}: AdminSidebarProps) {
     const t = useTranslation();
 
     const navigationList = useMemo<{

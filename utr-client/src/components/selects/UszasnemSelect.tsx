@@ -5,7 +5,7 @@ import {CommonSelectProps} from "./CommonSelectProps";
 import {useTranslation} from "../../hooks/translations";
 import {useGetUszasnemElnevezes} from "../../hooks";
 
-export function UszasnemSelect(props: CommonSelectProps<UszasnemId>) {
+export default function UszasnemSelect(props: CommonSelectProps<UszasnemId>) {
     const t = useTranslation();
     const getElnevezes = useGetUszasnemElnevezes();
 

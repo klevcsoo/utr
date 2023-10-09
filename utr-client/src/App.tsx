@@ -1,19 +1,19 @@
 import React from 'react';
 import {Navigate, Outlet, Route, Routes} from "react-router-dom";
-import {LoginPage} from "./pages/LoginPage";
-import {CsapatokIndexPage} from "./pages/CsapatokIndexPage";
 import {ProtectedView, UnprotectedView} from "./components/providers";
-import {LiveViewPage} from "./pages/LiveViewPage";
-import {AdminLayout} from "./layouts/AdminLayout";
-import {CsapatokSlugPage} from "./pages/CsapatokSlugPage";
-import {UszoversenyekIndexPage} from "./pages/UszoversenyekIndexPage";
-import {AdminIndexPage} from "./pages/AdminIndexPage";
-import {UszoversenyekSlugPage} from "./pages/UszoversenyekSlugPage";
-import {VersenyszamokSlugPage} from "./pages/VersenyszamokSlugPage";
-import {Error404Page} from "./pages/Error404Page";
-import {SupportPage} from "./pages/SupportPage";
-import {SettingsPage} from "./pages/SettingsPage";
 import {ACCESS_LEVEL_ADMIN} from "./lib/api/auth";
+import LiveViewPage from "./pages/LiveViewPage";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminIndexPage from "./pages/AdminIndexPage";
+import UszoversenyekIndexPage from "./pages/UszoversenyekIndexPage";
+import UszoversenyekSlugPage from "./pages/UszoversenyekSlugPage";
+import VersenyszamokSlugPage from "./pages/VersenyszamokSlugPage";
+import CsapatokIndexPage from "./pages/CsapatokIndexPage";
+import CsapatokSlugPage from "./pages/CsapatokSlugPage";
+import SettingsPage from "./pages/SettingsPage";
+import SupportPage from "./pages/SupportPage";
+import LoginPage from "./pages/LoginPage";
+import Error404Page from "./pages/Error404Page";
 
 function App() {
     return (

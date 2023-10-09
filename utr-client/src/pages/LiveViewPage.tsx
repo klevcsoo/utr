@@ -6,7 +6,7 @@ import {ACCESS_LEVEL_ADMIN} from "../lib/api/auth";
 import {useAuthUserAccess} from "../hooks/auth";
 import {useNyitottVerseny} from "../hooks/nyitottVerseny";
 
-export function LiveViewPage() {
+export default function LiveViewPage() {
     const t = useTranslation();
     const [uszoverseny, uszoversenyLoading] = useNyitottVerseny();
     const hasAccess = useAuthUserAccess(ACCESS_LEVEL_ADMIN);

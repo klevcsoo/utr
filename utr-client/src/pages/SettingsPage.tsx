@@ -27,7 +27,7 @@ const USER_ID_PARAM_KEY = "userId";
 const USER_PARAM_VALUE = "user";
 const USER_PASSWORD_PARAM_VALUE = "userPassword";
 
-export function SettingsPage() {
+export default function SettingsPage() {
     return (
         <Fragment>
             <div className="flex flex-col gap-4 w-full">

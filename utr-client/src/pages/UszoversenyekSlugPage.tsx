@@ -40,7 +40,7 @@ import {useUszoversenyDetails} from "../hooks/uszoversenyek";
 
 const CREATE_RACE_PARAM_KEY = "race";
 
-export function UszoversenyekSlugPage() {
+export default function UszoversenyekSlugPage() {
     const t = useTranslation();
 
     const {id} = useParams();

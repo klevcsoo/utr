@@ -19,7 +19,7 @@ const InputMaskCorrect: FC<TInputMaskCorrect> = ({children, ...props}) => {
     return <InputMask children={child} {...props} />;
 };
 
-export function IntervalMaskedInput(props: IntervalMaskedInputProps) {
+export default function IntervalMaskedInput(props: IntervalMaskedInputProps) {
     return (
         <InputMaskCorrect mask="9:99.999" value={props.value} onChange={event => {
             props.onValue(event.currentTarget.value);

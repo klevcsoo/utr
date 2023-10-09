@@ -7,7 +7,7 @@ export interface ProtectedViewProps extends CommonChildrenOnlyProps {
     accessLevel?: number;
 }
 
-export function ProtectedView(props: ProtectedViewProps) {
+export default function ProtectedView(props: ProtectedViewProps) {
     const user = useAuthUser();
     const hasAccess = useAuthUserAccess(props.accessLevel);
 

@@ -5,7 +5,7 @@ import {CommonSelectProps} from "./CommonSelectProps";
 import {useTranslation} from "../../hooks/translations";
 import {useGetEmberiNemElnevezes} from "../../hooks";
 
-export function EmberiNemSelect(props: CommonSelectProps<EmberiNemId>) {
+export default function EmberiNemSelect(props: CommonSelectProps<EmberiNemId>) {
     const t = useTranslation();
     const getElnevezes = useGetEmberiNemElnevezes();
 

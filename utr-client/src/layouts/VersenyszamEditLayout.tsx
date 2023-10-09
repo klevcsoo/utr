@@ -20,7 +20,7 @@ export interface VersenyszamEditLayoutProps {
     setUszasnem(value: UszasnemId): void;
 }
 
-export function VersenyszamEditLayout(props: VersenyszamEditLayoutProps) {
+export default function VersenyszamEditLayout(props: VersenyszamEditLayoutProps) {
     const t = useTranslation();
 
     return (

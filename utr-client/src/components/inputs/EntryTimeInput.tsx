@@ -9,7 +9,7 @@ export interface EntryTimeInputProps {
     onValue(value: string | undefined): void;
 }
 
-export function EntryTimeInput(props: EntryTimeInputProps) {
+export default function EntryTimeInput(props: EntryTimeInputProps) {
     const t = useTranslation();
 
     const [enabled, setEnabled] = useState(props.value !== undefined);

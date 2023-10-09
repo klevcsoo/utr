@@ -13,7 +13,7 @@ export interface DataTableDataColumnProps<
     element(value: T[K]): ReactNode;
 }
 
-export function DataTableDataColumn<
+export default function DataTableDataColumn<
     T extends Identifiable<object>,
     K extends keyof T = keyof T
 >(props: DataTableDataColumnProps<T, K>) {

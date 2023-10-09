@@ -23,7 +23,7 @@ import {useAuthUser} from "../hooks/auth";
 const MODAL_PARAM_KEY = "modal";
 const NEW_CSAPAT_PARAM_VALUE = "newCsapat";
 
-export function CsapatokIndexPage() {
+export default function CsapatokIndexPage() {
     const [csapatok, csapatokLoading] = useCsapatokList();
     const [, setSearchParams] = useSearchParams();
     const t = useTranslation();

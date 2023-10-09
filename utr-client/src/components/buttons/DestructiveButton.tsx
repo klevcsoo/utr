@@ -10,7 +10,7 @@ export type DestructiveButtonProps = Omit<ButtonProps, "color"> & {
     onConfirm?(): void
 }
 
-export function DestructiveButton(props: DestructiveButtonProps) {
+export default function DestructiveButton(props: DestructiveButtonProps) {
     const cleanProps = useMemo(() => {
         const p = {};
 

@@ -5,7 +5,7 @@ import {CommonSelectProps} from "./CommonSelectProps";
 import {useTranslation} from "../../hooks/translations";
 import {useGetVersenyszamNemElnevezes} from "../../hooks";
 
-export function VersenyszamNemSelect(props: CommonSelectProps<EmberiNemId>) {
+export default function VersenyszamNemSelect(props: CommonSelectProps<EmberiNemId>) {
     const t = useTranslation();
     const getElnevezes = useGetVersenyszamNemElnevezes();
 

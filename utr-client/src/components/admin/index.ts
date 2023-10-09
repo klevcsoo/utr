@@ -1,6 +1,3 @@
-import {AdminBreadcrumbs} from "./AdminBreadcrumbs";
-import {AdminNavbar} from "./AdminNavbar";
-import {AdminSidebar, AdminSidebarProps} from "./AdminSidebar";
-
-export {AdminBreadcrumbs, AdminNavbar, AdminSidebar};
-export type {AdminSidebarProps};
+export { default as AdminBreadcrumbs } from './AdminBreadcrumbs'
+export { default as AdminNavbar } from './AdminNavbar'
+export { default as AdminSidebar } from './AdminSidebar'

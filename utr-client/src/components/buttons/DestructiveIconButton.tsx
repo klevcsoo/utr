@@ -5,7 +5,7 @@ import {Fragment, useCallback, useMemo, useState} from "react";
 import {useTranslation} from "../../hooks/translations";
 import {DestructiveButtonProps} from "./DestructiveButton";
 
-export function DestructiveIconButton(props: DestructiveButtonProps) {
+export default function DestructiveIconButton(props: DestructiveButtonProps) {
     const cleanProps = useMemo(() => {
         const p = {};
 

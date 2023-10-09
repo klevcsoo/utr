@@ -1,7 +1,4 @@
-import {AuthProvider} from "./AuthProvider";
-import {ProtectedView, ProtectedViewProps} from "./ProtectedView";
-import {TranslationProvider} from "./TranslationProvider";
-import {UnprotectedView} from "./UnprotectedView";
-
-export {AuthProvider, ProtectedView, UnprotectedView, TranslationProvider};
-export type {ProtectedViewProps};
+export { default as AuthProvider } from './AuthProvider'
+export { default as ProtectedView } from './ProtectedView'
+export { default as TranslationProvider } from './TranslationProvider'
+export { default as UnprotectedView } from './UnprotectedView'

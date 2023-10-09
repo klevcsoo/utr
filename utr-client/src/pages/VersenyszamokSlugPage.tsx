@@ -36,7 +36,7 @@ const NEVEZES_ID_PARAM_KEY = "nevezesId";
 const CREATE_NEVEZES_PARAM_VALUE = "createNevezes";
 const EDIT_NEVEZES_PARAM_VALUE = "editNevezes";
 
-export function VersenyszamokSlugPage() {
+export default function VersenyszamokSlugPage() {
     const t = useTranslation();
 
     const {id} = useParams();
@@ -71,7 +71,7 @@ export function VersenyszamokSlugPage() {
     );
 }
 
-export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
+export default function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
     const t = useTranslation();
     const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
     const getUszasnemElnevezes = useGetUszasnemElnevezes();
@@ -154,7 +154,7 @@ export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
     );
 }
 
-export function NevezesekList(props: { versenyszam: Versenyszam }) {
+export default function NevezesekList(props: { versenyszam: Versenyszam }) {
     const t = useTranslation();
 
     const [nevezesek, loadingNevezesek] = useNevezesekList(props.versenyszam.id);

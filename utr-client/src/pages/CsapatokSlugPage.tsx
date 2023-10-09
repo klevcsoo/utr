@@ -31,7 +31,7 @@ const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";
 const USZO_PARAM_VALUE = "uszo";
 
-export function CsapatokSlugPage() {
+export default function CsapatokSlugPage() {
     const t = useTranslation();
 
     const {id} = useParams();

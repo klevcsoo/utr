@@ -4,7 +4,7 @@ import {
     FullPageModalWithActionsProps
 } from "../../types/componentProps/modals/FullPageModalWithActionsProps";
 
-export function FullPageModalWithActions(props: FullPageModalWithActionsProps) {
+export default function FullPageModalWithActions(props: FullPageModalWithActionsProps) {
     return (
         <FullPageModal>
             <div className="flex flex-row items-center

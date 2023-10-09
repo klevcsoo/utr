@@ -5,7 +5,7 @@ import {useTranslation} from "../../hooks/translations";
 import {Spinner} from "@material-tailwind/react";
 import {useUszokList} from "../../hooks/uszok";
 
-export function UszoSelect(props: UszoSelectProps) {
+export default function UszoSelect(props: UszoSelectProps) {
     const t = useTranslation();
     const [uszok, loadingUszok] = useUszokList(props.csapatId);
 

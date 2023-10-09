@@ -1,15 +1,6 @@
-import {CsapatSelect} from "./CsapatSelect";
-import {EmberiNemSelect} from "./EmberiNemSelect";
-import {GenericSelect} from "./GenericSelect";
-import {UszasnemSelect} from "./UszasnemSelect";
-import {UszoSelect} from "./UszoSelect";
-import {VersenyszamNemSelect} from "./VersenyszamNemSelect";
-
-export {
-    CsapatSelect,
-    UszoSelect,
-    UszasnemSelect,
-    GenericSelect,
-    EmberiNemSelect,
-    VersenyszamNemSelect
-};
+export { default as CsapatSelect } from './CsapatSelect'
+export { default as EmberiNemSelect } from './EmberiNemSelect'
+export { default as GenericSelect } from './GenericSelect'
+export { default as UszasnemSelect } from './UszasnemSelect'
+export { default as UszoSelect } from './UszoSelect'
+export { default as VersenyszamNemSelect } from './VersenyszamNemSelect'

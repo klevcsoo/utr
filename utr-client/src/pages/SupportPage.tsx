@@ -20,7 +20,7 @@ import {useServerEnvVars, useServerLog} from "../hooks/support";
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";
 
-export function SupportPage() {
+export default function SupportPage() {
     const t = useTranslation();
 
     return (
