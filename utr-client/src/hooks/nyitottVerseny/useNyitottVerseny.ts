@@ -2,8 +2,8 @@ import {useCallback, useEffect, useState} from "react";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getOpenUszoverseny, getOpenVersenyszamok} from "../../api/nyitottVerseny";
-import {useAuthUser} from "../auth/useAuthUser";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useNyitottVerseny():
     RefreshableLiveData<(Uszoverseny & { versenyszamok: Versenyszam[] })> {

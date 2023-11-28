@@ -1,8 +1,8 @@
 import {Uszo} from "../../types/model/Uszo";
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {createUszo} from "../../api/uszok";
 import {useTranslation} from "../translations/useTranslation";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useCreateUszo():
     (data: Omit<Uszo, "id">) => Promise<string> {

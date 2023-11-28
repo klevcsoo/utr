@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {getVersenyszam} from "../../api/versenyszamok";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useVersenyszamDetails(id: number): RefreshableLiveData<Versenyszam> {
     const user = useAuthUser();

@@ -1,8 +1,8 @@
 import {Uszo} from "../../types/model/Uszo";
 import {useCallback, useEffect, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
 import {getAllUszokInCsapat} from "../../api/uszok";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useUszokList(csapatId: number | undefined): RefreshableLiveData<Uszo[]> {
     const user = useAuthUser();

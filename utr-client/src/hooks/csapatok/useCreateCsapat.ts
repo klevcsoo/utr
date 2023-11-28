@@ -1,8 +1,8 @@
 import {useCallback} from "react";
 import {createCsapat} from "../../api/csapatok";
-import {useAuthUser} from "../auth/useAuthUser";
 import {Csapat} from "../../types/model/Csapat";
 import {useTranslation} from "../translations/useTranslation";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useCreateCsapat(): (data: Omit<Csapat, "id">) => Promise<string> {
     const user = useAuthUser();

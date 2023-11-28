@@ -1,13 +1,8 @@
 import {useTranslation} from "../hooks/translations/useTranslation";
-import {useUsersList} from "../hooks/auth/useUsersList";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import {useDeleteUser} from "../hooks/auth/useDeleteUser";
-import {useUserDetails} from "../hooks/auth/useUserDetails";
 import {TextInput} from "../components/inputs/TextInput";
 import {DisplayedUser} from "../types/DisplayedUser";
-import {useRolesList} from "../hooks/auth/useRolesList";
-import {useEditUser} from "../hooks/auth/useEditUser";
 import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
 import {
     Button,
@@ -24,6 +19,13 @@ import {
 } from "@material-tailwind/react";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+import {
+    useDeleteUser,
+    useEditUser,
+    useRolesList,
+    useUserDetails,
+    useUsersList
+} from "../auth/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USER_ID_PARAM_KEY = "userId";

@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
 import {Csapat} from "../../types/model/Csapat";
 import {getAllCsapatokList} from "../../api/csapatok";
-import {useAuthUser} from "../auth/useAuthUser";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useCsapatokList(): RefreshableLiveData<Csapat[]> {
     const user = useAuthUser();

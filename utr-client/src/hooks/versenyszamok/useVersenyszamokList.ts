@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {getVersenyszamokInVerseny} from "../../api/versenyszamok";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useVersenyszamokList(
     uszoversenyId: number | undefined

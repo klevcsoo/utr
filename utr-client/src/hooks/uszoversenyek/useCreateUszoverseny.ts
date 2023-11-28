@@ -1,7 +1,7 @@
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {createUszoverseny} from "../../api/uszoversenyek";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useCreateUszoverseny():
     (data: Omit<Uszoverseny, "id">) => Promise<string> {

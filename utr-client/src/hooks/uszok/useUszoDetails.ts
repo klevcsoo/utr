@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
 import {Uszo} from "../../types/model/Uszo";
-import {useAuthUser} from "../auth/useAuthUser";
 import {getUszo} from "../../api/uszok";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useUszoDetails(id: number): RefreshableLiveData<Uszo> {
     const user = useAuthUser();

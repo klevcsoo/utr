@@ -1,7 +1,7 @@
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {createVersenyszam} from "../../api/versenyszamok";
 import {VersenyszamCreationData} from "../../types/request/VersenyszamCreationData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useCreateVersenyszam():
     (data: Omit<VersenyszamCreationData, "id">) => Promise<string> {

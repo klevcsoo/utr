@@ -1,6 +1,6 @@
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {deleteVersenyszam} from "../../api/versenyszamok";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useDeleteVersenyszam():
     (id: number) => Promise<string> {

@@ -1,7 +1,7 @@
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {deleteCsapat} from "../../api/csapatok";
 import {useTranslation} from "../translations/useTranslation";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useDeleteCsapat(): (id: number) => Promise<string> {
     const user = useAuthUser();

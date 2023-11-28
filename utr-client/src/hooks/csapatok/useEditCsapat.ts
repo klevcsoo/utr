@@ -1,8 +1,8 @@
 import {Csapat} from "../../types/model/Csapat";
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {editCsapat} from "../../api/csapatok";
 import {useTranslation} from "../translations/useTranslation";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useEditCsapat():
     (id: number, data: Partial<Omit<Csapat, "id">>) => Promise<string> {

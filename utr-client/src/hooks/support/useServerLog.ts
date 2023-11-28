@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import {getApiServerLog} from "../../api/support";
-import {useAuthUser} from "../auth/useAuthUser";
+
+import {useAuthUser} from "../../auth/hooks";
 
 export function useServerLog(): [string[], boolean, () => void] {
     const user = useAuthUser();

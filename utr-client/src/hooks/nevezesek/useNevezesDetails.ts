@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
 import {Nevezes} from "../../types/model/Nevezes";
 import {getNevezes} from "../../api/nevezesek";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useNevezesDetails(id: number): RefreshableLiveData<Nevezes> {
     const user = useAuthUser();

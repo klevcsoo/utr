@@ -1,8 +1,8 @@
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {NevezesCreationData} from "../../types/request/NevezesCreationData";
 import {createNevezes} from "../../api/nevezesek";
 import {useTranslation} from "../translations/useTranslation";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useCreateNevezes():
     (data: NevezesCreationData) => Promise<string> {

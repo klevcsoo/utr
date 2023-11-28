@@ -1,7 +1,7 @@
-import {useAuthUser} from "../auth/useAuthUser";
 import {useCallback} from "react";
 import {deleteNevezes} from "../../api/nevezesek";
 import {useTranslation} from "../translations/useTranslation";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useDeleteNevezes():
     (id: number) => Promise<string> {

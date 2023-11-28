@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getAllUszoversenyekList} from "../../api/uszoversenyek";
 import {RefreshableLiveData} from "../../types/RefreshableLiveData";
+import {useAuthUser} from "../../auth/hooks";
 
 export function useUszoversenyekList(): RefreshableLiveData<Uszoverseny[]> {
     const user = useAuthUser();
