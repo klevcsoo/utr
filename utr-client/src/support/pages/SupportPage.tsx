@@ -11,7 +11,7 @@ import {
     TabsHeader,
     Typography
 } from "@material-tailwind/react";
-import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {KeyValueObject} from "../../types/KeyValueObject";
 import {Identifiable} from "../../types/Identifiable";
 import {useServerEnvVars, useServerLog} from "../hooks";

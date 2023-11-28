@@ -1,8 +1,8 @@
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {DataTable, DataTableDataColumn} from "../../components/tables";
-import {DateInput} from "../../components/inputs/DateInput";
-import {DestructiveButton} from "../../components/buttons";
+import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
+import {DateInput} from "../../utils/components/inputs/DateInput";
+import {DestructiveButton} from "../../utils/components/buttons";
 import {
     Button,
     Card,
@@ -16,8 +16,8 @@ import {
     Typography
 } from "@material-tailwind/react";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
-import {DateChip} from "../../components/DateChip";
+import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
+import {DateChip} from "../../utils/components/DateChip";
 import {useCreateUszoverseny, useNyitottVerseny, useUszoversenyekList} from "../hooks";
 import {useTranslation} from "../../translations/hooks";
 import {useSetAdminLayoutTitle} from "../../utils/hooks";

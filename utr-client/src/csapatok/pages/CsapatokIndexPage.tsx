@@ -1,6 +1,6 @@
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {TextInput} from "../../components/inputs/TextInput";
+import {TextInput} from "../../utils/components/inputs/TextInput";
 import {createCsapat} from "../api";
 import {
     Button,
@@ -12,8 +12,8 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DataTable, DataTableDataColumn} from "../../components/tables";
-import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
+import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
+import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {useAuthUser} from "../../auth/hooks";
 import {useCsapatokList} from "../hooks";

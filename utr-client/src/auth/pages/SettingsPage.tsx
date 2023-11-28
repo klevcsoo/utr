@@ -2,9 +2,9 @@
 
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import {TextInput} from "../../components/inputs/TextInput";
+import {TextInput} from "../../utils/components/inputs/TextInput";
 import {DisplayedUser} from "../../types/DisplayedUser";
-import {FullPageModalWithActions} from "../../components/modals/FullPageModalWithActions";
+import {FullPageModalWithActions} from "../../utils/components/modals/FullPageModalWithActions";
 import {
     Button,
     Card,
@@ -18,8 +18,8 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DataTable, DataTableDataColumn} from "../../components/tables";
-import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
+import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
+import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {useDeleteUser, useEditUser, useRolesList, useUserDetails, useUsersList} from "../hooks";
 import {useTranslation} from "../../translations/hooks";
 

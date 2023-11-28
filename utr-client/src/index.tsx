@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import {BrowserRouter} from "react-router-dom";
-import AuthProvider from "./components/providers/AuthProvider";
-import {TranslationProvider} from "./components/providers/TranslationProvider";
+import AuthProvider from "./auth/components/AuthProvider";
+import {TranslationProvider} from "./translations/components/TranslationProvider";
 import {startApiPollEventTimer} from "./utils/lib/apiPolling";
 import {ThemeProvider} from "@material-tailwind/react";
 

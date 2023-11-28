@@ -3,7 +3,7 @@ import {offApiPollEvent, onApiPollEvent} from "./lib/apiPolling";
 import {useTranslation} from "../translations/hooks";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
-import {AdminLayoutTitleContext} from "../layouts/AdminLayout";
+import {AdminLayoutTitleContext} from "./components/AdminLayout";
 
 export function useApiPolling(fetchCallback: () => void) {
     useEffect(() => {

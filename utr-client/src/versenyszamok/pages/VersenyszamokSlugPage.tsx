@@ -17,12 +17,12 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton} from "../../components/buttons";
-import {VersenyszamEditLayout} from "../../layouts/VersenyszamEditLayout";
-import {DataTable, DataTableDataColumn} from "../../components/tables";
-import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
+import {DestructiveButton} from "../../utils/components/buttons";
+import {VersenyszamEditLayout} from "../components/VersenyszamEditLayout";
+import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
+import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {PencilSquareIcon, PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
-import {EntryTimeInput} from "../../components/inputs/EntryTimeInput";
+import {EntryTimeInput} from "../../nevezesek/components/EntryTimeInput";
 import {
     useCreateNevezes,
     useDeleteNevezes,
