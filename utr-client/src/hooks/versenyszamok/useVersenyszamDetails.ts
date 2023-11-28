@@ -1,15 +1,15 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {getVersenyszam} from "../../api/versenyszamok";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useVersenyszamDetails(id: number): [Versenyszam | undefined, boolean] {
+export function useVersenyszamDetails(id: number): RefreshableLiveData<Versenyszam> {
     const user = useAuthUser();
     const [uszo, setUszo] = useState<Versenyszam>();
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!user && id !== -1) {
             getVersenyszam(user, id).then(setUszo).catch(console.error).finally(() => {
                 setLoading(false);
@@ -17,7 +17,7 @@ export function useVersenyszamDetails(id: number): [Versenyszam | undefined, boo
         }
     }, [id, user]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [uszo, loading];
+    return [uszo, loading, refresh];
 }

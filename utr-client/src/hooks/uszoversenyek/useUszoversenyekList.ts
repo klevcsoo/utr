@@ -1,15 +1,15 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getAllUszoversenyekList} from "../../api/uszoversenyek";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useUszoversenyekList(): [Uszoverseny[], boolean] {
+export function useUszoversenyekList(): RefreshableLiveData<Uszoverseny[]> {
     const user = useAuthUser();
     const [list, setList] = useState<Uszoverseny[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!user) {
             getAllUszoversenyekList(user).then(response => {
                 setList(response);
@@ -23,7 +23,7 @@ export function useUszoversenyekList(): [Uszoverseny[], boolean] {
         }
     }, [user]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [list, loading];
+    return [list, loading, refresh];
 }

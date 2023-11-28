@@ -1,15 +1,15 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getUszoverseny} from "../../api/uszoversenyek";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useUszoversenyDetails(id: number): [Uszoverseny | undefined, boolean] {
+export function useUszoversenyDetails(id: number): RefreshableLiveData<Uszoverseny> {
     const user = useAuthUser();
     const [uszoverseny, setUszoverseny] = useState<Uszoverseny>();
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!user && id !== -1) {
             getUszoverseny(user, id).then(setUszoverseny).catch(console.error).finally(() => {
                 setLoading(false);
@@ -17,7 +17,7 @@ export function useUszoversenyDetails(id: number): [Uszoverseny | undefined, boo
         }
     }, [id, user]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [uszoverseny, loading];
+    return [uszoverseny, loading, refresh];
 }

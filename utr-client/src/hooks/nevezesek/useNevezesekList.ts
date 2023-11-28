@@ -1,15 +1,17 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {Nevezes} from "../../types/model/Nevezes";
 import {getAllNevezesek} from "../../api/nevezesek";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useNevezesekList(versenyszamId: number | undefined): [Nevezes[], boolean] {
+export function useNevezesekList(
+    versenyszamId: number | undefined
+): RefreshableLiveData<Nevezes[]> {
     const user = useAuthUser();
     const [list, setList] = useState<Nevezes[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!versenyszamId && !!user) {
             getAllNevezesek(user, versenyszamId).then(setList).catch(reason => {
                 console.error(reason);
@@ -19,7 +21,7 @@ export function useNevezesekList(versenyszamId: number | undefined): [Nevezes[],
         }
     }, [user, versenyszamId]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [list, loading];
+    return [list, loading, refresh];
 }

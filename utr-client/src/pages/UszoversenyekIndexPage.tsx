@@ -77,9 +77,9 @@ function UszoversenyekList() {
     const t = useTranslation();
     const [, setSearchParams] = useSearchParams();
 
-    const [uszoversenyek, uszoversenyekLoading] = useUszoversenyekList();
+    const [uszoversenyek, loadingUszoversenyek] = useUszoversenyekList();
 
-    return uszoversenyekLoading ? (
+    return loadingUszoversenyek ? (
         <Spinner/>
     ) : (
         <Card className="w-full mt-6">

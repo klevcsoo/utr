@@ -1,15 +1,17 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {getVersenyszamokInVerseny} from "../../api/versenyszamok";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useVersenyszamokList(uszoversenyId: number | undefined): [Versenyszam[], boolean] {
+export function useVersenyszamokList(
+    uszoversenyId: number | undefined
+): RefreshableLiveData<Versenyszam[]> {
     const user = useAuthUser();
     const [list, setList] = useState<Versenyszam[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!uszoversenyId && !!user) {
             getVersenyszamokInVerseny(user, uszoversenyId).then(setList).catch(reason => {
                 console.error(reason);
@@ -19,7 +21,7 @@ export function useVersenyszamokList(uszoversenyId: number | undefined): [Versen
         }
     }, [user, uszoversenyId]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [list, loading];
+    return [list, loading, refresh];
 }

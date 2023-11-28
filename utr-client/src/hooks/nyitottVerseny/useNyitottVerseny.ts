@@ -1,19 +1,19 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getOpenUszoverseny, getOpenVersenyszamok} from "../../api/nyitottVerseny";
 import {useAuthUser} from "../auth/useAuthUser";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
 export function useNyitottVerseny():
-    [(Uszoverseny & { versenyszamok: Versenyszam[] }) | undefined, boolean] {
+    RefreshableLiveData<(Uszoverseny & { versenyszamok: Versenyszam[] })> {
     const user = useAuthUser();
 
     const [uszoverseny, setUszoverseny] = useState<Uszoverseny>();
     const [versenyszamok, setVersenyszamok] = useState<Versenyszam[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!user) {
             getOpenUszoverseny(user).then(setUszoverseny).catch(reason => {
                 console.error(reason);
@@ -24,10 +24,11 @@ export function useNyitottVerseny():
         }
     }, [user]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
     return [
         !uszoverseny ? undefined : {...uszoverseny, versenyszamok: versenyszamok},
-        loading
+        loading,
+        refresh
     ];
 }

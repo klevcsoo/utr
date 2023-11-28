@@ -1,15 +1,15 @@
 import {Csapat} from "../../types/model/Csapat";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {getCsapat} from "../../api/csapatok";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useCsapatDetails(id: number): [Csapat | undefined, boolean] {
+export function useCsapatDetails(id: number): RefreshableLiveData<Csapat> {
     const user = useAuthUser();
     const [csapat, setCsapat] = useState<Csapat>();
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!user && id !== -1) {
             getCsapat(user, id).then(setCsapat).catch(reason => {
                 console.error(reason);
@@ -19,7 +19,7 @@ export function useCsapatDetails(id: number): [Csapat | undefined, boolean] {
         }
     }, [id, user]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [csapat, loading];
+    return [csapat, loading, refresh];
 }

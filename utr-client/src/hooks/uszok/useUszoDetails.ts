@@ -1,15 +1,15 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Uszo} from "../../types/model/Uszo";
 import {useAuthUser} from "../auth/useAuthUser";
 import {getUszo} from "../../api/uszok";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useUszoDetails(id: number): [Uszo | undefined, boolean] {
+export function useUszoDetails(id: number): RefreshableLiveData<Uszo> {
     const user = useAuthUser();
     const [uszo, setUszo] = useState<Uszo>();
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!user && id !== -1) {
             getUszo(user, id).then(setUszo).catch(console.error).finally(() => {
                 setLoading(false);
@@ -17,7 +17,7 @@ export function useUszoDetails(id: number): [Uszo | undefined, boolean] {
         }
     }, [id, user]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [uszo, loading];
+    return [uszo, loading, refresh];
 }

@@ -1,15 +1,15 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Csapat} from "../../types/model/Csapat";
 import {getAllCsapatokList} from "../../api/csapatok";
 import {useAuthUser} from "../auth/useAuthUser";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useCsapatokList(): [Csapat[], boolean] {
+export function useCsapatokList(): RefreshableLiveData<Csapat[]> {
     const user = useAuthUser();
     const [list, setList] = useState<Csapat[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!user) {
             getAllCsapatokList(user).then(response => {
                 setList(response);
@@ -23,7 +23,7 @@ export function useCsapatokList(): [Csapat[], boolean] {
         }
     }, [user]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [list, loading];
+    return [list, loading, refresh];
 }

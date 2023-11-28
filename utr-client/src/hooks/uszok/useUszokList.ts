@@ -1,15 +1,15 @@
 import {Uszo} from "../../types/model/Uszo";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuthUser} from "../auth/useAuthUser";
 import {getAllUszokInCsapat} from "../../api/uszok";
-import {useApiPolling} from "../useApiPolling";
+import {RefreshableLiveData} from "../../types/RefreshableLiveData";
 
-export function useUszokList(csapatId: number | undefined): [Uszo[], boolean] {
+export function useUszokList(csapatId: number | undefined): RefreshableLiveData<Uszo[]> {
     const user = useAuthUser();
     const [list, setList] = useState<Uszo[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const doFetch = useCallback(() => {
+    const refresh = useCallback(() => {
         if (!!csapatId && !!user) {
             getAllUszokInCsapat(user, csapatId).then(setList).catch(reason => {
                 console.error(reason);
@@ -19,7 +19,7 @@ export function useUszokList(csapatId: number | undefined): [Uszo[], boolean] {
         }
     }, [user, csapatId]);
 
-    useApiPolling(doFetch);
+    useEffect(refresh, [refresh]);
 
-    return [list, loading];
+    return [list, loading, refresh];
 }
