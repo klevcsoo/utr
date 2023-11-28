@@ -1,5 +1,5 @@
 import {Uszoverseny} from "../types/model/Uszoverseny";
-import {apiRequest, createAllStringObject} from "../lib/utils";
+import {apiRequest, createAllStringObject} from "../utils/lib/utils";
 import {AuthUser} from "../types/AuthUser";
 import {MessageResponse} from "../types/response/MessageResponse";
 import {Versenyszam} from "../types/model/Versenyszam";

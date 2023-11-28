@@ -1,5 +1,5 @@
 import {useMemo} from "react";
-import {packageVersion} from "../lib/config";
+import {packageVersion} from "../utils/lib/config";
 import {useTranslation} from "../translations/hooks";
 
 export function EnvironmentBanner() {

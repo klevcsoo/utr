@@ -5,7 +5,7 @@ import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 import {CsapatSelect, UszoSelect} from "../components/selects";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
-import {formatInterval} from "../lib/utils";
+import {formatInterval} from "../utils/lib/utils";
 import {
     Button,
     Card,

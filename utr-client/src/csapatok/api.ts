@@ -1,7 +1,7 @@
 import {AuthUser} from "../types/AuthUser";
 import {Csapat} from "../types/model/Csapat";
 import {MessageResponse} from "../types/response/MessageResponse";
-import {apiRequest} from "../lib/utils";
+import {apiRequest} from "../utils/lib/utils";
 
 export async function getAllCsapatokList(user: AuthUser): Promise<Csapat[]> {
     return apiRequest<Csapat[]>(user, "/csapatok/", "GET");

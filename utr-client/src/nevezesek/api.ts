@@ -1,5 +1,5 @@
 import {AuthUser} from "../types/AuthUser";
-import {apiRequest, createAllStringObject} from "../lib/utils";
+import {apiRequest, createAllStringObject} from "../utils/lib/utils";
 import {Nevezes} from "../types/model/Nevezes";
 import {NevezesCreationData} from "../types/request/NevezesCreationData";
 

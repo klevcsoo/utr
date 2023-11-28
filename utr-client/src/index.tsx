@@ -5,7 +5,7 @@ import App from './App';
 import {BrowserRouter} from "react-router-dom";
 import AuthProvider from "./components/providers/AuthProvider";
 import {TranslationProvider} from "./components/providers/TranslationProvider";
-import {startApiPollEventTimer} from "./lib/apiPolling";
+import {startApiPollEventTimer} from "./utils/lib/apiPolling";
 import {ThemeProvider} from "@material-tailwind/react";
 
 startApiPollEventTimer();

@@ -1,5 +1,5 @@
 import {useCallback, useContext, useEffect, useMemo} from "react";
-import {offApiPollEvent, onApiPollEvent} from "../lib/apiPolling";
+import {offApiPollEvent, onApiPollEvent} from "./lib/apiPolling";
 import {useTranslation} from "../translations/hooks";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
