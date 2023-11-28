@@ -1,10 +1,9 @@
 import {useCallback, useState} from "react";
-import {AuthUser} from "../../types/AuthUser";
 import {AuthContext, login} from "../api";
-import {UserRole} from "../../types/UserRole";
-import {CommonChildrenOnlyProps} from "../../types/componentProps/common/CommonChildrenOnlyProps";
 
 import {useTranslation} from "../../translations/hooks";
+import {CommonChildrenOnlyProps} from "../../utils/types";
+import {AuthUser, UserRole} from "../types";
 
 const AUTH_DATA_KEY = "auth_data";
 

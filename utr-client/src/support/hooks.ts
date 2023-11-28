@@ -1,8 +1,7 @@
-import {Identifiable} from "../types/Identifiable";
-import {KeyValueObject} from "../types/KeyValueObject";
 import {useAuthUser} from "../auth/hooks";
 import {useCallback, useEffect, useState} from "react";
 import {getApiServerEnvVars, getApiServerLog} from "./api";
+import {Identifiable, KeyValueObject} from "../utils/types";
 
 export function useServerEnvVars(): [Identifiable<KeyValueObject<string>>[], boolean] {
     const user = useAuthUser();

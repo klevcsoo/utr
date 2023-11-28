@@ -1,8 +1,18 @@
 import {FullPageModal} from "./FullPageModal";
 import {TitleIcon} from "../icons/TitleIcon";
-import {
-    FullPageModalWithActionsProps
-} from "../../../types/componentProps/modals/FullPageModalWithActionsProps";
+import {ReactNode} from "react";
+
+export interface FullPageModalWithActionsProps {
+    icon: string;
+    title: string;
+    children: ReactNode;
+    className?: string;
+    canComplete?: boolean;
+
+    onComplete(): void;
+
+    onDismiss(): void;
+}
 
 export function FullPageModalWithActions(props: FullPageModalWithActionsProps) {
     return (

@@ -1,8 +1,8 @@
-import {Uszoverseny} from "../types/model/Uszoverseny";
 import {apiRequest, createAllStringObject} from "../utils/lib/utils";
-import {AuthUser} from "../types/AuthUser";
-import {MessageResponse} from "../types/response/MessageResponse";
-import {Versenyszam} from "../types/model/Versenyszam";
+import {Uszoverseny} from "./types";
+import {Versenyszam} from "../versenyszamok/types";
+import {MessageResponse} from "../utils/types";
+import {AuthUser} from "../auth/types";
 
 export async function getAllUszoversenyekList(user: AuthUser): Promise<Uszoverseny[]> {
     const data = await apiRequest<Uszoverseny[]>(user, "/uszoversenyek/", "GET");

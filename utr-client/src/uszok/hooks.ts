@@ -1,9 +1,10 @@
-import {Uszo} from "../types/model/Uszo";
 import {useAuthUser} from "../auth/hooks";
 import {useTranslation} from "../translations/hooks";
 import {useCallback, useEffect, useState} from "react";
 import {createUszo, deleteUszo, editUszo, getAllUszokInCsapat, getUszo} from "./api";
-import {RefreshableLiveData} from "../types/RefreshableLiveData";
+
+import {RefreshableLiveData} from "../utils/types";
+import {Uszo} from "./types";
 
 export function useCreateUszo():
     (data: Omit<Uszo, "id">) => Promise<string> {

@@ -1,9 +1,7 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {AuthContext, createUser, deleteUser, editUser, getAllUsers, getUser} from "./api";
-import {UserCreationData} from "../types/request/UserCreationData";
-import {MessageResponse} from "../types/response/MessageResponse";
-import {UserEditData} from "../types/request/UserEditData";
-import {DisplayedUser} from "../types/DisplayedUser";
+import {DisplayedUser, UserCreationData, UserEditData} from "./types";
+import {MessageResponse} from "../utils/types";
 
 export function useAuthLogin() {
     return useContext(AuthContext).login;

@@ -1,6 +1,7 @@
 import {useCallback, useContext} from "react";
 import {TranslationContext} from "../utils/lib/translation";
-import {Locale} from "../types/Locale";
+
+import {Locale} from "./types";
 
 export function useSetLocale() {
     const setLocale = useContext(TranslationContext).setLocale;

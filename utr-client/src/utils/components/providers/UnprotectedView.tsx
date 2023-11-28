@@ -1,9 +1,7 @@
 import {Fragment} from "react";
 import {Navigate} from "react-router-dom";
-import {
-    CommonChildrenOnlyProps
-} from "../../../types/componentProps/common/CommonChildrenOnlyProps";
 import {useAuthUser} from "../../../auth/hooks";
+import {CommonChildrenOnlyProps} from "../../types";
 
 export function UnprotectedView(props: CommonChildrenOnlyProps) {
     const user = useAuthUser();

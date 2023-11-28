@@ -1,10 +1,10 @@
 import {Fragment} from "react";
-import {EmberiNemId} from "../../types/EmberiNemId";
-import {UszasnemId} from "../../types/UszasnemId";
 import {useTranslation} from "../../translations/hooks";
 import {NumberInput} from "../../utils/components/inputs/NumberInput";
 import {VersenyszamNemSelect} from "./VersenyszamNemSelect";
 import {UszasnemSelect} from "./UszasnemSelect";
+import {EmberiNemId} from "../../uszok/types";
+import {UszasnemId} from "../types";
 
 export interface VersenyszamEditLayoutProps {
     valto: number;

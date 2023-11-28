@@ -1,9 +1,9 @@
 import {useCallback, useContext, useEffect, useMemo} from "react";
 import {offApiPollEvent, onApiPollEvent} from "./lib/apiPolling";
 import {useTranslation} from "../translations/hooks";
-import {EmberiNemId} from "../types/EmberiNemId";
-import {UszasnemId} from "../types/UszasnemId";
 import {AdminLayoutTitleContext} from "./components/AdminLayout";
+import {EmberiNemId} from "../uszok/types";
+import {UszasnemId} from "../versenyszamok/types";
 
 export function useApiPolling(fetchCallback: () => void) {
     useEffect(() => {

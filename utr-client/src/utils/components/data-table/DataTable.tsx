@@ -1,10 +1,10 @@
 import {ReactElement, ReactNode, useCallback, useState} from "react";
-import {Identifiable} from "../../../types/Identifiable";
 import {DataTableContext, DataTableContextType} from "./DataTableContext";
 import {DataTableDataColumnProps} from "./DataTableDataColumn";
 import {typedObjectKeys} from "../../lib/utils";
 import {Card} from "@material-tailwind/react";
 import {DataTableActionColumnProps} from "./DataTableActionColumn";
+import {Identifiable} from "../../types";
 
 export type DataTableChildren<T extends Identifiable<object>> =
     (ReactElement<DataTableDataColumnProps<T>> |

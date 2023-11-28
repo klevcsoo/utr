@@ -1,6 +1,7 @@
-import {AuthUser} from "../../types/AuthUser";
 import {artificialAPIDelay, serverURL} from "./config";
-import {MessageResponse} from "../../types/response/MessageResponse";
+
+import {MessageResponse} from "../types";
+import {AuthUser} from "../../auth/types";
 
 export function createAllStringObject<T extends object>(
     obj: T

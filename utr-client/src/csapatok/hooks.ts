@@ -1,9 +1,9 @@
-import {Csapat} from "../types/model/Csapat";
 import {useAuthUser} from "../auth/hooks";
 import {useCallback, useEffect, useState} from "react";
 import {createCsapat, deleteCsapat, editCsapat, getAllCsapatokList, getCsapat} from "./api";
-import {RefreshableLiveData} from "../types/RefreshableLiveData";
 import {useTranslation} from "../translations/hooks";
+import {RefreshableLiveData} from "../utils/types";
+import {Csapat} from "./types";
 
 export function useCreateCsapat(): (data: Omit<Csapat, "id">) => Promise<string> {
     const user = useAuthUser();

@@ -1,4 +1,11 @@
-import {FullPageModalProps} from "../../../types/componentProps/modals/FullPageModalProps";
+import {ReactNode} from "react";
+
+export interface FullPageModalProps {
+    children: ReactNode;
+    className?: string;
+
+    onClickOutside?(): void;
+}
 
 export function FullPageModal(props: FullPageModalProps) {
     return (

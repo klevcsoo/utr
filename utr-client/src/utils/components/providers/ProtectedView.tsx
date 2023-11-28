@@ -1,7 +1,13 @@
 import {Fragment} from "react";
 import {Navigate} from "react-router-dom";
-import {ProtectedViewProps} from "../../../types/componentProps/ProtectedViewProps";
 import {useAuthUser} from "../../../auth/hooks";
+import {CommonChildrenOnlyProps} from "../../types";
+
+import {UserRole} from "../../../auth/types";
+
+export interface ProtectedViewProps extends CommonChildrenOnlyProps {
+    role?: UserRole;
+}
 
 export function ProtectedView(props: ProtectedViewProps) {
     const user = useAuthUser();

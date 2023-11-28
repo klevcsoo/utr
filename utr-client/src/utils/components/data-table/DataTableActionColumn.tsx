@@ -1,6 +1,6 @@
-import {Identifiable} from "../../../types/Identifiable";
 import {ReactNode, useContext, useEffect} from "react";
 import {DataTableContext, DataTableContextType} from "./DataTableContext";
+import {Identifiable} from "../../types";
 
 export interface DataTableActionColumnProps<
     T extends Identifiable<object>

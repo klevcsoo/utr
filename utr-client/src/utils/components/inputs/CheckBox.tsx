@@ -1,4 +1,9 @@
-import {CheckBoxProps} from "../../../types/componentProps/inputs/CheckBoxProps";
+export interface CheckBoxProps {
+    value: boolean;
+    disabled?: boolean;
+
+    onValue(value: boolean): void;
+}
 
 export function CheckBox(props: CheckBoxProps) {
     return (

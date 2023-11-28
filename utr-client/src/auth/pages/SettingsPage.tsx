@@ -3,7 +3,6 @@
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {TextInput} from "../../utils/components/inputs/TextInput";
-import {DisplayedUser} from "../../types/DisplayedUser";
 import {FullPageModalWithActions} from "../../utils/components/modals/FullPageModalWithActions";
 import {
     Button,
@@ -22,6 +21,7 @@ import {DataTable, DataTableDataColumn} from "../../utils/components/data-table"
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {useDeleteUser, useEditUser, useRolesList, useUserDetails, useUsersList} from "../hooks";
 import {useTranslation} from "../../translations/hooks";
+import {DisplayedUser} from "../types";
 
 const MODAL_PARAM_KEY = "modal";
 const USER_ID_PARAM_KEY = "userId";

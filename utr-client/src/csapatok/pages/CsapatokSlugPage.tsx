@@ -1,8 +1,6 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {TextInput} from "../../utils/components/inputs/TextInput";
-import {EmberiNemId} from "../../types/EmberiNemId";
-import {Csapat} from "../../types/model/Csapat";
 import {
     Button,
     Card,
@@ -24,6 +22,8 @@ import {useCreateUszo, useDeleteUszo, useUszoDetails, useUszokList} from "../../
 import {useGetEmberiNemElnevezes, useSetAdminLayoutTitle} from "../../utils/hooks";
 import {NumberInput} from "../../utils/components/inputs/NumberInput";
 import {EmberiNemSelect} from "../../uszok/components/EmberiNemSelect";
+import {Csapat} from "../types";
+import {EmberiNemId} from "../../uszok/types";
 
 const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";

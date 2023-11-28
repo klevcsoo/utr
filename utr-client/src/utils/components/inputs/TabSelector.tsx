@@ -1,6 +1,10 @@
 import {useSearchParams} from "react-router-dom";
-import {TabSelectorProps} from "../../../types/componentProps/inputs/TabSelectorProps";
 import {useCallback} from "react";
+
+export interface TabSelectorProps {
+    tabs: { key: string, name: string }[];
+    defaultTabKey: string;
+}
 
 export function TabSelector(props: TabSelectorProps) {
     const [searchParams, setSearchParams] = useSearchParams();

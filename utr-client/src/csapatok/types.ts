@@ -1,4 +1,4 @@
-import {Identifiable} from "../Identifiable";
+import {Identifiable} from "../utils/types";
 
 export type Csapat = Identifiable<{
     nev: string

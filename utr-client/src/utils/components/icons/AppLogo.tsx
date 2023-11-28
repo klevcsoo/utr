@@ -1,5 +1,9 @@
 import {ReactComponent as Logo} from "../../../assets/utr_logo.svg";
-import {AppLogoProps} from "../../../types/componentProps/icons/AppLogoProps";
+
+export interface AppLogoProps {
+    scale?: number;
+    className?: string;
+}
 
 export function AppLogo(props: AppLogoProps) {
     return (

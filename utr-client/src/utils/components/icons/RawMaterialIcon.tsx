@@ -1,4 +1,7 @@
-import {RawMaterialIconProps} from "../../../types/componentProps/icons/RawMaterialIconProps";
+export interface RawMaterialIconProps {
+    name: string;
+    className?: string;
+}
 
 export function RawMaterialIcon(props: RawMaterialIconProps) {
     return (

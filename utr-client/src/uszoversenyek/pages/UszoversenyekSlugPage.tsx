@@ -1,8 +1,6 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {DateInput} from "../../utils/components/inputs/DateInput";
-import {EmberiNemId} from "../../types/EmberiNemId";
 import {
     Button,
     Card,
@@ -19,7 +17,6 @@ import {
 import {DestructiveButton} from "../../utils/components/buttons";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
-import {UszasnemId} from "../../types/UszasnemId";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {VersenyszamEditLayout} from "../../versenyszamok/components/VersenyszamEditLayout";
 import {
@@ -40,6 +37,9 @@ import {
     useGetVersenyszamNemElnevezes,
     useSetAdminLayoutTitle
 } from "../../utils/hooks";
+import {Uszoverseny} from "../types";
+import {EmberiNemId} from "../../uszok/types";
+import {UszasnemId} from "../../versenyszamok/types";
 
 const CREATE_RACE_PARAM_KEY = "race";
 

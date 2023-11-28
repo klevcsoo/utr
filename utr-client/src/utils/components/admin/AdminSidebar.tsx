@@ -1,6 +1,5 @@
 import {Link, useLocation} from "react-router-dom";
 import {createElement, FunctionComponent, useEffect, useMemo, useState} from "react";
-import {Locale} from "../../../types/Locale";
 import {
     Card,
     CardBody,
@@ -21,6 +20,7 @@ import {
 } from "@heroicons/react/24/solid";
 import {useSetLocale, useTranslation} from "../../../translations/hooks";
 import {GenericSelect} from "../selects/GenericSelect";
+import {Locale} from "../../../translations/types";
 
 export interface AdminSidebarProps {
     expanded: boolean;

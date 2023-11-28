@@ -1,4 +1,3 @@
-import {VersenyszamCreationData} from "../types/request/VersenyszamCreationData";
 import {useAuthUser} from "../auth/hooks";
 import {useCallback, useEffect, useState} from "react";
 import {
@@ -8,8 +7,8 @@ import {
     getVersenyszam,
     getVersenyszamokInVerseny
 } from "./api";
-import {RefreshableLiveData} from "../types/RefreshableLiveData";
-import {Versenyszam} from "../types/model/Versenyszam";
+import {RefreshableLiveData} from "../utils/types";
+import {Versenyszam, VersenyszamCreationData} from "./types";
 
 export function useCreateVersenyszam():
     (data: Omit<VersenyszamCreationData, "id">) => Promise<string> {

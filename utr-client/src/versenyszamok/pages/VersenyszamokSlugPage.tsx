@@ -1,10 +1,5 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {Versenyszam} from "../../types/model/Versenyszam";
-import {EmberiNemId} from "../../types/EmberiNemId";
-import {UszasnemId} from "../../types/UszasnemId";
-import {CsapatSelect, UszoSelect} from "../../components/selects";
-import {DisplayedNevezes} from "../../types/DisplayedNevezes";
 import {formatInterval} from "../../utils/lib/utils";
 import {
     Button,
@@ -34,6 +29,11 @@ import {useUszoversenyDetails} from "../../uszoversenyek/hooks";
 import {useTranslation} from "../../translations/hooks";
 import {useDeleteVersenyszam, useEditVersenyszam, useVersenyszamDetails} from "../hooks";
 import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../../utils/hooks";
+import {UszasnemId, Versenyszam} from "../types";
+import {DisplayedNevezes} from "../../nevezesek/types";
+import {EmberiNemId} from "../../uszok/types";
+import {CsapatSelect} from "../../csapatok/components/CsapatSelect";
+import {UszoSelect} from "../../uszok/components/UszoSelect";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";

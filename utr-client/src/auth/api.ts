@@ -1,13 +1,15 @@
 import {serverURL} from "../utils/lib/config";
-import {UserRole} from "../types/UserRole";
-import {LoginResponse} from "../types/response/LoginResponse";
-import {AuthUser} from "../types/AuthUser";
 import {createContext} from "react";
 import {apiRequest} from "../utils/lib/utils";
-import {DisplayedUser} from "../types/DisplayedUser";
-import {UserCreationData} from "../types/request/UserCreationData";
-import {MessageResponse} from "../types/response/MessageResponse";
-import {UserEditData} from "../types/request/UserEditData";
+import {
+    AuthUser,
+    DisplayedUser,
+    LoginResponse,
+    UserCreationData,
+    UserEditData,
+    UserRole
+} from "./types";
+import {MessageResponse} from "../utils/types";
 
 const userRoleMap: { [key: string]: UserRole } = {
     "ROLE_ADMIN": "admin",

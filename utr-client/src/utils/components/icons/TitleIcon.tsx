@@ -1,5 +1,6 @@
 import {RawMaterialIcon} from "./RawMaterialIcon";
-import {CommonNameOnlyProps} from "../../../types/componentProps/common/CommonNameOnlyProps";
+
+import {CommonNameOnlyProps} from "../../types";
 
 export function TitleIcon(props: CommonNameOnlyProps) {
     return (

@@ -1,5 +1,5 @@
-import {Locale} from "../../types/Locale";
 import {createContext} from "react";
+import {Locale} from "../../translations/types";
 
 export const TranslationContext = createContext<{
     getTranslation(key: string, ...args: string[]): string

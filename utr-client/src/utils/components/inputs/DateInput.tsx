@@ -1,5 +1,12 @@
 import {useCallback} from "react";
-import {DateInputProps} from "../../../types/componentProps/inputs/DateInputProps";
+
+export interface DateInputProps {
+    value: number;
+    min?: number;
+    max?: number;
+
+    onValue(date: number): void;
+}
 
 export function DateInput(props: DateInputProps) {
     const dateToString = useCallback((value: number) => {

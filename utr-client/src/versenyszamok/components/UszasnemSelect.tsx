@@ -1,10 +1,10 @@
 import {useMemo} from "react";
 import {GenericSelect} from "../../utils/components/selects/GenericSelect";
-import {UszasnemId} from "../../types/UszasnemId";
 import {CommonSelectProps} from "../../utils/components/selects/CommonSelectProps";
 
 import {useTranslation} from "../../translations/hooks";
 import {useGetUszasnemElnevezes} from "../../utils/hooks";
+import {UszasnemId} from "../types";
 
 export function UszasnemSelect(props: CommonSelectProps<UszasnemId>) {
     const t = useTranslation();
