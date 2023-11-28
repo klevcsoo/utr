@@ -1,14 +1,10 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {useUszokList} from "../hooks/uszok/useUszokList";
 import {TextInput} from "../components/inputs/TextInput";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 import {Csapat} from "../types/model/Csapat";
-import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
-import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {EmberiNemSelect} from "../components/selects";
 import {
@@ -28,6 +24,7 @@ import {DataTableActionColumn} from "../components/tables/DataTableActionColumn"
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {useCsapatDetails, useDeleteCsapat, useEditCsapat} from "../csapatok/hooks";
 import {useTranslation} from "../translations/hooks";
+import {useCreateUszo, useDeleteUszo, useUszoDetails, useUszokList} from "../uszok/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";

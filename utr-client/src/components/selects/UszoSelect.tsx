@@ -1,9 +1,9 @@
 import {GenericSelect} from "./GenericSelect";
 import {useMemo} from "react";
-import {useUszokList} from "../../hooks/uszok/useUszokList";
 import {UszoSelectProps} from "./UszoSelectProps";
 import {Spinner} from "@material-tailwind/react";
 import {useTranslation} from "../../translations/hooks";
+import {useUszokList} from "../../uszok/hooks";
 
 export function UszoSelect(props: UszoSelectProps) {
     const t = useTranslation();
