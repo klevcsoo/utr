@@ -2,9 +2,9 @@ import {EmberiNemId} from "../../types/EmberiNemId";
 import {useMemo} from "react";
 import {GenericSelect} from "./GenericSelect";
 import {CommonSelectProps} from "./CommonSelectProps";
-import {useGetVersenyszamNemElnevezes} from "../../hooks/useGetVersenyszamNemElnevezes";
 
 import {useTranslation} from "../../translations/hooks";
+import {useGetVersenyszamNemElnevezes} from "../../utils/hooks";
 
 export function VersenyszamNemSelect(props: CommonSelectProps<EmberiNemId>) {
     const t = useTranslation();

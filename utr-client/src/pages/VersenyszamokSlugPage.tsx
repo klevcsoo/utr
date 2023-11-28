@@ -6,8 +6,6 @@ import {UszasnemId} from "../types/UszasnemId";
 import {CsapatSelect, UszoSelect} from "../components/selects";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
-import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {
     Button,
     Card,
@@ -39,6 +37,7 @@ import {
     useEditVersenyszam,
     useVersenyszamDetails
 } from "../versenyszamok/hooks";
+import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../utils/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";

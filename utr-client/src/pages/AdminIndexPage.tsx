@@ -1,6 +1,5 @@
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-
 import {useTranslation} from "../translations/hooks";
+import {useSetAdminLayoutTitle} from "../utils/hooks";
 
 export function AdminIndexPage() {
     const t = useTranslation();

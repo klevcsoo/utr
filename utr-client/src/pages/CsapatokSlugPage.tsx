@@ -3,9 +3,7 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs";
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Csapat} from "../types/model/Csapat";
-import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {EmberiNemSelect} from "../components/selects";
 import {
     Button,
@@ -25,6 +23,7 @@ import {PlusIcon} from "@heroicons/react/24/solid";
 import {useCsapatDetails, useDeleteCsapat, useEditCsapat} from "../csapatok/hooks";
 import {useTranslation} from "../translations/hooks";
 import {useCreateUszo, useDeleteUszo, useUszoDetails, useUszokList} from "../uszok/hooks";
+import {useGetEmberiNemElnevezes, useSetAdminLayoutTitle} from "../utils/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";

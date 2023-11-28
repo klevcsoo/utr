@@ -1,5 +1,4 @@
 import {Link, useSearchParams} from "react-router-dom";
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DateInput} from "../components/inputs/DateInput";
@@ -25,6 +24,7 @@ import {
     useUszoversenyekList
 } from "../uszoversenyek/hooks";
 import {useTranslation} from "../translations/hooks";
+import {useSetAdminLayoutTitle} from "../utils/hooks";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
