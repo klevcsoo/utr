@@ -1,12 +1,9 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {useVersenyszamDetails} from "../hooks/versenyszamok/useVersenyszamDetails";
-import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 import {CsapatSelect, UszoSelect} from "../components/selects";
-import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
@@ -37,6 +34,11 @@ import {
 } from "../nevezesek/hooks";
 import {useUszoversenyDetails} from "../uszoversenyek/hooks";
 import {useTranslation} from "../translations/hooks";
+import {
+    useDeleteVersenyszam,
+    useEditVersenyszam,
+    useVersenyszamDetails
+} from "../versenyszamok/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";
