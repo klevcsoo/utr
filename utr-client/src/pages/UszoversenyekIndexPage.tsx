@@ -82,7 +82,7 @@ function UszoversenyekList() {
     return uszoversenyekLoading ? (
         <Spinner/>
     ) : (
-        <Card className="w-full">
+        <Card className="w-full mt-6">
             <CardHeader variant="gradient" color="blue-gray"
                         className="p-4 mb-4 text-center">
                 <Typography variant="h5">
