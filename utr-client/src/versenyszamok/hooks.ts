@@ -7,7 +7,7 @@ import {
     editVersenyszam,
     getVersenyszam,
     getVersenyszamokInVerseny
-} from "../api/versenyszamok";
+} from "./api";
 import {RefreshableLiveData} from "../types/RefreshableLiveData";
 import {Versenyszam} from "../types/model/Versenyszam";
 

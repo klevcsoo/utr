@@ -1,13 +1,7 @@
 import {NevezesCreationData} from "../types/request/NevezesCreationData";
 import {useAuthUser} from "../auth/hooks";
 import {useCallback, useEffect, useState} from "react";
-import {
-    createNevezes,
-    deleteNevezes,
-    editNevezes,
-    getAllNevezesek,
-    getNevezes
-} from "../api/nevezesek";
+import {createNevezes, deleteNevezes, editNevezes, getAllNevezesek, getNevezes} from "./api";
 import {RefreshableLiveData} from "../types/RefreshableLiveData";
 import {Nevezes} from "../types/model/Nevezes";
 import {useTranslation} from "../translations/hooks";

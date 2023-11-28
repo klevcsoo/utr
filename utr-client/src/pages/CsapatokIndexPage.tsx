@@ -1,7 +1,7 @@
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
-import {createCsapat} from "../api/csapatok";
+import {createCsapat} from "../csapatok/api";
 import {
     Button,
     Card,

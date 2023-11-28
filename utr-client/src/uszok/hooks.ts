@@ -2,7 +2,7 @@ import {Uszo} from "../types/model/Uszo";
 import {useAuthUser} from "../auth/hooks";
 import {useTranslation} from "../translations/hooks";
 import {useCallback, useEffect, useState} from "react";
-import {createUszo, deleteUszo, editUszo, getAllUszokInCsapat, getUszo} from "../api/uszok";
+import {createUszo, deleteUszo, editUszo, getAllUszokInCsapat, getUszo} from "./api";
 import {RefreshableLiveData} from "../types/RefreshableLiveData";
 
 export function useCreateUszo():

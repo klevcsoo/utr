@@ -2,6 +2,7 @@ import {Uszoverseny} from "../types/model/Uszoverseny";
 import {apiRequest, createAllStringObject} from "../lib/utils";
 import {AuthUser} from "../types/AuthUser";
 import {MessageResponse} from "../types/response/MessageResponse";
+import {Versenyszam} from "../types/model/Versenyszam";
 
 export async function getAllUszoversenyekList(user: AuthUser): Promise<Uszoverseny[]> {
     const data = await apiRequest<Uszoverseny[]>(user, "/uszoversenyek/", "GET");
@@ -45,4 +46,14 @@ export async function openUszoverseny(
 
 export async function closeUszoverseny(user: AuthUser): Promise<MessageResponse> {
     return apiRequest(user, "/nyitott/lezaras", "POST");
+}
+
+export async function getOpenUszoverseny(user: AuthUser): Promise<Uszoverseny> {
+    const data = await apiRequest<Uszoverseny>(user, "/nyitott/reszletek", "GET");
+    data.datum = new Date(data.datum);
+    return data;
+}
+
+export async function getOpenVersenyszamok(user: AuthUser): Promise<Versenyszam[]> {
+    return apiRequest(user, "/nyitott/versenyszamok", "GET");
 }

@@ -1,5 +1,5 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {AuthContext, createUser, deleteUser, editUser, getAllUsers, getUser} from "../api/auth";
+import {AuthContext, createUser, deleteUser, editUser, getAllUsers, getUser} from "./api";
 import {UserCreationData} from "../types/request/UserCreationData";
 import {MessageResponse} from "../types/response/MessageResponse";
 import {UserEditData} from "../types/request/UserEditData";
