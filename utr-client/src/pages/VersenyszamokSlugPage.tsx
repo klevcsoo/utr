@@ -8,11 +8,8 @@ import {EmberiNemId} from "../types/EmberiNemId";
 import {UszasnemId} from "../types/UszasnemId";
 import {CsapatSelect, UszoSelect} from "../components/selects";
 import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
-import {useNevezesekList} from "../hooks/nevezesek/useNevezesekList";
-import {useDeleteNevezes} from "../hooks/nevezesek/useDeleteNevezes";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {useCreateNevezes} from "../hooks/nevezesek/useCreateNevezes";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
@@ -32,9 +29,14 @@ import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {PencilSquareIcon, PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
-import {useEditNevezes} from "../hooks/nevezesek/useEditNevezes";
-import {useNevezesDetails} from "../hooks/nevezesek/useNevezesDetails";
 import {EntryTimeInput} from "../components/inputs/EntryTimeInput";
+import {
+    useCreateNevezes,
+    useDeleteNevezes,
+    useEditNevezes,
+    useNevezesDetails,
+    useNevezesekList
+} from "../nevezesek/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";
