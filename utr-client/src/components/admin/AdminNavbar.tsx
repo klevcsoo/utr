@@ -18,9 +18,9 @@ import {
     CubeTransparentIcon,
     TableCellsIcon
 } from "@heroicons/react/24/solid";
-import {useNyitottVerseny} from "../../hooks/nyitottVerseny/useNyitottVerseny";
 import {AdminBreadcrumbs} from "./AdminBreadcrumbs";
 import {useAuthLogout} from "../../auth/hooks";
+import {useNyitottVerseny} from "../../uszoversenyek/hooks";
 
 export function AdminNavbar() {
     const t = useTranslation();

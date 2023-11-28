@@ -1,7 +1,6 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useVersenyszamDetails} from "../hooks/versenyszamok/useVersenyszamDetails";
-import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {Versenyszam} from "../types/model/Versenyszam";
 import {EmberiNemId} from "../types/EmberiNemId";
@@ -37,6 +36,7 @@ import {
     useNevezesDetails,
     useNevezesekList
 } from "../nevezesek/hooks";
+import {useUszoversenyDetails} from "../uszoversenyek/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";

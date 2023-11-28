@@ -1,14 +1,9 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
-import {useDeleteUszoverseny} from "../hooks/uszoversenyek/useDeleteUszoverseny";
-import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
-import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Uszoverseny} from "../types/model/Uszoverseny";
 import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
-import {useEditUszoverseny} from "../hooks/uszoversenyek/useEditUszoverseny";
 import {DateInput} from "../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
 import {useTranslation} from "../hooks/translations/useTranslation";
@@ -34,6 +29,13 @@ import {DataTableActionColumn} from "../components/tables/DataTableActionColumn"
 import {UszasnemId} from "../types/UszasnemId";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
+import {
+    useCloseUszoverseny,
+    useDeleteUszoverseny,
+    useEditUszoverseny,
+    useOpenUszoverseny,
+    useUszoversenyDetails
+} from "../uszoversenyek/hooks";
 
 const CREATE_RACE_PARAM_KEY = "race";
 

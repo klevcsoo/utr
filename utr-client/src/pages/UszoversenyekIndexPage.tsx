@@ -1,11 +1,8 @@
-import {useUszoversenyekList} from "../hooks/uszoversenyek/useUszoversenyekList";
 import {Link, useSearchParams} from "react-router-dom";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DateInput} from "../components/inputs/DateInput";
-import {useNyitottVerseny} from "../hooks/nyitottVerseny/useNyitottVerseny";
-import {useCreateUszoverseny} from "../hooks/uszoversenyek/useCreateUszoverseny";
 import {useTranslation} from "../hooks/translations/useTranslation";
 import {DestructiveButton} from "../components/buttons";
 import {
@@ -23,6 +20,11 @@ import {
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {DateChip} from "../components/DateChip";
+import {
+    useCreateUszoverseny,
+    useNyitottVerseny,
+    useUszoversenyekList
+} from "../uszoversenyek/hooks";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();
