@@ -3,7 +3,8 @@ import {AuthUser} from "../../types/AuthUser";
 import {AuthContext, login} from "../../api/auth";
 import {UserRole} from "../../types/UserRole";
 import {CommonChildrenOnlyProps} from "../../types/componentProps/common/CommonChildrenOnlyProps";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+
+import {useTranslation} from "../../translations/hooks";
 
 const AUTH_DATA_KEY = "auth_data";
 

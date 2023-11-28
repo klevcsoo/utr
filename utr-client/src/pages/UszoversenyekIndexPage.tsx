@@ -3,7 +3,6 @@ import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DateInput} from "../components/inputs/DateInput";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {DestructiveButton} from "../components/buttons";
 import {
     Button,
@@ -25,6 +24,7 @@ import {
     useNyitottVerseny,
     useUszoversenyekList
 } from "../uszoversenyek/hooks";
+import {useTranslation} from "../translations/hooks";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();

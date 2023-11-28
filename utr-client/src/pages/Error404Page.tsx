@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {Button} from "@material-tailwind/react";
+import {useTranslation} from "../translations/hooks";
 
 export function Error404Page() {
     const t = useTranslation();

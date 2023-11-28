@@ -9,7 +9,6 @@ import {CsapatSelect, UszoSelect} from "../components/selects";
 import {useEditVersenyszam} from "../hooks/versenyszamok/useEditVersenyszam";
 import {DisplayedNevezes} from "../types/DisplayedNevezes";
 import {formatInterval} from "../lib/utils";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {
@@ -37,6 +36,7 @@ import {
     useNevezesekList
 } from "../nevezesek/hooks";
 import {useUszoversenyDetails} from "../uszoversenyek/hooks";
+import {useTranslation} from "../translations/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";

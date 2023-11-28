@@ -1,8 +1,8 @@
 import {Uszo} from "../../types/model/Uszo";
 import {useCallback} from "react";
 import {editUszo} from "../../api/uszok";
-import {useTranslation} from "../translations/useTranslation";
 import {useAuthUser} from "../../auth/hooks";
+import {useTranslation} from "../../translations/hooks";
 
 export function useEditUszo():
     (id: number, data: Partial<Omit<Uszo, "id">>) => Promise<string> {

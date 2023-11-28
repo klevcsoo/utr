@@ -1,5 +1,5 @@
-import {useTranslation} from "./translations/useTranslation";
 import {useMemo} from "react";
+import {useTranslation} from "../translations/hooks";
 
 export function useUszasnemDropdownList(): Readonly<string[]> {
     const t = useTranslation();

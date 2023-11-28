@@ -9,7 +9,6 @@ import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
 import {Csapat} from "../types/model/Csapat";
 import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
 import {EmberiNemSelect} from "../components/selects";
 import {
@@ -28,6 +27,7 @@ import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {useCsapatDetails, useDeleteCsapat, useEditCsapat} from "../csapatok/hooks";
+import {useTranslation} from "../translations/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";

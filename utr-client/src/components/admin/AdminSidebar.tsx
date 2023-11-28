@@ -1,7 +1,5 @@
 import {Link, useLocation} from "react-router-dom";
 import {createElement, FunctionComponent, useEffect, useMemo, useState} from "react";
-import {useTranslation} from "../../hooks/translations/useTranslation";
-import {useSetLocale} from "../../hooks/translations/useSetLocale";
 import {Locale} from "../../types/Locale";
 import {GenericSelect} from "../selects";
 import {
@@ -22,6 +20,7 @@ import {
     PrinterIcon,
     UserGroupIcon
 } from "@heroicons/react/24/solid";
+import {useSetLocale, useTranslation} from "../../translations/hooks";
 
 export interface AdminSidebarProps {
     expanded: boolean;

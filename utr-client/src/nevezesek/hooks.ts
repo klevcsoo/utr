@@ -1,6 +1,5 @@
 import {NevezesCreationData} from "../types/request/NevezesCreationData";
 import {useAuthUser} from "../auth/hooks";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {useCallback, useEffect, useState} from "react";
 import {
     createNevezes,
@@ -11,6 +10,7 @@ import {
 } from "../api/nevezesek";
 import {RefreshableLiveData} from "../types/RefreshableLiveData";
 import {Nevezes} from "../types/model/Nevezes";
+import {useTranslation} from "../translations/hooks";
 
 export function useCreateNevezes():
     (data: NevezesCreationData) => Promise<string> {

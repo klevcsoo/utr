@@ -2,8 +2,8 @@
 
 import {Button, Dialog, DialogFooter, DialogHeader, IconButton} from "@material-tailwind/react";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {useTranslation} from "../../hooks/translations/useTranslation";
 import {DestructiveButtonProps} from "./DestructiveButton";
+import {useTranslation} from "../../translations/hooks";
 
 export function DestructiveIconButton(props: DestructiveButtonProps) {
     const cleanProps = useMemo(() => {

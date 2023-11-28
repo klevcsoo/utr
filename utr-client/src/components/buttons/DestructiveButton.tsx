@@ -2,7 +2,8 @@
 
 import {Button, ButtonProps, Dialog, DialogFooter, DialogHeader} from "@material-tailwind/react";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+
+import {useTranslation} from "../../translations/hooks";
 
 export type DestructiveButtonProps = Omit<ButtonProps, "color"> & {
     confirmText: string

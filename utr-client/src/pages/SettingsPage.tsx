@@ -1,4 +1,3 @@
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {TextInput} from "../components/inputs/TextInput";
@@ -26,6 +25,7 @@ import {
     useUserDetails,
     useUsersList
 } from "../auth/hooks";
+import {useTranslation} from "../translations/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USER_ID_PARAM_KEY = "userId";

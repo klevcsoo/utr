@@ -1,6 +1,6 @@
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {useMemo} from "react";
 import {packageVersion} from "../lib/config";
+import {useTranslation} from "../translations/hooks";
 
 export function EnvironmentBanner() {
     const t = useTranslation();

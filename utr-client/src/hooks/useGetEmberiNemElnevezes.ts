@@ -1,6 +1,6 @@
-import {useTranslation} from "./translations/useTranslation";
 import {useCallback, useMemo} from "react";
 import {EmberiNemId} from "../types/EmberiNemId";
+import {useTranslation} from "../translations/hooks";
 
 export function useGetEmberiNemElnevezes() {
     const t = useTranslation();

@@ -6,7 +6,6 @@ import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList"
 import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
 import {DateInput} from "../components/inputs/DateInput";
 import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
 import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
 import {EmberiNemId} from "../types/EmberiNemId";
@@ -36,6 +35,7 @@ import {
     useOpenUszoverseny,
     useUszoversenyDetails
 } from "../uszoversenyek/hooks";
+import {useTranslation} from "../translations/hooks";
 
 const CREATE_RACE_PARAM_KEY = "race";
 

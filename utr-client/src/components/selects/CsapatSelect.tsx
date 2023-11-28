@@ -1,9 +1,9 @@
 import {GenericSelect} from "./GenericSelect";
 import {useMemo} from "react";
 import {CommonSelectProps} from "./CommonSelectProps";
-import {useTranslation} from "../../hooks/translations/useTranslation";
 import {Spinner} from "@material-tailwind/react";
 import {useCsapatokList} from "../../csapatok/hooks";
+import {useTranslation} from "../../translations/hooks";
 
 export function CsapatSelect(props: CommonSelectProps<number>) {
     const t = useTranslation();

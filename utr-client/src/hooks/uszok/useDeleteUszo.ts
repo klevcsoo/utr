@@ -1,7 +1,7 @@
 import {useCallback} from "react";
 import {deleteUszo} from "../../api/uszok";
-import {useTranslation} from "../translations/useTranslation";
 import {useAuthUser} from "../../auth/hooks";
+import {useTranslation} from "../../translations/hooks";
 
 export function useDeleteUszo():
     (id: number) => Promise<string> {

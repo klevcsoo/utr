@@ -1,6 +1,6 @@
-import {useTranslation} from "./translations/useTranslation";
 import {useCallback, useMemo} from "react";
 import {UszasnemId} from "../types/UszasnemId";
+import {useTranslation} from "../translations/hooks";
 
 export function useGetUszasnemElnevezes() {
     const t = useTranslation();

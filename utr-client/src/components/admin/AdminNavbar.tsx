@@ -10,7 +10,6 @@ import {
 } from "@material-tailwind/react";
 import {AppLogo} from "../icons/AppLogo";
 import {Link, useLocation} from "react-router-dom";
-import {useTranslation} from "../../hooks/translations/useTranslation";
 import {createElement, FunctionComponent, useMemo, useState} from "react";
 import {
     ArrowRightOnRectangleIcon,
@@ -21,6 +20,7 @@ import {
 import {AdminBreadcrumbs} from "./AdminBreadcrumbs";
 import {useAuthLogout} from "../../auth/hooks";
 import {useNyitottVerseny} from "../../uszoversenyek/hooks";
+import {useTranslation} from "../../translations/hooks";
 
 export function AdminNavbar() {
     const t = useTranslation();

@@ -1,5 +1,4 @@
 import {useEffect, useMemo} from "react";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {
     Button,
     Card,
@@ -16,6 +15,7 @@ import {DataTable, DataTableDataColumn} from "../components/tables";
 import {KeyValueObject} from "../types/KeyValueObject";
 import {Identifiable} from "../types/Identifiable";
 import {useServerEnvVars, useServerLog} from "../support/hooks";
+import {useTranslation} from "../translations/hooks";
 
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";

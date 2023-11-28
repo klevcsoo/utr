@@ -2,8 +2,8 @@ import {Fragment, useCallback, useContext, useMemo, useState} from "react";
 import {TextInput} from "../components/inputs/TextInput";
 import {AuthContext} from "../api/auth";
 import {AppLogo} from "../components/icons/AppLogo";
-import {useTranslation} from "../hooks/translations/useTranslation";
 import {Button, Card, CardBody, CardFooter, CardHeader, Spinner} from "@material-tailwind/react";
+import {useTranslation} from "../translations/hooks";
 
 export function LoginPage() {
     const t = useTranslation();
