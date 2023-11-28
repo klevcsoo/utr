@@ -1,8 +1,8 @@
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {DataTable, DataTableDataColumn} from "../components/tables";
-import {DateInput} from "../components/inputs/DateInput";
-import {DestructiveButton} from "../components/buttons";
+import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {DateInput} from "../../components/inputs/DateInput";
+import {DestructiveButton} from "../../components/buttons";
 import {
     Button,
     Card,
@@ -16,15 +16,11 @@ import {
     Typography
 } from "@material-tailwind/react";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
-import {DateChip} from "../components/DateChip";
-import {
-    useCreateUszoverseny,
-    useNyitottVerseny,
-    useUszoversenyekList
-} from "../uszoversenyek/hooks";
-import {useTranslation} from "../translations/hooks";
-import {useSetAdminLayoutTitle} from "../utils/hooks";
+import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
+import {DateChip} from "../../components/DateChip";
+import {useCreateUszoverseny, useNyitottVerseny, useUszoversenyekList} from "../hooks";
+import {useTranslation} from "../../translations/hooks";
+import {useSetAdminLayoutTitle} from "../../utils/hooks";
 
 export function UszoversenyekIndexPage() {
     const t = useTranslation();

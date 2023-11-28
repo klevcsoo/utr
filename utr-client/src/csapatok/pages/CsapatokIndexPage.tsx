@@ -1,7 +1,7 @@
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {TextInput} from "../components/inputs/TextInput";
-import {createCsapat} from "../csapatok/api";
+import {TextInput} from "../../components/inputs/TextInput";
+import {createCsapat} from "../api";
 import {
     Button,
     Card,
@@ -12,13 +12,13 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DataTable, DataTableDataColumn} from "../components/tables";
-import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {useAuthUser} from "../auth/hooks";
-import {useCsapatokList} from "../csapatok/hooks";
-import {useTranslation} from "../translations/hooks";
-import {useSetAdminLayoutTitle} from "../utils/hooks";
+import {useAuthUser} from "../../auth/hooks";
+import {useCsapatokList} from "../hooks";
+import {useTranslation} from "../../translations/hooks";
+import {useSetAdminLayoutTitle} from "../../utils/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEW_CSAPAT_PARAM_VALUE = "newCsapat";

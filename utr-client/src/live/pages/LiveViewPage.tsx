@@ -1,9 +1,9 @@
 import {Link, NavLink} from "react-router-dom";
 import {Fragment} from "react";
 import {Button, Spinner} from "@material-tailwind/react";
-import {useAuthUser} from "../auth/hooks";
-import {useNyitottVerseny} from "../uszoversenyek/hooks";
-import {useTranslation} from "../translations/hooks";
+import {useAuthUser} from "../../auth/hooks";
+import {useNyitottVerseny} from "../../uszoversenyek/hooks";
+import {useTranslation} from "../../translations/hooks";
 
 export function LiveViewPage() {
     const t = useTranslation();

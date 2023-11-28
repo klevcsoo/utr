@@ -11,11 +11,11 @@ import {
     TabsHeader,
     Typography
 } from "@material-tailwind/react";
-import {DataTable, DataTableDataColumn} from "../components/tables";
-import {KeyValueObject} from "../types/KeyValueObject";
-import {Identifiable} from "../types/Identifiable";
-import {useServerEnvVars, useServerLog} from "../support/hooks";
-import {useTranslation} from "../translations/hooks";
+import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {KeyValueObject} from "../../types/KeyValueObject";
+import {Identifiable} from "../../types/Identifiable";
+import {useServerEnvVars, useServerLog} from "../hooks";
+import {useTranslation} from "../../translations/hooks";
 
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";

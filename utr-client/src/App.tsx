@@ -1,19 +1,19 @@
 import React from 'react';
 import {Navigate, Outlet, Route, Routes} from "react-router-dom";
-import {LoginPage} from "./pages/LoginPage";
-import {CsapatokIndexPage} from "./pages/CsapatokIndexPage";
+import {LoginPage} from "./auth/pages/LoginPage";
+import {CsapatokIndexPage} from "./csapatok/pages/CsapatokIndexPage";
 import {UnprotectedView} from "./components/providers/UnprotectedView";
 import {ProtectedView} from "./components/providers/ProtectedView";
-import {LiveViewPage} from "./pages/LiveViewPage";
+import {LiveViewPage} from "./live/pages/LiveViewPage";
 import {AdminLayout} from "./layouts/AdminLayout";
-import {CsapatokSlugPage} from "./pages/CsapatokSlugPage";
-import {UszoversenyekIndexPage} from "./pages/UszoversenyekIndexPage";
-import {AdminIndexPage} from "./pages/AdminIndexPage";
-import {UszoversenyekSlugPage} from "./pages/UszoversenyekSlugPage";
-import {VersenyszamokSlugPage} from "./pages/VersenyszamokSlugPage";
-import {Error404Page} from "./pages/Error404Page";
-import {SupportPage} from "./pages/SupportPage";
-import {SettingsPage} from "./pages/SettingsPage";
+import {CsapatokSlugPage} from "./csapatok/pages/CsapatokSlugPage";
+import {UszoversenyekIndexPage} from "./uszoversenyek/pages/UszoversenyekIndexPage";
+import {AdminIndexPage} from "./utils/pages/AdminIndexPage";
+import {UszoversenyekSlugPage} from "./uszoversenyek/pages/UszoversenyekSlugPage";
+import {VersenyszamokSlugPage} from "./versenyszamok/pages/VersenyszamokSlugPage";
+import {Error404Page} from "./utils/pages/Error404Page";
+import {SupportPage} from "./support/pages/SupportPage";
+import {SettingsPage} from "./auth/pages/SettingsPage";
 
 function App() {
     return (

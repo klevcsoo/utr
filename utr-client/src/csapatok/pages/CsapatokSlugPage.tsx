@@ -1,10 +1,10 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {TextInput} from "../components/inputs/TextInput";
-import {EmberiNemId} from "../types/EmberiNemId";
-import {NumberInput} from "../components/inputs";
-import {Csapat} from "../types/model/Csapat";
-import {EmberiNemSelect} from "../components/selects";
+import {TextInput} from "../../components/inputs/TextInput";
+import {EmberiNemId} from "../../types/EmberiNemId";
+import {NumberInput} from "../../components/inputs";
+import {Csapat} from "../../types/model/Csapat";
+import {EmberiNemSelect} from "../../components/selects";
 import {
     Button,
     Card,
@@ -16,14 +16,14 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton} from "../components/buttons";
-import {DataTable, DataTableDataColumn} from "../components/tables";
-import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+import {DestructiveButton} from "../../components/buttons";
+import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {useCsapatDetails, useDeleteCsapat, useEditCsapat} from "../csapatok/hooks";
-import {useTranslation} from "../translations/hooks";
-import {useCreateUszo, useDeleteUszo, useUszoDetails, useUszokList} from "../uszok/hooks";
-import {useGetEmberiNemElnevezes, useSetAdminLayoutTitle} from "../utils/hooks";
+import {useCsapatDetails, useDeleteCsapat, useEditCsapat} from "../hooks";
+import {useTranslation} from "../../translations/hooks";
+import {useCreateUszo, useDeleteUszo, useUszoDetails, useUszokList} from "../../uszok/hooks";
+import {useGetEmberiNemElnevezes, useSetAdminLayoutTitle} from "../../utils/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";

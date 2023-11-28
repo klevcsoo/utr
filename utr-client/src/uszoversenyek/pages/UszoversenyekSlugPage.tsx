@@ -1,8 +1,8 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {Uszoverseny} from "../types/model/Uszoverseny";
-import {DateInput} from "../components/inputs/DateInput";
-import {EmberiNemId} from "../types/EmberiNemId";
+import {Uszoverseny} from "../../types/model/Uszoverseny";
+import {DateInput} from "../../components/inputs/DateInput";
+import {EmberiNemId} from "../../types/EmberiNemId";
 import {
     Button,
     Card,
@@ -16,30 +16,30 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton} from "../components/buttons";
-import {DataTable, DataTableDataColumn} from "../components/tables";
-import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
-import {UszasnemId} from "../types/UszasnemId";
+import {DestructiveButton} from "../../components/buttons";
+import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
+import {UszasnemId} from "../../types/UszasnemId";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
+import {VersenyszamEditLayout} from "../../layouts/VersenyszamEditLayout";
 import {
     useCloseUszoverseny,
     useDeleteUszoverseny,
     useEditUszoverseny,
     useOpenUszoverseny,
     useUszoversenyDetails
-} from "../uszoversenyek/hooks";
-import {useTranslation} from "../translations/hooks";
+} from "../hooks";
+import {useTranslation} from "../../translations/hooks";
 import {
     useCreateVersenyszam,
     useDeleteVersenyszam,
     useVersenyszamokList
-} from "../versenyszamok/hooks";
+} from "../../versenyszamok/hooks";
 import {
     useGetUszasnemElnevezes,
     useGetVersenyszamNemElnevezes,
     useSetAdminLayoutTitle
-} from "../utils/hooks";
+} from "../../utils/hooks";
 
 const CREATE_RACE_PARAM_KEY = "race";
 

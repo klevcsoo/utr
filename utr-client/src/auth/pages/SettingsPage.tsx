@@ -2,9 +2,9 @@
 
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import {TextInput} from "../components/inputs/TextInput";
-import {DisplayedUser} from "../types/DisplayedUser";
-import {FullPageModalWithActions} from "../components/modals/FullPageModalWithActions";
+import {TextInput} from "../../components/inputs/TextInput";
+import {DisplayedUser} from "../../types/DisplayedUser";
+import {FullPageModalWithActions} from "../../components/modals/FullPageModalWithActions";
 import {
     Button,
     Card,
@@ -18,16 +18,10 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DataTable, DataTableDataColumn} from "../components/tables";
-import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
-import {
-    useDeleteUser,
-    useEditUser,
-    useRolesList,
-    useUserDetails,
-    useUsersList
-} from "../auth/hooks";
-import {useTranslation} from "../translations/hooks";
+import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
+import {useDeleteUser, useEditUser, useRolesList, useUserDetails, useUsersList} from "../hooks";
+import {useTranslation} from "../../translations/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USER_ID_PARAM_KEY = "userId";

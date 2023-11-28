@@ -1,11 +1,11 @@
 import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {Versenyszam} from "../types/model/Versenyszam";
-import {EmberiNemId} from "../types/EmberiNemId";
-import {UszasnemId} from "../types/UszasnemId";
-import {CsapatSelect, UszoSelect} from "../components/selects";
-import {DisplayedNevezes} from "../types/DisplayedNevezes";
-import {formatInterval} from "../utils/lib/utils";
+import {Versenyszam} from "../../types/model/Versenyszam";
+import {EmberiNemId} from "../../types/EmberiNemId";
+import {UszasnemId} from "../../types/UszasnemId";
+import {CsapatSelect, UszoSelect} from "../../components/selects";
+import {DisplayedNevezes} from "../../types/DisplayedNevezes";
+import {formatInterval} from "../../utils/lib/utils";
 import {
     Button,
     Card,
@@ -17,27 +17,23 @@ import {
     Spinner,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton} from "../components/buttons";
-import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
-import {DataTable, DataTableDataColumn} from "../components/tables";
-import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
+import {DestructiveButton} from "../../components/buttons";
+import {VersenyszamEditLayout} from "../../layouts/VersenyszamEditLayout";
+import {DataTable, DataTableDataColumn} from "../../components/tables";
+import {DataTableActionColumn} from "../../components/tables/DataTableActionColumn";
 import {PencilSquareIcon, PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
-import {EntryTimeInput} from "../components/inputs/EntryTimeInput";
+import {EntryTimeInput} from "../../components/inputs/EntryTimeInput";
 import {
     useCreateNevezes,
     useDeleteNevezes,
     useEditNevezes,
     useNevezesDetails,
     useNevezesekList
-} from "../nevezesek/hooks";
-import {useUszoversenyDetails} from "../uszoversenyek/hooks";
-import {useTranslation} from "../translations/hooks";
-import {
-    useDeleteVersenyszam,
-    useEditVersenyszam,
-    useVersenyszamDetails
-} from "../versenyszamok/hooks";
-import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../utils/hooks";
+} from "../../nevezesek/hooks";
+import {useUszoversenyDetails} from "../../uszoversenyek/hooks";
+import {useTranslation} from "../../translations/hooks";
+import {useDeleteVersenyszam, useEditVersenyszam, useVersenyszamDetails} from "../hooks";
+import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../../utils/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEVEZES_ID_PARAM_KEY = "nevezesId";
