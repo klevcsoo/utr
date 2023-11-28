@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {getApiServerEnvVars} from "../../api/support";
-import {Identifiable} from "../../types/Identifiable";
-import {KeyValueObject} from "../../types/KeyValueObject";
-import {useAuthUser} from "../../auth/hooks";
+import {Identifiable} from "../types/Identifiable";
+import {KeyValueObject} from "../types/KeyValueObject";
+import {useAuthUser} from "../auth/hooks";
+import {useCallback, useEffect, useState} from "react";
+import {getApiServerEnvVars, getApiServerLog} from "../api/support";
 
 export function useServerEnvVars(): [Identifiable<KeyValueObject<string>>[], boolean] {
     const user = useAuthUser();
@@ -27,4 +27,23 @@ export function useServerEnvVars(): [Identifiable<KeyValueObject<string>>[], boo
     }, [user]);
 
     return [variableMap, loading];
+}
+
+export function useServerLog(): [string[], boolean, () => void] {
+    const user = useAuthUser();
+    const [lines, setLines] = useState<string[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const doLoad = useCallback(() => {
+        if (!!user) {
+            setLoading(true);
+            getApiServerLog(user).then(setLines).catch(console.error).finally(() => {
+                setLoading(false);
+            });
+        }
+    }, [user]);
+
+    useEffect(doLoad, [doLoad]);
+
+    return [lines, loading, doLoad];
 }
