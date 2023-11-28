@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols
+
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {TextInput} from "../components/inputs/TextInput";
@@ -288,10 +290,12 @@ function UserRoleSelector(props: { user?: DisplayedUser }) {
         });
     }, []);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const doRevertChanges = useCallback(() => {
         setSelectedRoles(defaultState);
     }, [defaultState]);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const doSaveChanges = useCallback(() => {
         if (!!props.user) {
             editUser(props.user.id, {
@@ -323,6 +327,7 @@ function UserRoleSelector(props: { user?: DisplayedUser }) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function UserPasswordChangeModal() {
     const t = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
