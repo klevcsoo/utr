@@ -1,5 +1,4 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
-import {useCsapatDetails} from "../hooks/csapatok/useCsapatDetails";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {useUszokList} from "../hooks/uszok/useUszokList";
 import {TextInput} from "../components/inputs/TextInput";
@@ -7,8 +6,6 @@ import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs";
 import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
-import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";
-import {useEditCsapat} from "../hooks/csapatok/useEditCsapat";
 import {Csapat} from "../types/model/Csapat";
 import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
 import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
@@ -30,6 +27,7 @@ import {DestructiveButton} from "../components/buttons";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
+import {useCsapatDetails, useDeleteCsapat, useEditCsapat} from "../csapatok/hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";
