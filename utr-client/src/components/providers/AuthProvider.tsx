@@ -1,32 +1,28 @@
 import {useCallback, useState} from "react";
-import {AuthUser} from "../../types/AuthUser";
-import {AuthContext, login} from "../../api/auth";
+import {AuthContext, login} from "../../lib/api/auth";
 import {UserRole} from "../../types/UserRole";
 import {CommonChildrenOnlyProps} from "../../types/componentProps/common/CommonChildrenOnlyProps";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
+import {UserRecord} from "../../types/UserRecord";
 
 const AUTH_DATA_KEY = "auth_data";
 
-function AuthProvider(props: CommonChildrenOnlyProps) {
+export default function AuthProvider(props: CommonChildrenOnlyProps) {
     const t = useTranslation();
 
-    const [user, setUser] = useState<AuthUser | undefined>(
+    const [user, setUser] = useState<UserRecord | undefined>(
         !!sessionStorage.getItem(AUTH_DATA_KEY) ? (
             JSON.parse(sessionStorage.getItem(AUTH_DATA_KEY)!)
         ) : undefined
     );
 
     const doLogin = useCallback(
-        (username: string, password: string): Promise<AuthUser> => {
+        async (username: string, password: string): Promise<void> => {
             if (!username || !password) {
                 throw new Error(t("error.auth.missing_username_or_pass"));
             }
 
-            return login(username as UserRole, password).then(user => {
-                setUser(user);
-                sessionStorage.setItem(AUTH_DATA_KEY, JSON.stringify(user));
-                return user;
-            });
+            setUser(await login(username as UserRole, password));
         }, [t]
     );
 
@@ -48,5 +44,3 @@ function AuthProvider(props: CommonChildrenOnlyProps) {
         </AuthContext.Provider>
     );
 }
-
-export default AuthProvider;

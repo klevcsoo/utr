@@ -1,7 +1,3 @@
-import {AuthUser} from "../types/AuthUser";
-import {artificialAPIDelay, serverURL} from "./config";
-import {MessageResponse} from "../types/response/MessageResponse";
-
 export function createAllStringObject<T extends object>(
     obj: T
 ): { [key in keyof T]: string } {
@@ -18,35 +14,6 @@ export function createAllStringObject<T extends object>(
         }
     }
     return out;
-}
-
-export async function apiRequest<T extends object = MessageResponse>(
-    user: AuthUser,
-    path: string,
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
-): Promise<T> {
-    const actualPath = path.startsWith("/") ? path.substring(1) : path;
-    const lang = window.localStorage.getItem("locale");
-
-    if (window.location.origin.includes("localhost") && artificialAPIDelay) {
-        await sleep(Math.random() * 1200);
-    }
-
-    const data = await fetch(`${serverURL}/api/${actualPath}`, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${user.jwtToken}`,
-            "Accept-Language": lang ?? "hu"
-        }
-    }).then(res => res.json()) as T;
-
-    const error = (data as any)["error"];
-    if (error) {
-        throw new Error(error);
-    }
-
-    return data;
 }
 
 export async function sleep(milliseconds: number) {

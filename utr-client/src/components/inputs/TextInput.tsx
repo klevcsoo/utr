@@ -7,7 +7,7 @@ export interface TextInputProps extends RefAttributes<HTMLInputElement>, Omit<In
     onValue(val: string): void;
 }
 
-export function TextInput(props: TextInputProps) {
+export default function TextInput(props: TextInputProps) {
     return (
         <Input {...props} onChange={event => {
             props.onValue(event.currentTarget.value);

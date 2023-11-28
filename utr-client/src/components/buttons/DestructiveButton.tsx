@@ -2,7 +2,7 @@
 
 import {Button, ButtonProps, Dialog, DialogFooter, DialogHeader} from "@material-tailwind/react";
 import {Fragment, useCallback, useMemo, useState} from "react";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
 
 export type DestructiveButtonProps = Omit<ButtonProps, "color"> & {
     confirmText: string
@@ -10,7 +10,7 @@ export type DestructiveButtonProps = Omit<ButtonProps, "color"> & {
     onConfirm?(): void
 }
 
-export function DestructiveButton(props: DestructiveButtonProps) {
+export default function DestructiveButton(props: DestructiveButtonProps) {
     const cleanProps = useMemo(() => {
         const p = {};
 

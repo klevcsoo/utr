@@ -1,7 +1,7 @@
 import {RawMaterialIcon} from "./RawMaterialIcon";
 import {CommonNameOnlyProps} from "../../types/componentProps/common/CommonNameOnlyProps";
 
-export function TitleIcon(props: CommonNameOnlyProps) {
+export default function TitleIcon(props: CommonNameOnlyProps) {
     return (
         <div className="w-16 h-16 grid place-content-center
         bg-blue-200 text-blue-500 rounded-full">

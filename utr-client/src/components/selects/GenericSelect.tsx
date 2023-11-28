@@ -2,7 +2,7 @@ import {useMemo} from "react";
 import {GenericSelectProps} from "./GenericSelectProps";
 import {Option, Select} from "@material-tailwind/react";
 
-export function GenericSelect<T extends string>(props: GenericSelectProps<T>) {
+export default function GenericSelect<T extends string>(props: GenericSelectProps<T>) {
     const resolvedOptions = useMemo<[string, string][]>(() => {
         if (props.options instanceof Array) {
             return (props.options as string[]).map(value => [value, value]);

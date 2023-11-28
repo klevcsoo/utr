@@ -1,6 +1,6 @@
 import {FullPageModalProps} from "../../types/componentProps/modals/FullPageModalProps";
 
-export function FullPageModal(props: FullPageModalProps) {
+export default function FullPageModal(props: FullPageModalProps) {
     return (
         <div className="fixed inset-0 backdrop-blur-xl backdrop-saturate-150
 		grid place-content-center">

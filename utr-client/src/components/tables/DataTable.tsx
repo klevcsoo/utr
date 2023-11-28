@@ -20,7 +20,7 @@ export interface DataTableProps<T extends Identifiable<object>> {
     children: DataTableChildren<T>;
 }
 
-export function DataTable<T extends Identifiable<object>>(props: DataTableProps<T>) {
+export default function DataTable<T extends Identifiable<object>>(props: DataTableProps<T>) {
     const [headers, setHeaders] = useState<{ [key in keyof T]?: string }>({});
     const [rows, setRows] = useState<{ [key in keyof T]?: ReactNode }[]>(
         props.dataList.map(value => {

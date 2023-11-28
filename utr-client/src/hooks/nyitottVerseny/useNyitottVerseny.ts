@@ -2,10 +2,10 @@ import {useCallback, useState} from "react";
 import {Versenyszam} from "../../types/model/Versenyszam";
 import {Uszoverseny} from "../../types/model/Uszoverseny";
 import {getOpenUszoverseny, getOpenVersenyszamok} from "../../api/nyitottVerseny";
-import {useAuthUser} from "../auth/useAuthUser";
-import {useApiPolling} from "../useApiPolling";
+import {useAuthUser} from "../auth";
+import {useApiPolling} from "..";
 
-export function useNyitottVerseny():
+export default function useNyitottVerseny():
     [(Uszoverseny & { versenyszamok: Versenyszam[] }) | undefined, boolean] {
     const user = useAuthUser();
 
@@ -15,10 +15,10 @@ export function useNyitottVerseny():
 
     const doFetch = useCallback(() => {
         if (!!user) {
-            getOpenUszoverseny(user).then(setUszoverseny).catch(reason => {
+            getOpenUszoverseny().then(setUszoverseny).catch(reason => {
                 console.error(reason);
             }).finally(() => setLoading(false));
-            getOpenVersenyszamok(user).then(setVersenyszamok).catch(reason => {
+            getOpenVersenyszamok().then(setVersenyszamok).catch(reason => {
                 console.error(reason);
             }).finally(() => setLoading(false));
         }

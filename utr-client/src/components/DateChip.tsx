@@ -1,12 +1,12 @@
 import {useMemo} from "react";
 import {Chip} from "@material-tailwind/react";
-import {useTranslation} from "../hooks/translations/useTranslation";
+import {useTranslation} from "../hooks/translations";
 
 export interface DateChipProps {
     date: number | Date;
 }
 
-export function DateChip(props: DateChipProps) {
+export default function DateChip(props: DateChipProps) {
     const t = useTranslation();
 
     const date = useMemo(() => {

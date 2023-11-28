@@ -1,8 +1,8 @@
-import {useTranslation} from "./translations/useTranslation";
+import {useTranslation} from "./translations";
 import {useCallback, useMemo} from "react";
 import {EmberiNemId} from "../types/EmberiNemId";
 
-export function useGetVersenyszamNemElnevezes() {
+export default function useGetVersenyszamNemElnevezes() {
     const t = useTranslation();
 
     const elnevezesMap = useMemo<{ [key in EmberiNemId]: string }>(() => {

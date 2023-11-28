@@ -13,7 +13,7 @@ export interface NumberInputProps {
     onSubmit?(): void;
 }
 
-export function NumberInput(props: NumberInputProps) {
+export default function NumberInput(props: NumberInputProps) {
     return (
         <Input value={props.value} onChange={event => {
             const value = event.currentTarget.value;

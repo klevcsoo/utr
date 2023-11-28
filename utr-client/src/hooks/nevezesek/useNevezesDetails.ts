@@ -1,17 +1,17 @@
 import {useCallback, useState} from "react";
-import {useAuthUser} from "../auth/useAuthUser";
+import {useAuthUser} from "../auth";
 import {Nevezes} from "../../types/model/Nevezes";
 import {getNevezes} from "../../api/nevezesek";
-import {useApiPolling} from "../useApiPolling";
+import {useApiPolling} from "..";
 
-export function useNevezesDetails(id: number): [Nevezes | undefined, boolean] {
+export default function useNevezesDetails(id: number): [Nevezes | undefined, boolean] {
     const user = useAuthUser();
     const [nevezes, setNevezes] = useState<Nevezes>();
     const [loading, setLoading] = useState(true);
 
     const doFetch = useCallback(() => {
         if (!!user && id !== -1) {
-            getNevezes(user, id).then(setNevezes).catch(console.error).finally(() => {
+            getNevezes(id).then(setNevezes).catch(console.error).finally(() => {
                 setLoading(false);
             });
         }

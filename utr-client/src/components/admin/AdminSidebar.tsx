@@ -1,7 +1,6 @@
 import {Link, useLocation} from "react-router-dom";
 import {createElement, FunctionComponent, useEffect, useMemo, useState} from "react";
-import {useTranslation} from "../../hooks/translations/useTranslation";
-import {useSetLocale} from "../../hooks/translations/useSetLocale";
+import {useSetLocale, useTranslation} from "../../hooks/translations";
 import {Locale} from "../../types/Locale";
 import {GenericSelect} from "../selects";
 import {
@@ -29,7 +28,7 @@ export interface AdminSidebarProps {
     toggleExpanded(): void;
 }
 
-export function AdminSidebar({expanded, toggleExpanded}: AdminSidebarProps) {
+export default function AdminSidebar({expanded, toggleExpanded}: AdminSidebarProps) {
     const t = useTranslation();
 
     const navigationList = useMemo<{

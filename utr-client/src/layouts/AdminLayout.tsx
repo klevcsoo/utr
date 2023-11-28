@@ -9,7 +9,7 @@ export const AdminLayoutTitleContext = createContext<
     }
 );
 
-export function AdminLayout() {
+export default function AdminLayout() {
     const [expanded, setExpanded] = useState(true);
 
     return (

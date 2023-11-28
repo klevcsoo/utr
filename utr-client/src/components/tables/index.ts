@@ -1,5 +1,3 @@
-import {DataTable, DataTableProps} from "./DataTable";
-import {DataTableDataColumn, DataTableDataColumnProps} from "./DataTableDataColumn";
-
-export {DataTable, DataTableDataColumn};
-export type {DataTableProps, DataTableDataColumnProps};
+export { default as DataTable } from './DataTable'
+export { default as DataTableActionColumn } from './DataTableActionColumn'
+export { default as DataTableDataColumn } from './DataTableDataColumn'

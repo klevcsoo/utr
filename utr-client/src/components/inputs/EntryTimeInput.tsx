@@ -1,7 +1,7 @@
 import {Checkbox} from "@material-tailwind/react";
 import {IntervalMaskedInput} from "./IntervalMaskedInput";
 import {useEffect, useState} from "react";
-import {useTranslation} from "../../hooks/translations/useTranslation";
+import {useTranslation} from "../../hooks/translations";
 
 export interface EntryTimeInputProps {
     value: string | undefined;
@@ -9,7 +9,7 @@ export interface EntryTimeInputProps {
     onValue(value: string | undefined): void;
 }
 
-export function EntryTimeInput(props: EntryTimeInputProps) {
+export default function EntryTimeInput(props: EntryTimeInputProps) {
     const t = useTranslation();
 
     const [enabled, setEnabled] = useState(props.value !== undefined);

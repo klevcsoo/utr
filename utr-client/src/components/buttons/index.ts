@@ -1,5 +1,2 @@
-import {DestructiveButton, DestructiveButtonProps} from "./DestructiveButton";
-import {DestructiveIconButton} from "./DestructiveIconButton";
-
-export {DestructiveButton, DestructiveIconButton};
-export type {DestructiveButtonProps};
+export { default as DestructiveButton } from './DestructiveButton'
+export { default as DestructiveIconButton } from './DestructiveIconButton'

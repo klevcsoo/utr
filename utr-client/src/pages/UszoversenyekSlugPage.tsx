@@ -1,19 +1,8 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {useUszoversenyDetails} from "../hooks/uszoversenyek/useUszoversenyDetails";
-import {useDeleteUszoverseny} from "../hooks/uszoversenyek/useDeleteUszoverseny";
-import {useOpenUszoverseny} from "../hooks/uszoversenyek/useOpenUszoverseny";
-import {useCloseUszoverseny} from "../hooks/uszoversenyek/useCloseUszoverseny";
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
 import {Uszoverseny} from "../types/model/Uszoverseny";
-import {useVersenyszamokList} from "../hooks/versenyszamok/useVersenyszamokList";
-import {useDeleteVersenyszam} from "../hooks/versenyszamok/useDeleteVersenyszam";
-import {useEditUszoverseny} from "../hooks/uszoversenyek/useEditUszoverseny";
 import {DateInput} from "../components/inputs/DateInput";
-import {useCreateVersenyszam} from "../hooks/versenyszamok/useCreateVersenyszam";
-import {useTranslation} from "../hooks/translations/useTranslation";
-import {useGetVersenyszamNemElnevezes} from "../hooks/useGetVersenyszamNemElnevezes";
-import {useGetUszasnemElnevezes} from "../hooks/useGetUszasnemElnevezes";
+import {useTranslation} from "../hooks/translations";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {
     Button,
@@ -34,10 +23,24 @@ import {DataTableActionColumn} from "../components/tables/DataTableActionColumn"
 import {UszasnemId} from "../types/UszasnemId";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {VersenyszamEditLayout} from "../layouts/VersenyszamEditLayout";
+import {
+    closeUszoverseny,
+    deleteUszoverseny,
+    editUszoverseny,
+    openUszoverseny
+} from "../api/uszoversenyek";
+import {createVersenyszam, deleteVersenyszam} from "../api/versenyszamok";
+import {
+    useGetUszasnemElnevezes,
+    useGetVersenyszamNemElnevezes,
+    useSetAdminLayoutTitle
+} from "../hooks";
+import {useVersenyszamokList} from "../hooks/versenyszamok";
+import {useUszoversenyDetails} from "../hooks/uszoversenyek";
 
 const CREATE_RACE_PARAM_KEY = "race";
 
-export function UszoversenyekSlugPage() {
+export default function UszoversenyekSlugPage() {
     const t = useTranslation();
 
     const {id} = useParams();
@@ -75,10 +78,6 @@ function UszoversenyDetailsForm(props: {
     uszoverseny: Uszoverseny
 }) {
     const t = useTranslation();
-    const editUszoverseny = useEditUszoverseny();
-    const deleteUszoverseny = useDeleteUszoverseny();
-    const openUszoverseny = useOpenUszoverseny();
-    const closeUszoverseny = useCloseUszoverseny();
 
     const [isDirty, setIsDirty] = useState(false);
     const [nev, setNev] = useState(props.uszoverseny.nev);
@@ -94,13 +93,13 @@ function UszoversenyDetailsForm(props: {
             console.log(message);
             setIsDirty(false);
         }).catch(console.error);
-    }, [datum, editUszoverseny, helyszin, nev, props.uszoverseny]);
+    }, [datum, helyszin, nev, props.uszoverseny]);
 
     const doDeleteUszoverseny = useCallback(() => {
         deleteUszoverseny(props.uszoverseny.id)
             .then(console.log)
             .catch(console.error);
-    }, [deleteUszoverseny, props.uszoverseny]);
+    }, [props.uszoverseny]);
 
     const doChangeOpenedState = useCallback(() => {
         if (props.uszoverseny.nyitott) {
@@ -112,7 +111,7 @@ function UszoversenyDetailsForm(props: {
                 .then(console.log)
                 .catch(console.error);
         }
-    }, [closeUszoverseny, openUszoverseny, props.uszoverseny]);
+    }, [props.uszoverseny]);
 
     useEffect(() => {
         setIsDirty(
@@ -175,7 +174,6 @@ function VersenyszamokList(props: {
     const getUszasnemElnevezes = useGetUszasnemElnevezes();
 
     const [versenyszamok, versenyszamokLoading] = useVersenyszamokList(props.uszoverseny?.id);
-    const deleteVersenyszam = useDeleteVersenyszam();
     const [, setSearchParams] = useSearchParams();
 
     const doOpenNewVersenyszamModal = useCallback(() => {
@@ -187,7 +185,7 @@ function VersenyszamokList(props: {
 
     const doDeleteVersenyszam = useCallback((id: number) => {
         deleteVersenyszam(id).then(console.log).catch(console.error);
-    }, [deleteVersenyszam]);
+    }, []);
 
     return versenyszamokLoading ? (
         <div className="grid place-content-center">
@@ -277,7 +275,6 @@ function VersenyszamModal(props: {
 }) {
     const t = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
-    const createVersenyszam = useCreateVersenyszam();
 
     const open = useMemo(() => {
         return searchParams.has("modal") && searchParams.get("modal") === CREATE_RACE_PARAM_KEY;
@@ -322,8 +319,7 @@ function VersenyszamModal(props: {
                 doDismiss();
             }).catch(console.error);
         }
-    }, [canComplete, createVersenyszam, doDismiss, versenyszamNem,
-        hossz, props.uszoverseny, uszasnem, valto]);
+    }, [canComplete, doDismiss, versenyszamNem, hossz, props.uszoverseny, uszasnem, valto]);
 
     return (
         <Dialog open={open} handler={setOpen}>

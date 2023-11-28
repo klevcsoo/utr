@@ -1,7 +1,7 @@
-import {useTranslation} from "./translations/useTranslation";
+import {useTranslation} from "./translations";
 import {useMemo} from "react";
 
-export function useEmberiNemDropdownList(): Readonly<string[]> {
+export default function useEmberiNemDropdownList(): Readonly<string[]> {
     const t = useTranslation();
 
     // noinspection SpellCheckingInspection

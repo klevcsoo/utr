@@ -10,7 +10,7 @@ export interface DataTableActionColumnProps<
     element(entry: T): ReactNode;
 }
 
-export function DataTableActionColumn<
+export default function DataTableActionColumn<
     T extends Identifiable<object>
 >(props: DataTableActionColumnProps<T>) {
     const {setActionColumn} = useContext<DataTableContextType<T>>(DataTableContext);

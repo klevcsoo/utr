@@ -1,12 +1,16 @@
 import {Fragment} from "react";
-import {useAuthUser} from "../../hooks/auth/useAuthUser";
 import {Navigate} from "react-router-dom";
-import {ProtectedViewProps} from "../../types/componentProps/ProtectedViewProps";
+import {CommonChildrenOnlyProps} from "../../types/componentProps/common/CommonChildrenOnlyProps";
+import {useAuthUser, useAuthUserAccess} from "../../hooks/auth";
 
-export function ProtectedView(props: ProtectedViewProps) {
+export interface ProtectedViewProps extends CommonChildrenOnlyProps {
+    accessLevel?: number;
+}
+
+export default function ProtectedView(props: ProtectedViewProps) {
     const user = useAuthUser();
+    const hasAccess = useAuthUserAccess(props.accessLevel);
 
-    return !user ? <Navigate to="/login"/> :
-        !!props.role && !user.roles.includes(props.role) ? <div>unauthorized</div>
-            : <Fragment>{props.children}</Fragment>;
+    return !user ? <Navigate to="/login"/> : hasAccess ? <div>unauthorized</div>
+        : <Fragment>{props.children}</Fragment>;
 }

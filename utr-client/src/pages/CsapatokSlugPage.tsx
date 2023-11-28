@@ -1,19 +1,10 @@
 import {Link, useParams, useSearchParams} from "react-router-dom";
-import {useCsapatDetails} from "../hooks/csapatok/useCsapatDetails";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
-import {useUszokList} from "../hooks/uszok/useUszokList";
 import {TextInput} from "../components/inputs/TextInput";
 import {EmberiNemId} from "../types/EmberiNemId";
 import {NumberInput} from "../components/inputs";
-import {useSetAdminLayoutTitle} from "../hooks/useSetAdminLayoutTitle";
-import {useUszoDetails} from "../hooks/uszok/useUszoDetails";
-import {useDeleteCsapat} from "../hooks/csapatok/useDeleteCsapat";
-import {useEditCsapat} from "../hooks/csapatok/useEditCsapat";
 import {Csapat} from "../types/model/Csapat";
-import {useDeleteUszo} from "../hooks/uszok/useDeleteUszo";
-import {useCreateUszo} from "../hooks/uszok/useCreateUszo";
-import {useTranslation} from "../hooks/translations/useTranslation";
-import {useGetEmberiNemElnevezes} from "../hooks/useGetEmberiNemElnevezes";
+import {useTranslation} from "../hooks/translations";
 import {EmberiNemSelect} from "../components/selects";
 import {
     Button,
@@ -30,12 +21,17 @@ import {DestructiveButton} from "../components/buttons";
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {DataTableActionColumn} from "../components/tables/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
+import {deleteCsapat, editCsapat} from "../api/csapatok";
+import {createUszo, deleteUszo} from "../api/uszok";
+import {useCsapatDetails} from "../hooks/csapatok";
+import {useGetEmberiNemElnevezes, useSetAdminLayoutTitle} from "../hooks";
+import {useUszoDetails, useUszokList} from "../hooks/uszok";
 
 const MODAL_PARAM_KEY = "modal";
 const USZO_ID_PARAM_KEY = "uszoId";
 const USZO_PARAM_VALUE = "uszo";
 
-export function CsapatokSlugPage() {
+export default function CsapatokSlugPage() {
     const t = useTranslation();
 
     const {id} = useParams();
@@ -73,8 +69,6 @@ function CsapatDetailsForm(props: {
     csapat: Csapat
 }) {
     const t = useTranslation();
-    const deleteCsapat = useDeleteCsapat();
-    const editCsapat = useEditCsapat();
 
     const [isDirty, setIsDirty] = useState(false);
     const [nev, setNev] = useState(props.csapat.nev);
@@ -88,13 +82,13 @@ function CsapatDetailsForm(props: {
             console.log(message);
             setIsDirty(false);
         }).catch(console.error);
-    }, [editCsapat, nev, props.csapat, varos]);
+    }, [nev, props.csapat, varos]);
 
     const doDelete = useCallback(() => {
         if (!!props.csapat) {
             deleteCsapat(props.csapat.id).then(console.log);
         }
-    }, [props.csapat, deleteCsapat]);
+    }, [props.csapat]);
 
     useEffect(() => {
         setIsDirty(props.csapat.nev !== nev || props.csapat.varos !== varos);
@@ -137,7 +131,6 @@ function UszokList(props: {
     const getEmberiNemElnevezes = useGetEmberiNemElnevezes();
 
     const [uszok, loadingUszok] = useUszokList(props.csapat.id);
-    const deleteUszo = useDeleteUszo();
     const [, setSearchParams] = useSearchParams();
 
     const displayedUszok = useMemo(() => {
@@ -169,7 +162,7 @@ function UszokList(props: {
         if (window.confirm(t("confirm.generic.delete"))) {
             deleteUszo(id).then(console.log).catch(console.error);
         }
-    }, [deleteUszo, t]);
+    }, [t]);
 
     return (
         <Card className="w-full">
@@ -233,7 +226,6 @@ function UszoModal(props: {
     const [uszo, loadingUszo] = useUszoDetails(
         parseInt(searchParams.get(USZO_ID_PARAM_KEY) ?? "-1")
     );
-    const createUszo = useCreateUszo();
 
     const [nev, setNev] = useState("");
     const [szuletesiEv, setSzuletesiEv] = useState((new Date()).getFullYear());
@@ -281,7 +273,7 @@ function UszoModal(props: {
                 setOpen(false);
             }).catch(console.log);
         }
-    }, [createUszo, setOpen, nem, nev, props.csapat, szuletesiEv]);
+    }, [setOpen, nem, nev, props.csapat, szuletesiEv]);
 
     useEffect(() => {
         if (!!uszo) {

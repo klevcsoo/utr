@@ -1,7 +1,5 @@
-import {useServerEnvVars} from "../hooks/support/useServerEnvVars";
 import {useEffect, useMemo} from "react";
-import {useServerLog} from "../hooks/support/useServerLog";
-import {useTranslation} from "../hooks/translations/useTranslation";
+import {useTranslation} from "../hooks/translations";
 import {
     Button,
     Card,
@@ -17,11 +15,12 @@ import {
 import {DataTable, DataTableDataColumn} from "../components/tables";
 import {KeyValueObject} from "../types/KeyValueObject";
 import {Identifiable} from "../types/Identifiable";
+import {useServerEnvVars, useServerLog} from "../hooks/support";
 
 const ENV_TAB_KEY = "env";
 const LOG_TAB_KEY = "log";
 
-export function SupportPage() {
+export default function SupportPage() {
     const t = useTranslation();
 
     return (

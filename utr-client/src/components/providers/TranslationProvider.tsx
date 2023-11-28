@@ -11,7 +11,7 @@ const LOCALE_STORAGE_KEY = "locale";
     }
 }
 
-export function TranslationProvider(props: CommonChildrenOnlyProps) {
+export default function TranslationProvider(props: CommonChildrenOnlyProps) {
     const [translationMap, setTranslationMap] = useState<Readonly<{ [key: string]: string }>>();
     const [locale, setLocale] = useState<Locale>(
         window.localStorage.getItem(LOCALE_STORAGE_KEY)! as Locale
