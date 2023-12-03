@@ -21,7 +21,8 @@ export function GenericSelect<T extends string>(props: GenericSelectProps<T>) {
     return (
         <Select id={`dropdown-${(new Date()).getTime()}${Math.random() * 100}`}
                 value={props.selected} label={props.label}
-                onChange={value => props.onSelect(value as T)}>
+                onChange={value => props.onSelect(value as T)}
+                disabled={props.disabled}>
             {resolvedOptions.map(([value, displayName], index) => (
                 <Option key={index} value={value}>{displayName}</Option>
             ))}

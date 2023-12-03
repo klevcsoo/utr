@@ -5,14 +5,12 @@ import {Spinner} from "@material-tailwind/react";
 import {useCsapatokList} from "../hooks";
 import {useTranslation} from "../../translations/hooks";
 
-export function CsapatSelect(props: CommonSelectProps<number>) {
+export function CsapatSelect(props: CommonSelectProps<number | undefined>) {
     const t = useTranslation();
     const [csapatok, loadingCsapatok] = useCsapatokList();
 
     const options = useMemo<{ [id: string]: string }>(() => {
-        const out: { [id: string]: string } = {
-            "NaN": "-"
-        };
+        const out: { [id: string]: string } = {};
 
         csapatok.forEach(value => {
             out[String(value.id)] = value.nev;

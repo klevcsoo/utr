@@ -8,6 +8,12 @@ export interface CommonNameOnlyProps {
     name: string;
 }
 
+export interface DataEditComponentProps<T> {
+    data: T;
+
+    onData(data: T): void;
+}
+
 export type Identifiable<T extends object> = { id: number } & T
 
 export type KeyValueObject<K, V = K> = {

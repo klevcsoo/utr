@@ -1,5 +1,5 @@
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
+import {Fragment, useCallback, useMemo, useState} from "react";
 import {formatInterval} from "../../utils/lib/utils";
 import {
     Button,
@@ -8,35 +8,28 @@ import {
     CardFooter,
     CardHeader,
     Dialog,
+    DialogBody,
+    DialogFooter,
+    DialogHeader,
     IconButton,
-    Spinner,
     Typography
 } from "@material-tailwind/react";
 import {DestructiveButton} from "../../utils/components/buttons";
 import {VersenyszamEditLayout} from "../components/VersenyszamEditLayout";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
-import {PencilSquareIcon, PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
-import {EntryTimeInput} from "../../nevezesek/components/EntryTimeInput";
-import {
-    useCreateNevezes,
-    useDeleteNevezes,
-    useEditNevezes,
-    useNevezesDetails
-} from "../../nevezesek/hooks";
+import {PlusIcon, TrashIcon} from "@heroicons/react/24/solid";
+import {useCreateNevezes, useDeleteNevezes} from "../../nevezesek/hooks";
 import {useTranslation} from "../../translations/hooks";
 import {useDeleteVersenyszam, useEditVersenyszam, useVersenyszamFromContext} from "../hooks";
 import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../../utils/hooks";
 import {UszasnemId} from "../types";
-import {DisplayedNevezes} from "../../nevezesek/types";
+import {DisplayedNevezes, NevezesEditData} from "../../nevezesek/types";
 import {EmberiNemId} from "../../uszok/types";
-import {CsapatSelect} from "../../csapatok/components/CsapatSelect";
-import {UszoSelect} from "../../uszok/components/UszoSelect";
+import {NevezesEditLayout} from "../../nevezesek/components/NevezesEditLayout";
 
 const MODAL_PARAM_KEY = "modal";
-const NEVEZES_ID_PARAM_KEY = "nevezesId";
 const CREATE_NEVEZES_PARAM_VALUE = "createNevezes";
-const EDIT_NEVEZES_PARAM_VALUE = "editNevezes";
 
 export function VersenyszamokSlugPage() {
     return (
@@ -46,7 +39,6 @@ export function VersenyszamokSlugPage() {
                 <NevezesekList/>
             </div>
             <CreateNevezesModal/>
-            <EditNevezesModal/>
         </Fragment>
     );
 }
@@ -170,17 +162,16 @@ export function NevezesekList() {
         });
     }, [setSearchParams]);
 
-    const doOpenEditNevezesModalDialog = useCallback((id: number) => {
-        setSearchParams(prevState => {
-            prevState.set(MODAL_PARAM_KEY, EDIT_NEVEZES_PARAM_VALUE);
-            prevState.set(NEVEZES_ID_PARAM_KEY, String(id));
-            return prevState;
-        });
-    }, [setSearchParams]);
-
     return !nevezesek || !nevezesek.length ? (
-        <Card>
-            <p>{t("versenyszam.no_uszo")}</p>
+        <Card className="w-full">
+            <CardBody>
+                <p>{t("versenyszam.no_uszo")}</p>
+            </CardBody>
+            <CardFooter>
+                <Button color="blue" variant="outlined" onClick={doOpenCreateNevezesDialog}>
+                    {t("actions.versenyszam.add_uszo")}
+                </Button>
+            </CardFooter>
         </Card>
     ) : (
         <Card className="w-full">
@@ -218,18 +209,11 @@ export function NevezesekList() {
                                              <Typography variant="small">{value}</Typography>
                                          )}/>
                     <DataTableActionColumn list={displayedNevezesek} element={entry => (
-                        <div className="flex flex-row gap-1">
-                            <IconButton variant="outlined" color="blue-gray" onClick={() => {
-                                doOpenEditNevezesModalDialog(entry.id);
-                            }} size="sm">
-                                <PencilSquareIcon className="h-5"/>
-                            </IconButton>
-                            <IconButton variant="outlined" color="red" onClick={() => {
-                                doDeleteNevezes(entry.id);
-                            }} size="sm">
-                                <TrashIcon className="h-5"/>
-                            </IconButton>
-                        </div>
+                        <IconButton variant="outlined" color="red" onClick={() => {
+                            doDeleteNevezes(entry.id);
+                        }} size="sm">
+                            <TrashIcon className="h-5"/>
+                        </IconButton>
                     )}/>
                 </DataTable>
             </CardBody>
@@ -250,9 +234,7 @@ function CreateNevezesModal() {
     const [searchParams, setSearchParams] = useSearchParams();
     const createNevezes = useCreateNevezes();
 
-    const [csapat, setCsapat] = useState<number>(NaN);
-    const [uszo, setUszo] = useState<number>(NaN);
-    const [nevezesiIdo, setNevezesiIdo] = useState<string>();
+    const [editData, setEditData] = useState<NevezesEditData>(defaultNevezesEditData);
 
     const open = useMemo(() => {
         return searchParams.has(MODAL_PARAM_KEY) &&
@@ -267,142 +249,59 @@ function CreateNevezesModal() {
             return state;
         });
 
-        if (!open) {
-            setCsapat(NaN);
-            setUszo(NaN);
-        }
+        if (!open) setEditData(defaultNevezesEditData);
     }, [setSearchParams]);
 
     const canComplete = useMemo(() => {
-        return !!uszo && !!nevezesiIdo && !nevezesiIdo.includes("_");
-    }, [nevezesiIdo, uszo]);
+        return !!editData.csapatId && !!editData.uszoId &&
+            !!editData.nevezesiIdo && !editData.nevezesiIdo.includes("_");
+    }, [editData.csapatId, editData.nevezesiIdo, editData.uszoId]);
 
     const doComplete = useCallback(() => {
-        if (!canComplete) {
-            return;
-        }
+        if (!canComplete) return;
 
         createNevezes({
             megjelent: true,
-            nevezesiIdo: nevezesiIdo,
+            nevezesiIdo: editData.nevezesiIdo,
             versenyszamId: versenyszam.id,
-            uszoId: uszo!
+            uszoId: editData.uszoId!
         }).then(message => {
             console.log(message);
             setOpen(false);
         }).catch(console.error);
-    }, [canComplete, createNevezes, setOpen, nevezesiIdo, versenyszam, uszo]);
-
-    useEffect(() => {
-        setUszo(NaN);
-    }, [csapat]);
+    }, [canComplete, createNevezes, editData.nevezesiIdo, editData.uszoId, versenyszam.id, setOpen]);
 
     return (
         <Dialog open={open} handler={setOpen}>
-            <Card>
-                <CardHeader color="blue-gray"
-                            className="p-4 mb-4 text-center
+            <DialogHeader color="blue-gray"
+                          className="p-4 mb-4 text-center
                             flex flex-row items-center justify-center gap-4">
-                    <PlusIcon className="w-8"/>
-                    <Typography variant="h5">
-                        {t("actions.versenyszam.add_uszo")}
-                    </Typography>
-                </CardHeader>
-                <CardBody className="flex flex-col gap-2">
-                    <CsapatSelect selected={csapat} onSelect={setCsapat}/>
-                    {csapat ? (
-                        <UszoSelect csapatId={csapat} selected={uszo}
-                                    onSelect={setUszo}/>
-                    ) : null}
-                    {uszo ? (
-                        <EntryTimeInput value={nevezesiIdo} onValue={setNevezesiIdo}/>
-                    ) : null}
-                </CardBody>
-                <CardFooter className="flex flex-row gap-2">
-                    <Button color="blue" variant="outlined" fullWidth
-                            onClick={() => setOpen(false)}>
-                        {t("generic_label.rather_not")}
-                    </Button>
-                    <Button color="blue" variant="filled" fullWidth
-                            onClick={doComplete} disabled={!canComplete}>
-                        {t("generic_label.lets_go")}
-                    </Button>
-                </CardFooter>
-            </Card>
+                <PlusIcon className="w-8"/>
+                <Typography variant="h5">
+                    {t("actions.versenyszam.add_uszo")}
+                </Typography>
+            </DialogHeader>
+            <DialogBody>
+                <NevezesEditLayout data={editData} onData={setEditData}/>
+            </DialogBody>
+            <DialogFooter className="grid grid-cols-2 gap-4">
+                <Button color="blue" variant="outlined" fullWidth
+                        onClick={() => setOpen(false)}>
+                    {t("generic_label.rather_not")}
+                </Button>
+                <Button color="blue" variant="filled" fullWidth
+                        onClick={doComplete} disabled={!canComplete}>
+                    {t("generic_label.lets_go")}
+                </Button>
+            </DialogFooter>
         </Dialog>
     );
 }
 
-function EditNevezesModal() {
-    const t = useTranslation();
-
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [nevezes, loadingNevezes] = useNevezesDetails(parseInt(
-        searchParams.get(NEVEZES_ID_PARAM_KEY) ?? "-1"
-    ));
-
-    const editNevezes = useEditNevezes();
-
-    const [nevezesiIdo, setNevezesiIdo] = useState<string>();
-
-    const open = useMemo(() => {
-        return searchParams.has(MODAL_PARAM_KEY) &&
-            searchParams.get(MODAL_PARAM_KEY) === EDIT_NEVEZES_PARAM_VALUE;
-    }, [searchParams]);
-
-    const setOpen = useCallback((open: boolean) => {
-        setSearchParams(state => {
-            if (open) {
-                state.set(MODAL_PARAM_KEY, EDIT_NEVEZES_PARAM_VALUE);
-            } else {
-                state.delete(MODAL_PARAM_KEY);
-                state.delete(NEVEZES_ID_PARAM_KEY);
-            }
-
-            return state;
-        });
-
-        if (!open) {
-            setNevezesiIdo(undefined);
-        }
-    }, [setSearchParams]);
-
-    const doComplete = useCallback(() => {
-        if (!!nevezes) {
-            editNevezes(nevezes.id, {
-                nevezesiIdo: nevezesiIdo
-            }).then(console.log).catch(console.error).finally(() => {
-                setOpen(false);
-            });
-        }
-    }, [editNevezes, nevezes, nevezesiIdo, setOpen]);
-
-    useEffect(() => {
-        if (!!nevezes) {
-            setNevezesiIdo(formatInterval(nevezes.nevezesiIdo));
-        }
-    }, [nevezes]);
-
-    return (
-        <Dialog open={open} handler={setOpen}>
-            {loadingNevezes || !nevezes ? <Spinner/> : (
-                <Card>
-                    <CardBody className="flex flex-col gap-4">
-                        <Typography variant="lead">{nevezes.uszo.nev}</Typography>
-                        <EntryTimeInput value={nevezesiIdo} onValue={setNevezesiIdo}/>
-                    </CardBody>
-                    <CardFooter className="flex flex-row gap-2">
-                        <Button color="blue" variant="outlined" fullWidth
-                                onClick={() => setOpen(false)}>
-                            {t("generic_label.rather_not")}
-                        </Button>
-                        <Button color="blue" variant="filled" fullWidth
-                                onClick={doComplete}>
-                            {t("generic_label.lets_go")}
-                        </Button>
-                    </CardFooter>
-                </Card>
-            )}
-        </Dialog>
-    );
+function defaultNevezesEditData(): NevezesEditData {
+    return {
+        nevezesiIdo: "",
+        uszoId: undefined,
+        csapatId: undefined
+    };
 }
