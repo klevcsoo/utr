@@ -30,7 +30,7 @@ public class Versenyszam implements Serializable {
     @Column(name = "hossz")
     private Integer hossz;
 
-    @Column(name = "uszasnem_id")
+    @Column(name = "uszasnem")
     @Enumerated(EnumType.STRING)
     private EUszasnem uszasnem;
 
