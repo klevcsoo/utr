@@ -2,6 +2,8 @@ import {AdminNavbar, AdminSidebar} from "./admin";
 import React, {createContext, useState} from "react";
 import {OrganisationRouteProvider} from "../../organisation/components/OrganisationRouteProvider";
 
+const LS_KEY_EXPANDED = "UTR::AdminLayout::SidebarOpen";
+
 export const AdminLayoutTitleContext = createContext<
     (title: string, disableNavigation?: boolean) => void
 >(
@@ -10,7 +12,9 @@ export const AdminLayoutTitleContext = createContext<
 );
 
 export function AdminLayout() {
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useState(
+        window.localStorage.getItem(LS_KEY_EXPANDED) === "true"
+    );
 
     return (
         <div className={`grid ${expanded ? "grid-cols-[20rem_auto]" : "grid-cols-[4rem_auto]"}
@@ -23,7 +27,11 @@ export function AdminLayout() {
             sticky top-[8.5rem] z-40">
                 <AdminSidebar expanded={expanded}
                               toggleExpanded={() => {
-                                  setExpanded(prevState => !prevState);
+                                  setExpanded(prevState => {
+                                      window.localStorage.setItem(LS_KEY_EXPANDED,
+                                          String(!prevState));
+                                      return !prevState;
+                                  });
                               }}/>
             </div>
             <div className="col-start-2 col-end-2 row-start-2 row-span-full pb-4">
