@@ -24,3 +24,7 @@ export type RefreshableLiveData<T> = [
 export type MessageResponse = {
     message: string
 }
+
+export type RefreshableContext<T extends object> = T & {
+    refresh(key?: keyof T): void;
+}

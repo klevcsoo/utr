@@ -1,4 +1,4 @@
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {TextInput} from "../../utils/components/inputs/TextInput";
 import {
@@ -9,20 +9,18 @@ import {
     CardHeader,
     Dialog,
     Input,
-    Spinner,
     Typography
 } from "@material-tailwind/react";
 import {DestructiveButton} from "../../utils/components/buttons";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {useCsapatDetails, useDeleteCsapat, useEditCsapat} from "../hooks";
+import {useCsapatFromContext, useDeleteCsapat, useEditCsapat} from "../hooks";
 import {useTranslation} from "../../translations/hooks";
-import {useCreateUszo, useDeleteUszo, useUszoDetails, useUszokList} from "../../uszok/hooks";
-import {useGetEmberiNemElnevezes, useSetAdminLayoutTitle} from "../../utils/hooks";
+import {useCreateUszo, useDeleteUszo, useUszoDetails} from "../../uszok/hooks";
+import {useGetEmberiNemElnevezes} from "../../utils/hooks";
 import {NumberInput} from "../../utils/components/inputs/NumberInput";
 import {EmberiNemSelect} from "../../uszok/components/EmberiNemSelect";
-import {Csapat} from "../types";
 import {EmberiNemId} from "../../uszok/types";
 
 const MODAL_PARAM_KEY = "modal";
@@ -30,75 +28,54 @@ const USZO_ID_PARAM_KEY = "uszoId";
 const USZO_PARAM_VALUE = "uszo";
 
 export function CsapatokSlugPage() {
-    const t = useTranslation();
-
-    const {id} = useParams();
-    const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
-
-    const [csapat, csapatLoading] = useCsapatDetails(idNumber);
-
-    useSetAdminLayoutTitle(!csapat ? t("generic_label.loading") : csapat.nev);
-
-    return csapatLoading ? (
-        <div className="w-full h-full grid place-content-center">
-            <Spinner/>
-        </div>
-    ) : !csapat ? (
-        <div className="h-full grid place-content-center">
-            <div className="flex flex-col gap-2 items-center">
-                <p>{t("csapat.not_found")}</p>
-                <Link to=".." relative="path">
-                    <Button color="blue" variant="filled">{t("actions.generic.back")}</Button>
-                </Link>
-            </div>
-        </div>
-    ) : (
+    return (
         <Fragment>
             <div className="w-full flex flex-col gap-4 items-start">
-                <CsapatDetailsForm csapat={csapat}/>
-                <UszokList csapat={csapat}/>
+                <CsapatDetailsForm/>
+                <UszokList/>
             </div>
-            <UszoModal csapat={csapat}/>
+            <UszoModal/>
         </Fragment>
     );
 }
 
-function CsapatDetailsForm(props: {
-    csapat: Csapat
-}) {
+function CsapatDetailsForm() {
     const t = useTranslation();
+
+    const {csapat} = useCsapatFromContext();
+
     const deleteCsapat = useDeleteCsapat();
     const editCsapat = useEditCsapat();
 
     const [isDirty, setIsDirty] = useState(false);
-    const [nev, setNev] = useState(props.csapat.nev);
-    const [varos, setVaros] = useState(props.csapat.varos);
+    const [nev, setNev] = useState(csapat.nev);
+    const [varos, setVaros] = useState(csapat.varos);
 
     const doCommitChanges = useCallback(() => {
-        editCsapat(props.csapat.id, {
+        editCsapat(csapat.id, {
             nev: nev,
             varos: varos
         }).then(message => {
             console.log(message);
             setIsDirty(false);
         }).catch(console.error);
-    }, [editCsapat, nev, props.csapat, varos]);
+    }, [editCsapat, nev, csapat, varos]);
 
     const doDelete = useCallback(() => {
-        if (!!props.csapat) {
-            deleteCsapat(props.csapat.id).then(console.log);
+        if (!!csapat) {
+            deleteCsapat(csapat.id).then(console.log);
         }
-    }, [props.csapat, deleteCsapat]);
+    }, [csapat, deleteCsapat]);
 
     useEffect(() => {
-        setIsDirty(props.csapat.nev !== nev || props.csapat.varos !== varos);
-    }, [nev, props.csapat, varos]);
+        setIsDirty(csapat.nev !== nev || csapat.varos !== varos);
+    }, [nev, csapat, varos]);
 
     return (
         <Card className="w-full mt-6">
             <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
                 <Typography variant="h5">
-                    {props.csapat.nev}
+                    {csapat.nev}
                 </Typography>
             </CardHeader>
             <CardBody>
@@ -124,13 +101,12 @@ function CsapatDetailsForm(props: {
     );
 }
 
-function UszokList(props: {
-    csapat: Csapat
-}) {
+function UszokList() {
     const t = useTranslation();
     const getEmberiNemElnevezes = useGetEmberiNemElnevezes();
 
-    const [uszok, loadingUszok] = useUszokList(props.csapat.id);
+    const {uszok} = useCsapatFromContext();
+
     const deleteUszo = useDeleteUszo();
     const [, setSearchParams] = useSearchParams();
 
@@ -167,65 +143,60 @@ function UszokList(props: {
 
     return (
         <Card className="w-full">
-            {loadingUszok ? (
-                <CardBody className="grid place-content-center">
-                    <Spinner/>
-                </CardBody>
-            ) : !uszok || !uszok.length ? (
+            {!uszok || !uszok.length ? (
                 <CardBody className="grid place-content-center">
                     <Typography>{t("csapat.no_uszok")}</Typography>
                 </CardBody>
             ) : (
-                <Fragment>
-                    <CardBody>
-                        <DataTable dataList={displayedUszok} excludedProperties={["id"]}>
-                            <DataTableDataColumn list={displayedUszok} forKey="nev"
-                                                 header={t("generic_label.name")}
-                                                 element={value => (
-                                                     <Typography
-                                                         variant="small">{value}</Typography>
-                                                 )}/>
-                            <DataTableDataColumn list={displayedUszok} forKey="szuletesiEv"
-                                                 header={t("generic_label.year_of_birth")}
-                                                 element={value => (
-                                                     <Typography
-                                                         variant="small">{value}</Typography>
-                                                 )}/>
-                            <DataTableActionColumn list={displayedUszok} element={entry => (
-                                <Fragment>
-                                    <Button variant="text" color="blue-gray" onClick={() => {
-                                        doOpenEditUszoModal(entry.id);
-                                    }}>
-                                        {t("actions.generic.edit")}
-                                    </Button>
-                                    <Button variant="text" color="red" onClick={() => {
-                                        doDeleteUszo(entry.id);
-                                    }}>
-                                        {t("actions.generic.delete")}
-                                    </Button>
-                                </Fragment>
-                            )}/>
-                        </DataTable>
-                    </CardBody>
-                    <CardFooter>
-                        <Button color="blue" variant="outlined" onClick={doOpenNewUszoModal}>
-                            {t("actions.uszo.create")}
-                        </Button>
-                    </CardFooter>
-                </Fragment>
+                <CardBody>
+                    <DataTable dataList={displayedUszok} excludedProperties={["id"]}>
+                        <DataTableDataColumn list={displayedUszok} forKey="nev"
+                                             header={t("generic_label.name")}
+                                             element={value => (
+                                                 <Typography
+                                                     variant="small">{value}</Typography>
+                                             )}/>
+                        <DataTableDataColumn list={displayedUszok} forKey="szuletesiEv"
+                                             header={t("generic_label.year_of_birth")}
+                                             element={value => (
+                                                 <Typography
+                                                     variant="small">{value}</Typography>
+                                             )}/>
+                        <DataTableActionColumn list={displayedUszok} element={entry => (
+                            <Fragment>
+                                <Button variant="text" color="blue-gray" onClick={() => {
+                                    doOpenEditUszoModal(entry.id);
+                                }}>
+                                    {t("actions.generic.edit")}
+                                </Button>
+                                <Button variant="text" color="red" onClick={() => {
+                                    doDeleteUszo(entry.id);
+                                }}>
+                                    {t("actions.generic.delete")}
+                                </Button>
+                            </Fragment>
+                        )}/>
+                    </DataTable>
+                </CardBody>
             )}
+            <CardFooter>
+                <Button color="blue" variant="outlined" onClick={doOpenNewUszoModal}>
+                    {t("actions.uszo.create")}
+                </Button>
+            </CardFooter>
         </Card>
     );
 }
 
-function UszoModal(props: {
-    csapat: Csapat
-}) {
+function UszoModal() {
     const t = useTranslation();
 
+    const {csapat} = useCsapatFromContext();
+
     const [searchParams, setSearchParams] = useSearchParams();
-    const [uszo, loadingUszo] = useUszoDetails(
-        parseInt(searchParams.get(USZO_ID_PARAM_KEY) ?? "-1")
+    const [uszo] = useUszoDetails(
+        searchParams.has(USZO_ID_PARAM_KEY) ?
+            parseInt(searchParams.get(USZO_ID_PARAM_KEY)!) : undefined
     );
     const createUszo = useCreateUszo();
 
@@ -264,18 +235,18 @@ function UszoModal(props: {
     }, [searchParams, t]);
 
     const doComplete = useCallback(() => {
-        if (!!props.csapat && !!nev && !!szuletesiEv && !!nem) {
+        if (!!csapat && !!nev && !!szuletesiEv && !!nem) {
             createUszo({
                 nev: nev,
                 szuletesiEv: szuletesiEv,
                 nem: nem,
-                csapatId: props.csapat.id
+                csapatId: csapat.id
             }).then(message => {
                 console.log(message);
                 setOpen(false);
-            }).catch(console.log);
+            }).catch(console.error);
         }
-    }, [createUszo, setOpen, nem, nev, props.csapat, szuletesiEv]);
+    }, [createUszo, setOpen, nem, nev, csapat, szuletesiEv]);
 
     useEffect(() => {
         if (!!uszo) {
@@ -285,7 +256,7 @@ function UszoModal(props: {
         }
     }, [uszo]);
 
-    return loadingUszo ? <Spinner/> : (
+    return (
         <Dialog open={open} handler={setOpen}>
             <Card>
 

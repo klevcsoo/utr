@@ -12,21 +12,16 @@ import {
     Chip,
     Dialog,
     Input,
-    Spinner,
     Typography
 } from "@material-tailwind/react";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {DateChip} from "../../utils/components/DateChip";
-import {useCreateUszoverseny, useNyitottVerseny, useUszoversenyekList} from "../hooks";
+import {useCreateUszoverseny} from "../hooks";
 import {useTranslation} from "../../translations/hooks";
-import {useSetAdminLayoutTitle} from "../../utils/hooks";
+import {useOrganisationFromContext} from "../../organisation/hooks";
 
 export function UszoversenyekIndexPage() {
-    const t = useTranslation();
-
-    useSetAdminLayoutTitle(t("title.admin_layout.uszoversenyek"));
-
     return (
         <Fragment>
             <div className="w-full flex flex-col gap-12 items-start">
@@ -40,11 +35,10 @@ export function UszoversenyekIndexPage() {
 
 function NyitottUszoversenyCard() {
     const t = useTranslation();
-    const [nyitottVerseny, loadingNyitottVerseny] = useNyitottVerseny();
 
-    return loadingNyitottVerseny ? (
-        <Spinner/>
-    ) : !nyitottVerseny ? null : (
+    const {nyitottUszoverseny: nyitottVerseny} = useOrganisationFromContext();
+
+    return !nyitottVerseny ? null : (
         <Card className="w-full mt-6">
             <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
                 <Typography variant="h5">{t("uszoverseny.opened")}</Typography>
@@ -75,11 +69,9 @@ function UszoversenyekList() {
     const t = useTranslation();
     const [, setSearchParams] = useSearchParams();
 
-    const [uszoversenyek, loadingUszoversenyek] = useUszoversenyekList();
+    const {uszoversenyek} = useOrganisationFromContext();
 
-    return loadingUszoversenyek ? (
-        <Spinner/>
-    ) : (
+    return (
         <Card className="w-full mt-6">
             <CardHeader variant="gradient" color="blue-gray"
                         className="p-4 mb-4 text-center">

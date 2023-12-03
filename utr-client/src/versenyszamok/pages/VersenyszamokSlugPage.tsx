@@ -1,4 +1,4 @@
-import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {formatInterval} from "../../utils/lib/utils";
 import {
@@ -22,14 +22,12 @@ import {
     useCreateNevezes,
     useDeleteNevezes,
     useEditNevezes,
-    useNevezesDetails,
-    useNevezesekList
+    useNevezesDetails
 } from "../../nevezesek/hooks";
-import {useUszoversenyDetails} from "../../uszoversenyek/hooks";
 import {useTranslation} from "../../translations/hooks";
-import {useDeleteVersenyszam, useEditVersenyszam, useVersenyszamDetails} from "../hooks";
+import {useDeleteVersenyszam, useEditVersenyszam, useVersenyszamFromContext} from "../hooks";
 import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../../utils/hooks";
-import {UszasnemId, Versenyszam} from "../types";
+import {UszasnemId} from "../types";
 import {DisplayedNevezes} from "../../nevezesek/types";
 import {EmberiNemId} from "../../uszok/types";
 import {CsapatSelect} from "../../csapatok/components/CsapatSelect";
@@ -41,93 +39,74 @@ const CREATE_NEVEZES_PARAM_VALUE = "createNevezes";
 const EDIT_NEVEZES_PARAM_VALUE = "editNevezes";
 
 export function VersenyszamokSlugPage() {
-    const t = useTranslation();
-
-    const {id} = useParams();
-    const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
-    const [versenyszam, loadingVersenyszam] = useVersenyszamDetails(idNumber);
-    const [uszoverseny, loadingUszoverseny] = useUszoversenyDetails(
-        versenyszam?.versenyId ?? -1
-    );
-
-    return loadingVersenyszam || loadingUszoverseny ? (
-        <div className="w-full h-full grid place-content-center">
-            <Spinner/>
-        </div>
-    ) : !versenyszam || !uszoverseny ? (
-        <div className="h-full grid place-content-center">
-            <div className="flex flex-col gap-2 items-center">
-                <p>{t("versenyszam.not_found")}</p>
-                <Link to=".." relative="path">
-                    <Button color="blue">{t("actions.generic.back")}</Button>
-                </Link>
-            </div>
-        </div>
-    ) : (
+    return (
         <Fragment>
             <div className="w-full flex flex-col gap-12 items-start">
-                <VersenyszamDetails versenyszam={versenyszam}/>
-                <NevezesekList versenyszam={versenyszam}/>
+                <VersenyszamDetails/>
+                <NevezesekList/>
             </div>
-            <CreateNevezesModal versenyszam={versenyszam}/>
+            <CreateNevezesModal/>
             <EditNevezesModal/>
         </Fragment>
     );
 }
 
-export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
+export function VersenyszamDetails() {
     const t = useTranslation();
+
+    const {versenyszam} = useVersenyszamFromContext();
+
     const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
     const getUszasnemElnevezes = useGetUszasnemElnevezes();
     const deleteVersenyszam = useDeleteVersenyszam();
     const navigate = useNavigate();
 
-    const [valto, setValto] = useState<number>(props.versenyszam.valto ?? 0);
-    const [hossz, setHossz] = useState<number>(props.versenyszam.hossz);
-    const [nem, setNem] = useState<EmberiNemId>(props.versenyszam.nem);
+    const [valto, setValto] = useState<number>(versenyszam.valto ?? 0);
+    const [hossz, setHossz] = useState<number>(versenyszam.hossz);
+    const [nem, setNem] = useState<EmberiNemId>(versenyszam.nem);
     const [uszasnem, setUszasnem] = useState<UszasnemId>(
-        props.versenyszam.uszasnem
+        versenyszam.uszasnem
     );
 
     const elnevezes = useMemo(() => {
-        if (!props.versenyszam) {
+        if (!versenyszam) {
             return t("generic_label.loading");
         }
 
-        const valto = props.versenyszam.valto ? `${props.versenyszam.valto}x` : "";
-        const nem = getVersenyszamNemElnevezes(props.versenyszam.nem);
-        const uszasnem = getUszasnemElnevezes(props.versenyszam.uszasnem);
-        return `${valto}${props.versenyszam.hossz} ${nem} ${uszasnem}`;
-    }, [getUszasnemElnevezes, getVersenyszamNemElnevezes, t, props.versenyszam]);
+        const valto = versenyszam.valto ? `${versenyszam.valto}x` : "";
+        const nem = getVersenyszamNemElnevezes(versenyszam.nem);
+        const uszasnem = getUszasnemElnevezes(versenyszam.uszasnem);
+        return `${valto}${versenyszam.hossz} ${nem} ${uszasnem}`;
+    }, [getUszasnemElnevezes, getVersenyszamNemElnevezes, t, versenyszam]);
 
     const unsavedChanges = useMemo(() => {
         return (
-            props.versenyszam.valto !== valto ||
-            props.versenyszam.hossz !== hossz ||
-            props.versenyszam.nem !== nem ||
-            props.versenyszam.uszasnem !== uszasnem
+            versenyszam.valto !== valto ||
+            versenyszam.hossz !== hossz ||
+            versenyszam.nem !== nem ||
+            versenyszam.uszasnem !== uszasnem
         );
-    }, [hossz, nem, props.versenyszam, uszasnem, valto]);
+    }, [hossz, nem, versenyszam, uszasnem, valto]);
 
     const editVersenyszam = useEditVersenyszam();
 
     const doCommitChanges = useCallback(() => {
-        editVersenyszam(props.versenyszam.id, {
+        editVersenyszam(versenyszam.id, {
             valto: valto === 0 ? undefined : valto,
             emberiNemId: nem,
             hossz: hossz,
             uszasnemId: uszasnem
         }).then(console.log).catch(console.error);
-    }, [editVersenyszam, hossz, nem, props.versenyszam, uszasnem, valto]);
+    }, [editVersenyszam, hossz, nem, versenyszam, uszasnem, valto]);
 
     const doDeleteVersenyszam = useCallback(() => {
-        if (!!props.versenyszam && window.confirm(t("confirm.generic.delete"))) {
-            deleteVersenyszam(props.versenyszam.id).then(message => {
+        if (!!versenyszam && window.confirm(t("confirm.generic.delete"))) {
+            deleteVersenyszam(versenyszam.id).then(message => {
                 console.log(message);
                 navigate("..");
             }).catch(console.error);
         }
-    }, [deleteVersenyszam, navigate, t, props.versenyszam]);
+    }, [deleteVersenyszam, navigate, t, versenyszam]);
 
     return (
         <Card className="w-full mt-6">
@@ -160,10 +139,10 @@ export function VersenyszamDetails(props: { versenyszam: Versenyszam }) {
     );
 }
 
-export function NevezesekList(props: { versenyszam: Versenyszam }) {
+export function NevezesekList() {
     const t = useTranslation();
 
-    const [nevezesek, loadingNevezesek] = useNevezesekList(props.versenyszam.id);
+    const {nevezesek} = useVersenyszamFromContext();
     const deleteNevezes = useDeleteNevezes();
     const [, setSearchParams] = useSearchParams();
 
@@ -199,11 +178,7 @@ export function NevezesekList(props: { versenyszam: Versenyszam }) {
         });
     }, [setSearchParams]);
 
-    return loadingNevezesek ? (
-        <div className="grid place-content-center">
-            <Spinner/>
-        </div>
-    ) : !nevezesek || !nevezesek.length ? (
+    return !nevezesek || !nevezesek.length ? (
         <Card>
             <p>{t("versenyszam.no_uszo")}</p>
         </Card>
@@ -267,8 +242,10 @@ export function NevezesekList(props: { versenyszam: Versenyszam }) {
     );
 }
 
-function CreateNevezesModal(props: { versenyszam: Versenyszam }) {
+function CreateNevezesModal() {
     const t = useTranslation();
+
+    const {versenyszam} = useVersenyszamFromContext();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const createNevezes = useCreateNevezes();
@@ -308,13 +285,13 @@ function CreateNevezesModal(props: { versenyszam: Versenyszam }) {
         createNevezes({
             megjelent: true,
             nevezesiIdo: nevezesiIdo,
-            versenyszamId: props.versenyszam.id,
+            versenyszamId: versenyszam.id,
             uszoId: uszo!
         }).then(message => {
             console.log(message);
             setOpen(false);
         }).catch(console.error);
-    }, [canComplete, createNevezes, setOpen, nevezesiIdo, props.versenyszam, uszo]);
+    }, [canComplete, createNevezes, setOpen, nevezesiIdo, versenyszam, uszo]);
 
     useEffect(() => {
         setUszo(NaN);

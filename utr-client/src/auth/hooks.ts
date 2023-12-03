@@ -51,13 +51,13 @@ export function useRolesList() {
     }, []);
 }
 
-export function useUserDetails(userId: number): [DisplayedUser | undefined, boolean] {
+export function useUserDetails(userId?: number): [DisplayedUser | undefined, boolean] {
     const user = useAuthUser()!;
     const [details, setDetails] = useState<DisplayedUser>();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (userId !== -1) {
+        if (!!userId) {
             getUser(user, userId)
                 .then(setDetails)
                 .catch(console.error)

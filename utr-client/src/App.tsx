@@ -14,6 +14,9 @@ import {VersenyszamokSlugPage} from "./versenyszamok/pages/VersenyszamokSlugPage
 import {Error404Page} from "./utils/pages/Error404Page";
 import {SupportPage} from "./support/pages/SupportPage";
 import {SettingsPage} from "./auth/pages/SettingsPage";
+import {UszoversenyRouteProvider} from "./uszoversenyek/components/UszoversenyRouteProvider";
+import {VersenyszamRouteProvider} from "./versenyszamok/components/VersenyszamRouteProvider";
+import {CsapatRouteProvider} from "./csapatok/components/CsapatRouteProvider";
 
 function App() {
     return (
@@ -33,18 +36,22 @@ function App() {
                     <Route index element={<AdminIndexPage/>}/>
                     <Route path="uszoversenyek">
                         <Route index element={<UszoversenyekIndexPage/>}/>
-                        <Route path=":id">
+                        <Route path=":uszoversenyId" element={<UszoversenyRouteProvider/>}>
                             <Route index element={<UszoversenyekSlugPage/>}/>
                             <Route path="versenyszamok">
                                 <Route index element={<Navigate to=".."
                                                                 relative="path"/>}/>
-                                <Route path=":id" element={<VersenyszamokSlugPage/>}/>
+                                <Route path=":versenyszamId" element={<VersenyszamRouteProvider/>}>
+                                    <Route index element={<VersenyszamokSlugPage/>}/>
+                                </Route>
                             </Route>
                         </Route>
                     </Route>
                     <Route path="csapatok">
                         <Route index element={<CsapatokIndexPage/>}/>
-                        <Route path=":id" element={<CsapatokSlugPage/>}/>
+                        <Route path=":csapatId" element={<CsapatRouteProvider/>}>
+                            <Route index element={<CsapatokSlugPage/>}/>
+                        </Route>
                     </Route>
                     <Route path="settings/*" element={<SettingsPage/>}/>
                     <Route path="support/*" element={<SupportPage/>}/>

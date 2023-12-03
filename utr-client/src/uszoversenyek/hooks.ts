@@ -1,5 +1,5 @@
 import {useAuthUser} from "../auth/hooks";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {
     closeUszoverseny,
     createUszoverseny,
@@ -14,6 +14,8 @@ import {
 import {RefreshableLiveData} from "../utils/types";
 import {Uszoverseny} from "./types";
 import {Versenyszam} from "../versenyszamok/types";
+import {UszoversenyContext} from "./index";
+import {useOrganisationFromContext} from "../organisation/hooks";
 
 export function useNyitottVerseny():
     RefreshableLiveData<(Uszoverseny & { versenyszamok: Versenyszam[] })> {
@@ -45,94 +47,107 @@ export function useNyitottVerseny():
 
 export function useCloseUszoverseny(): () => Promise<string> {
     const user = useAuthUser();
+    const {refresh} = useOrganisationFromContext();
 
     return useCallback(() => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 closeUszoverseny(user).then(({message}) => {
+                    refresh("uszoversenyek");
+                    refresh("nyitottUszoverseny");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject("Úgy látszik nem vagy bejelentkezve.");
             }
         });
-    }, [user]);
+    }, [refresh, user]);
 }
 
 export function useCreateUszoverseny():
     (data: Omit<Uszoverseny, "id">) => Promise<string> {
     const user = useAuthUser();
+    const {refresh} = useOrganisationFromContext();
 
     return useCallback(data => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 createUszoverseny(user, data).then(({message}) => {
+                    refresh("uszoversenyek");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject("Úgy látszik nem vagy bejelentkezve.");
             }
         });
-    }, [user]);
+    }, [refresh, user]);
 }
 
 export function useDeleteUszoverseny():
     (id: number) => Promise<string> {
     const user = useAuthUser();
+    const {refresh} = useOrganisationFromContext();
 
     return useCallback((id) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 deleteUszoverseny(user, id).then(({message}) => {
+                    refresh("uszoversenyek");
+                    refresh("nyitottUszoverseny");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject("Úgy látszik nem vagy bejelentkezve.");
             }
         });
-    }, [user]);
+    }, [refresh, user]);
 }
 
 export function useEditUszoverseny():
     (id: number, data: Partial<Omit<Uszoverseny, "id">>) => Promise<string> {
     const user = useAuthUser();
+    const {refresh} = useOrganisationFromContext();
 
     return useCallback((id, data) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 editUszoverseny(user, id, data).then(({message}) => {
+                    refresh("uszoversenyek");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject("Úgy látszik nem vagy bejelentkezve.");
             }
         });
-    }, [user]);
+    }, [refresh, user]);
 }
 
 export function useOpenUszoverseny(): (id: number) => Promise<string> {
     const user = useAuthUser();
+    const {refresh} = useOrganisationFromContext();
 
     return useCallback((id) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 openUszoverseny(user, id).then(({message}) => {
+                    refresh("uszoversenyek");
+                    refresh("nyitottUszoverseny");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject("Úgy látszik nem vagy bejelentkezve.");
             }
         });
-    }, [user]);
+    }, [refresh, user]);
 }
 
-export function useUszoversenyDetails(id: number): RefreshableLiveData<Uszoverseny> {
+export function useUszoversenyDetails(id?: number): RefreshableLiveData<Uszoverseny> {
     const user = useAuthUser();
     const [uszoverseny, setUszoverseny] = useState<Uszoverseny>();
     const [loading, setLoading] = useState(true);
 
     const refresh = useCallback(() => {
-        if (!!user && id !== -1) {
+        if (!!user && !!id) {
             getUszoverseny(user, id).then(setUszoverseny).catch(console.error).finally(() => {
                 setLoading(false);
             });
@@ -166,4 +181,8 @@ export function useUszoversenyekList(): RefreshableLiveData<Uszoverseny[]> {
     useEffect(refresh, [refresh]);
 
     return [list, loading, refresh];
+}
+
+export function useUszoversenyFromContext() {
+    return useContext(UszoversenyContext);
 }

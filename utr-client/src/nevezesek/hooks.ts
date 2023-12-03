@@ -4,68 +4,75 @@ import {createNevezes, deleteNevezes, editNevezes, getAllNevezesek, getNevezes} 
 import {useTranslation} from "../translations/hooks";
 import {RefreshableLiveData} from "../utils/types";
 import {Nevezes, NevezesCreationData} from "./types";
+import {useVersenyszamFromContext} from "../versenyszamok/hooks";
 
 export function useCreateNevezes():
     (data: NevezesCreationData) => Promise<string> {
     const user = useAuthUser();
     const t = useTranslation();
+    const {refresh} = useVersenyszamFromContext();
 
     return useCallback(data => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 createNevezes(user, data).then(({message}) => {
+                    refresh("nevezesek");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject(t("error.auth.unauthenticated"));
             }
         });
-    }, [t, user]);
+    }, [refresh, t, user]);
 }
 
 export function useDeleteNevezes():
     (id: number) => Promise<string> {
     const user = useAuthUser();
     const t = useTranslation();
+    const {refresh} = useVersenyszamFromContext();
 
     return useCallback((id) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 deleteNevezes(user, id).then(({message}) => {
+                    refresh("nevezesek");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject(t("error.auth.unauthenticated"));
             }
         });
-    }, [t, user]);
+    }, [refresh, t, user]);
 }
 
 export function useEditNevezes():
     (id: number, data: Partial<NevezesCreationData>) => Promise<string> {
     const user = useAuthUser();
     const t = useTranslation();
+    const {refresh} = useVersenyszamFromContext();
 
     return useCallback((id, data) => {
         return new Promise((resolve, reject) => {
             if (!!user) {
                 editNevezes(user, id, data).then(({message}) => {
+                    refresh("nevezesek");
                     resolve(message);
                 }).catch(reject);
             } else {
                 reject(t("error.auth.unauthenticated"));
             }
         });
-    }, [t, user]);
+    }, [refresh, t, user]);
 }
 
-export function useNevezesDetails(id: number): RefreshableLiveData<Nevezes> {
+export function useNevezesDetails(id?: number): RefreshableLiveData<Nevezes> {
     const user = useAuthUser();
     const [nevezes, setNevezes] = useState<Nevezes>();
     const [loading, setLoading] = useState(true);
 
     const refresh = useCallback(() => {
-        if (!!user && id !== -1) {
+        if (!!user && !!id) {
             getNevezes(user, id).then(setNevezes).catch(console.error).finally(() => {
                 setLoading(false);
             });

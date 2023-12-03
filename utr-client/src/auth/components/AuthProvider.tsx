@@ -17,16 +17,15 @@ function AuthProvider(props: CommonChildrenOnlyProps) {
     );
 
     const doLogin = useCallback(
-        (username: string, password: string): Promise<AuthUser> => {
+        async (username: string, password: string): Promise<AuthUser> => {
             if (!username || !password) {
                 throw new Error(t("error.auth.missing_username_or_pass"));
             }
 
-            return login(username as UserRole, password).then(user => {
-                setUser(user);
-                sessionStorage.setItem(AUTH_DATA_KEY, JSON.stringify(user));
-                return user;
-            });
+            let authUser = await login(username as UserRole, password);
+            setUser(authUser);
+            sessionStorage.setItem(AUTH_DATA_KEY, JSON.stringify(authUser));
+            return authUser;
         }, [t]
     );
 

@@ -1,6 +1,6 @@
 import {AdminNavbar, AdminSidebar} from "./admin";
-import {Outlet} from "react-router-dom";
 import React, {createContext, useState} from "react";
+import {OrganisationRouteProvider} from "../../organisation/components/OrganisationRouteProvider";
 
 export const AdminLayoutTitleContext = createContext<
     (title: string, disableNavigation?: boolean) => void
@@ -27,7 +27,7 @@ export function AdminLayout() {
                               }}/>
             </div>
             <div className="col-start-2 col-end-2 row-start-2 row-span-full pb-4">
-                <Outlet/>
+                <OrganisationRouteProvider/>
             </div>
         </div>
     );

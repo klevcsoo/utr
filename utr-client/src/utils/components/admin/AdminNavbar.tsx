@@ -1,6 +1,5 @@
 import {
     Avatar,
-    Badge,
     Button,
     Menu,
     MenuHandler,
@@ -19,7 +18,6 @@ import {
 } from "@heroicons/react/24/solid";
 import {AdminBreadcrumbs} from "./AdminBreadcrumbs";
 import {useAuthLogout} from "../../../auth/hooks";
-import {useNyitottVerseny} from "../../../uszoversenyek/hooks";
 import {useTranslation} from "../../../translations/hooks";
 
 export function AdminNavbar() {
@@ -53,32 +51,25 @@ function NavButton(props: {
     nyitottVersenyBadge?: boolean
 }) {
     const {pathname} = useLocation();
-    const [nyitottVerseny] = useNyitottVerseny();
 
     const isActive = useMemo(() => {
         return pathname.startsWith(props.to);
     }, [pathname, props.to]);
 
-    const badge = useMemo(() => {
-        return props.nyitottVersenyBadge && !!nyitottVerseny;
-    }, [nyitottVerseny, props.nyitottVersenyBadge]);
-
     return (
-        <Badge className="animate-pulse" invisible={!badge}>
-            <Link to={props.to}>
-                <Typography as="div" variant="small" color={isActive ? "blue" : "blue-gray"}
-                            className={`font-normal px-4 py-2 rounded-lg 
+        <Link to={props.to}>
+            <Typography as="div" variant="small" color={isActive ? "blue" : "blue-gray"}
+                        className={`font-normal px-4 py-2 rounded-lg 
                         ${isActive ?
-                                "bg-blue-gray-50 bg-opacity-50 border border-blue-gray-100" :
-                                "bg-transparent hover:bg-gray-100"}
+                            "bg-blue-gray-50 bg-opacity-50 border border-blue-gray-100" :
+                            "bg-transparent hover:bg-gray-100"}
                         flex flex-row items-center gap-2`}>
-                    {createElement<{ className: string }>(props.icon, {
-                        className: "w-6 mb-0.5"
-                    })}
-                    {props.text}
-                </Typography>
-            </Link>
-        </Badge>
+                {createElement<{ className: string }>(props.icon, {
+                    className: "w-6 mb-0.5"
+                })}
+                {props.text}
+            </Typography>
+        </Link>
     );
 }
 

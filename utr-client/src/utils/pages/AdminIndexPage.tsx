@@ -1,5 +1,6 @@
 import {useTranslation} from "../../translations/hooks";
 import {useSetAdminLayoutTitle} from "../hooks";
+import {Navigate} from "react-router-dom";
 
 export function AdminIndexPage() {
     const t = useTranslation();
@@ -7,6 +8,6 @@ export function AdminIndexPage() {
     useSetAdminLayoutTitle(t("title.admin_layout.overview"), true);
 
     return (
-        <div>admin index</div>
+        <Navigate to="uszoversenyek" replace/>
     );
 }

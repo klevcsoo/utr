@@ -1,7 +1,6 @@
 import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {TextInput} from "../../utils/components/inputs/TextInput";
-import {createCsapat} from "../api";
 import {
     Button,
     Card,
@@ -9,32 +8,27 @@ import {
     CardFooter,
     CardHeader,
     Dialog,
-    Spinner,
     Typography
 } from "@material-tailwind/react";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {useAuthUser} from "../../auth/hooks";
-import {useCsapatokList} from "../hooks";
 import {useTranslation} from "../../translations/hooks";
 import {useSetAdminLayoutTitle} from "../../utils/hooks";
+import {useOrganisationFromContext} from "../../organisation/hooks";
+import {useCreateCsapat} from "../hooks";
 
 const MODAL_PARAM_KEY = "modal";
 const NEW_CSAPAT_PARAM_VALUE = "newCsapat";
 
 export function CsapatokIndexPage() {
-    const [csapatok, csapatokLoading] = useCsapatokList();
+    const {csapatok} = useOrganisationFromContext();
     const [, setSearchParams] = useSearchParams();
     const t = useTranslation();
 
     useSetAdminLayoutTitle(t("title.admin_layout.csapatok"));
 
-    return csapatokLoading ? (
-        <div className="w-full h-full grid place-content-center">
-            <Spinner/>
-        </div>
-    ) : (
+    return (
         <Fragment>
             <Card className="w-full mt-6">
                 <CardHeader variant="gradient" color="blue-gray"
@@ -78,9 +72,10 @@ export function CsapatokIndexPage() {
 }
 
 function NewCsapatDialog() {
-    const user = useAuthUser();
-    const [searchParams, setSearchParams] = useSearchParams();
     const t = useTranslation();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const createCsapat = useCreateCsapat();
 
     const [nev, setNev] = useState("");
     const [varos, setVaros] = useState("");
@@ -104,16 +99,16 @@ function NewCsapatDialog() {
     }, [nev, varos]);
 
     const doComplete = useCallback(() => {
-        if (!!user && !!nev && !!varos) {
-            createCsapat(user, {nev: nev, varos: varos}).then(({message}) => {
-                console.log(message);
+        if (!!nev && !!varos) {
+            createCsapat({nev: nev, varos: varos}).then(value => {
+                console.log(value);
                 setSearchParams(prevState => {
                     prevState.delete("modal");
                     return prevState;
                 });
             }).catch(console.error);
         }
-    }, [user, nev, varos, setSearchParams]);
+    }, [nev, varos, createCsapat, setSearchParams]);
 
     return (
         <Dialog open={open} handler={setOpen}>

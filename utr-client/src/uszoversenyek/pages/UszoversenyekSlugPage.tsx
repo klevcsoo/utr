@@ -1,4 +1,4 @@
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 import {DateInput} from "../../utils/components/inputs/DateInput";
 import {
@@ -11,7 +11,6 @@ import {
     ChipProps,
     Dialog,
     Input,
-    Spinner,
     Typography
 } from "@material-tailwind/react";
 import {DestructiveButton} from "../../utils/components/buttons";
@@ -24,75 +23,45 @@ import {
     useDeleteUszoverseny,
     useEditUszoverseny,
     useOpenUszoverseny,
-    useUszoversenyDetails
+    useUszoversenyFromContext
 } from "../hooks";
 import {useTranslation} from "../../translations/hooks";
-import {
-    useCreateVersenyszam,
-    useDeleteVersenyszam,
-    useVersenyszamokList
-} from "../../versenyszamok/hooks";
-import {
-    useGetUszasnemElnevezes,
-    useGetVersenyszamNemElnevezes,
-    useSetAdminLayoutTitle
-} from "../../utils/hooks";
-import {Uszoverseny} from "../types";
+import {useCreateVersenyszam, useDeleteVersenyszam} from "../../versenyszamok/hooks";
+import {useGetUszasnemElnevezes, useGetVersenyszamNemElnevezes} from "../../utils/hooks";
 import {EmberiNemId} from "../../uszok/types";
 import {UszasnemId} from "../../versenyszamok/types";
 
 const CREATE_RACE_PARAM_KEY = "race";
 
 export function UszoversenyekSlugPage() {
-    const t = useTranslation();
-
-    const {id} = useParams();
-    const idNumber = useMemo(() => parseInt(id ?? "-1"), [id]);
-
-    const [uszoverseny, uszoversenyLoading] = useUszoversenyDetails(idNumber);
-
-    useSetAdminLayoutTitle(!uszoverseny ? t("generic_label.loading") : uszoverseny.nev);
-
-    return uszoversenyLoading ? (
-        <div className="w-full h-full grid place-content-center">
-            <Spinner/>
-        </div>
-    ) : !uszoverseny ? (
-        <div className="h-full grid place-content-center">
-            <div className="flex flex-col gap-2 items-center">
-                <p>{t("uszoverseny.not_found")}</p>
-                <Link to=".." relative="path">
-                    <Button color="blue">{t("actions.generic.back")}</Button>
-                </Link>
-            </div>
-        </div>
-    ) : (
+    return (
         <Fragment>
             <div className="w-full flex flex-col gap-12 items-start">
-                <UszoversenyDetailsForm uszoverseny={uszoverseny}/>
-                <VersenyszamokList uszoverseny={uszoverseny}/>
+                <UszoversenyDetailsForm/>
+                <VersenyszamokList/>
             </div>
-            <VersenyszamModal uszoverseny={uszoverseny}/>
+            <VersenyszamModal/>
         </Fragment>
     );
 }
 
-function UszoversenyDetailsForm(props: {
-    uszoverseny: Uszoverseny
-}) {
+function UszoversenyDetailsForm() {
     const t = useTranslation();
+
+    const {uszoverseny} = useUszoversenyFromContext();
+
     const editUszoverseny = useEditUszoverseny();
     const deleteUszoverseny = useDeleteUszoverseny();
     const openUszoverseny = useOpenUszoverseny();
     const closeUszoverseny = useCloseUszoverseny();
 
     const [isDirty, setIsDirty] = useState(false);
-    const [nev, setNev] = useState(props.uszoverseny.nev);
-    const [helyszin, setHelyszin] = useState(props.uszoverseny.helyszin);
-    const [datum, setDatum] = useState(props.uszoverseny.datum.getTime());
+    const [nev, setNev] = useState(uszoverseny.nev);
+    const [helyszin, setHelyszin] = useState(uszoverseny.helyszin);
+    const [datum, setDatum] = useState(uszoverseny.datum.getTime());
 
     const doCommitChanges = useCallback(() => {
-        editUszoverseny(props.uszoverseny.id, {
+        editUszoverseny(uszoverseny.id, {
             nev: nev,
             datum: new Date(datum),
             helyszin: helyszin
@@ -100,39 +69,39 @@ function UszoversenyDetailsForm(props: {
             console.log(message);
             setIsDirty(false);
         }).catch(console.error);
-    }, [datum, editUszoverseny, helyszin, nev, props.uszoverseny]);
+    }, [datum, editUszoverseny, helyszin, nev, uszoverseny]);
 
     const doDeleteUszoverseny = useCallback(() => {
-        deleteUszoverseny(props.uszoverseny.id)
+        deleteUszoverseny(uszoverseny.id)
             .then(console.log)
             .catch(console.error);
-    }, [deleteUszoverseny, props.uszoverseny]);
+    }, [deleteUszoverseny, uszoverseny]);
 
     const doChangeOpenedState = useCallback(() => {
-        if (props.uszoverseny.nyitott) {
+        if (uszoverseny.nyitott) {
             closeUszoverseny()
                 .then(console.log)
                 .catch(console.error);
         } else {
-            openUszoverseny(props.uszoverseny.id)
+            openUszoverseny(uszoverseny.id)
                 .then(console.log)
                 .catch(console.error);
         }
-    }, [closeUszoverseny, openUszoverseny, props.uszoverseny]);
+    }, [closeUszoverseny, openUszoverseny, uszoverseny]);
 
     useEffect(() => {
         setIsDirty(
-            props.uszoverseny.nev !== nev ||
-            props.uszoverseny.helyszin !== helyszin ||
-            props.uszoverseny.datum.getTime() !== datum
+            uszoverseny.nev !== nev ||
+            uszoverseny.helyszin !== helyszin ||
+            uszoverseny.datum.getTime() !== datum
         );
-    }, [datum, helyszin, nev, props.uszoverseny]);
+    }, [datum, helyszin, nev, uszoverseny]);
 
     return (
         <Card className="w-full mt-6">
             <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
                 <Typography variant="h5">
-                    {props.uszoverseny.nev}
+                    {uszoverseny.nev}
                 </Typography>
             </CardHeader>
             <CardBody>
@@ -150,10 +119,10 @@ function UszoversenyDetailsForm(props: {
                 <Button color="blue" disabled={!isDirty} onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
                 </Button>
-                <Button variant={props.uszoverseny.nyitott ? "filled" : "outlined"}
-                        color={props.uszoverseny.nyitott ? "red" : "blue-gray"}
+                <Button variant={uszoverseny.nyitott ? "filled" : "outlined"}
+                        color={uszoverseny.nyitott ? "red" : "blue-gray"}
                         onClick={doChangeOpenedState}>
-                    {props.uszoverseny.nyitott ?
+                    {uszoverseny.nyitott ?
                         t("actions.uszoverseny.close") :
                         t("actions.uszoverseny.open")}
                 </Button>
@@ -173,14 +142,14 @@ const SWIMMING_STYLE_COLOURS: { [key in UszasnemId]: ChipProps["color"] } = {
     USZASNEM_PILLANGO: "light-green"
 } as const;
 
-function VersenyszamokList(props: {
-    uszoverseny?: Uszoverseny
-}) {
+function VersenyszamokList() {
     const t = useTranslation();
+
+    const {versenyszamok} = useUszoversenyFromContext();
+
     const getVersenyszamNemElnevezes = useGetVersenyszamNemElnevezes();
     const getUszasnemElnevezes = useGetUszasnemElnevezes();
 
-    const [versenyszamok, versenyszamokLoading] = useVersenyszamokList(props.uszoverseny?.id);
     const deleteVersenyszam = useDeleteVersenyszam();
     const [, setSearchParams] = useSearchParams();
 
@@ -195,11 +164,7 @@ function VersenyszamokList(props: {
         deleteVersenyszam(id).then(console.log).catch(console.error);
     }, [deleteVersenyszam]);
 
-    return versenyszamokLoading ? (
-        <div className="grid place-content-center">
-            <Spinner/>
-        </div>
-    ) : !versenyszamok || !versenyszamok.length ? (
+    return !versenyszamok || !versenyszamok.length ? (
         <Card className="w-full">
             <CardBody>
                 <Typography variant="lead" className="text-center">
@@ -278,10 +243,11 @@ function VersenyszamokList(props: {
     );
 }
 
-function VersenyszamModal(props: {
-    uszoverseny?: Uszoverseny
-}) {
+function VersenyszamModal() {
     const t = useTranslation();
+
+    const {uszoverseny} = useUszoversenyFromContext();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const createVersenyszam = useCreateVersenyszam();
 
@@ -316,20 +282,20 @@ function VersenyszamModal(props: {
     }, [setSearchParams]);
 
     const doComplete = useCallback(() => {
-        if (!!props.uszoverseny && canComplete) {
+        if (!!uszoverseny && canComplete) {
             createVersenyszam({
                 hossz: hossz,
                 valto: valto === 0 ? undefined : valto,
                 emberiNemId: versenyszamNem,
                 uszasnemId: uszasnem,
-                versenyId: props.uszoverseny.id
+                versenyId: uszoverseny.id
             }).then(message => {
                 console.log(message);
                 doDismiss();
             }).catch(console.error);
         }
     }, [canComplete, createVersenyszam, doDismiss, versenyszamNem,
-        hossz, props.uszoverseny, uszasnem, valto]);
+        hossz, uszoverseny, uszasnem, valto]);
 
     return (
         <Dialog open={open} handler={setOpen}>
