@@ -1,7 +1,7 @@
 package hu.bathorydse.utrapi.security.services;
 
-import hu.bathorydse.utrapi.models.auth.User;
-import hu.bathorydse.utrapi.repository.UserRepository;
+import hu.bathorydse.utrapi.auth.model.User;
+import hu.bathorydse.utrapi.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

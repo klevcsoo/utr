@@ -1,7 +1,7 @@
 package hu.bathorydse.utrapi.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import hu.bathorydse.utrapi.models.auth.User;
+import hu.bathorydse.utrapi.auth.model.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
