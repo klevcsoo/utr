@@ -37,8 +37,7 @@ export function LoginPage() {
             </div>
             <div className="w-screen h-screen grid place-content-center">
                 <Card className="w-80">
-                    <CardHeader variant="gradient" color="blue"
-                                className="grid place-content-center p-1">
+                    <CardHeader className="grid place-content-center p-1">
                         <AppLogo className="invert brightness-200" scale={120}/>
                     </CardHeader>
                     <CardBody className="flex flex-col items-center gap-2">

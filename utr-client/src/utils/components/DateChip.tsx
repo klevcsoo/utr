@@ -27,7 +27,7 @@ export function DateChip(props: DateChipProps) {
     }, [date, isToday, t]);
 
     return (
-        <Chip value={formattedDate} variant="ghost" className="w-min"
+        <Chip value={formattedDate}
               color={isToday ? "deep-purple" : "blue"}/>
     );
 }

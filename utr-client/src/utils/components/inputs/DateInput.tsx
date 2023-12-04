@@ -1,9 +1,11 @@
 import {useCallback} from "react";
+import {Input} from "@material-tailwind/react";
 
 export interface DateInputProps {
     value: number;
     min?: number;
     max?: number;
+    label: string;
 
     onValue(date: number): void;
 }
@@ -20,11 +22,11 @@ export function DateInput(props: DateInputProps) {
     }, []);
 
     return (
-        <input type="date" className="max-w-sm h-8 px-2 border-2 rounded-md
-               border-slate-200 bg-slate-100 focus:outline-none focus:border-blue-400"
+        <Input type="date"
                value={dateToString(props.value)}
                min={!!props.min ? dateToString(props.min) : undefined}
                max={!!props.max ? dateToString(props.max) : undefined}
+               label={props.label}
                onChange={event => {
                    props.onValue(new Date(event.currentTarget.value).getTime());
                }}/>

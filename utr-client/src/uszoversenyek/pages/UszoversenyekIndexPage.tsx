@@ -2,7 +2,6 @@ import {Link, useSearchParams} from "react-router-dom";
 import {Fragment, useCallback, useMemo, useState} from "react";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DateInput} from "../../utils/components/inputs/DateInput";
-import {DestructiveButton} from "../../utils/components/buttons";
 import {
     Button,
     Card,
@@ -24,7 +23,7 @@ import {useOrganisationFromContext} from "../../organisation/hooks";
 export function UszoversenyekIndexPage() {
     return (
         <Fragment>
-            <div className="w-full flex flex-col gap-12 items-start">
+            <div className="w-full flex flex-col gap-4 items-start">
                 <NyitottUszoversenyCard/>
                 <UszoversenyekList/>
             </div>
@@ -39,27 +38,26 @@ function NyitottUszoversenyCard() {
     const {nyitottUszoverseny: nyitottVerseny} = useOrganisationFromContext();
 
     return !nyitottVerseny ? null : (
-        <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
+        <Card>
+            <CardHeader>
                 <Typography variant="h5">{t("uszoverseny.opened")}</Typography>
             </CardHeader>
             <CardBody className="flex flex-col gap-2">
                 <Typography variant="lead">{nyitottVerseny.nev}</Typography>
                 <div className="flex flex-row gap-2">
                     <DateChip date={nyitottVerseny.datum}/>
-                    <Chip value={nyitottVerseny.helyszin} color="teal" variant="ghost"/>
+                    <Chip value={nyitottVerseny.helyszin} color="teal"/>
                 </div>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
-                <DestructiveButton className="max-w-xs" fullWidth
-                                   confirmText={t("actions.uszoverseny.close")}>
-                    {t("actions.uszoverseny.close")}
-                </DestructiveButton>
-                <Link to={String(nyitottVerseny.id)} className="w-full">
-                    <Button color="blue" variant="outlined" className="max-w-xs" fullWidth>
+                <Link to={String(nyitottVerseny.id)} className="min-w-max max-w-xs w-full">
+                    <Button className="max-w-xs" fullWidth>
                         {t("actions.generic.view_details")}
                     </Button>
                 </Link>
+                <Button className="max-w-xs" fullWidth color="red" variant="text">
+                    {t("actions.uszoverseny.close")}
+                </Button>
             </CardFooter>
         </Card>
     );
@@ -72,9 +70,8 @@ function UszoversenyekList() {
     const {uszoversenyek} = useOrganisationFromContext();
 
     return (
-        <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue-gray"
-                        className="p-4 mb-4 text-center">
+        <Card>
+            <CardHeader>
                 <Typography variant="h5">
                     {t("generic_label.all_uszoversenyek")}
                 </Typography>
@@ -102,12 +99,11 @@ function UszoversenyekList() {
                         <Chip value={nyitott ?
                             t("uszoverseny.state.open") :
                             t("uszoverseny.state.closed")}
-                              variant="ghost" color={nyitott ? "teal" : "amber"}
-                              className="w-min"/>
+                              color={nyitott ? "teal" : "amber"}/>
                     )}/>
                     <DataTableActionColumn list={uszoversenyek} element={entry => (
                         <Link to={String(entry.id)} relative="path">
-                            <Button variant="text" color="blue-gray">
+                            <Button variant="text" color="gray">
                                 {t("actions.generic.edit")}
                             </Button>
                         </Link>
@@ -115,7 +111,7 @@ function UszoversenyekList() {
                 </DataTable>
             </CardBody>
             <CardFooter>
-                <Button color="blue" variant="outlined" onClick={() => {
+                <Button variant="text" onClick={() => {
                     setSearchParams({modal: "create"});
                 }}>
                     {t("actions.uszoverseny.create")}
@@ -168,9 +164,7 @@ function NewUszoversenyModal() {
     return (
         <Dialog open={open} handler={setOpen}>
             <Card>
-                <CardHeader variant="gradient" color="blue-gray"
-                            className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-2">
+                <CardHeader className="flex flex-row items-center justify-center gap-2">
                     <PlusIcon className="w-8"/>
                     <Typography variant="h5">
                         {t("actions.uszoverseny.create")}
@@ -183,14 +177,15 @@ function NewUszoversenyModal() {
                     <Input value={helyszin} onChange={event => {
                         setHelyszin(event.currentTarget.value);
                     }} label={t("generic_label.city")}/>
-                    <DateInput value={datum} onValue={setDatum} min={Date.now()}/>
+                    <DateInput value={datum} onValue={setDatum} min={Date.now()}
+                               label={t("generic_label.date")}/>
                 </CardBody>
                 <CardFooter className="flex flex-row gap-2">
-                    <Button color="blue" variant="outlined" fullWidth
+                    <Button variant="text" fullWidth
                             onClick={() => setOpen(false)}>
                         {t("generic_label.rather_not")}
                     </Button>
-                    <Button color="blue" variant="filled" fullWidth onClick={doComplete}
+                    <Button variant="filled" fullWidth onClick={doComplete}
                             disabled={!canComplete}>
                         {t("generic_label.lets_go")}
                     </Button>

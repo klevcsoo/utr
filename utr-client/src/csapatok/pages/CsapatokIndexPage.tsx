@@ -30,9 +30,8 @@ export function CsapatokIndexPage() {
 
     return (
         <Fragment>
-            <Card className="w-full mt-6">
-                <CardHeader variant="gradient" color="blue-gray"
-                            className="p-4 mb-4 text-center">
+            <Card>
+                <CardHeader>
                     <Typography variant="h5">
                         {t("title.admin_layout.csapatok")}
                     </Typography>
@@ -51,7 +50,7 @@ export function CsapatokIndexPage() {
                                              )}/>
                         <DataTableActionColumn list={csapatok} element={entry => (
                             <Link to={String(entry.id)}>
-                                <Button variant="text" color="blue-gray">
+                                <Button variant="text" color="gray">
                                     {t("actions.generic.edit")}
                                 </Button>
                             </Link>
@@ -59,7 +58,7 @@ export function CsapatokIndexPage() {
                     </DataTable>
                 </CardBody>
                 <CardFooter>
-                    <Button color="blue" variant="outlined" onClick={() => {
+                    <Button variant="text" onClick={() => {
                         setSearchParams({[MODAL_PARAM_KEY]: NEW_CSAPAT_PARAM_VALUE});
                     }}>
                         {t("actions.csapat.create")}
@@ -113,26 +112,24 @@ function NewCsapatDialog() {
     return (
         <Dialog open={open} handler={setOpen}>
             <Card>
-                <CardHeader variant="gradient" color="blue-gray"
-                            className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-2">
-                    <PlusIcon className="w-8"/>
-                    <Typography variant="h5">
-                        {t("actions.csapat.create")}
-                    </Typography>
-                </CardHeader>
                 <CardBody className="flex flex-col gap-2">
                     <TextInput value={nev} onValue={setNev}
                                label={t("generic_label.name")}/>
                     <TextInput value={varos} onValue={setVaros}
                                label={t("generic_label.city")}/>
                 </CardBody>
+                <CardHeader className="flex flex-row items-center justify-center gap-2">
+                    <PlusIcon className="w-8"/>
+                    <Typography variant="h5">
+                        {t("actions.csapat.create")}
+                    </Typography>
+                </CardHeader>
                 <CardFooter className="flex flex-row gap-2">
-                    <Button color="blue" variant="outlined" fullWidth
+                    <Button variant="text" fullWidth
                             onClick={() => setOpen(false)}>
                         {t("generic_label.rather_not")}
                     </Button>
-                    <Button color="blue" variant="filled" fullWidth onClick={doComplete}
+                    <Button variant="filled" fullWidth onClick={doComplete}
                             disabled={!canComplete}>
                         {t("generic_label.lets_go")}
                     </Button>

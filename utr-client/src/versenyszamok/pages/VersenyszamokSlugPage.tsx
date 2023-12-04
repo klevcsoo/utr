@@ -7,6 +7,7 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    Chip,
     Dialog,
     DialogBody,
     DialogFooter,
@@ -14,7 +15,6 @@ import {
     IconButton,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton} from "../../utils/components/buttons";
 import {VersenyszamEditLayout} from "../components/VersenyszamEditLayout";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
@@ -34,7 +34,7 @@ const CREATE_NEVEZES_PARAM_VALUE = "createNevezes";
 export function VersenyszamokSlugPage() {
     return (
         <Fragment>
-            <div className="w-full flex flex-col gap-12 items-start">
+            <div className="w-full flex flex-col gap-4 items-start">
                 <VersenyszamDetails/>
                 <NevezesekList/>
             </div>
@@ -101,10 +101,8 @@ export function VersenyszamDetails() {
     }, [deleteVersenyszam, navigate, t, versenyszam]);
 
     return (
-        <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue-gray"
-                        className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-4">
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-center gap-4">
                 <Typography variant="h5">
                     {elnevezes}
                 </Typography>
@@ -118,14 +116,13 @@ export function VersenyszamDetails() {
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
                 {unsavedChanges ? (
-                    <Button color="blue" onClick={doCommitChanges}>
+                    <Button onClick={doCommitChanges}>
                         {t("actions.generic.save_changes")}
                     </Button>
                 ) : null}
-                <DestructiveButton confirmText={t("actions.versenyszam.delete")}
-                                   onClick={doDeleteVersenyszam}>
+                <Button variant="text" color="red" onClick={doDeleteVersenyszam}>
                     {t("actions.versenyszam.delete")}
-                </DestructiveButton>
+                </Button>
             </CardFooter>
         </Card>
     );
@@ -145,8 +142,8 @@ export function NevezesekList() {
                 uszoNev: value.uszo.nev,
                 uszoSzuletesiEv: (value.uszo as any)["szuletesiDatum"],
                 csapatNev: value.uszo.csapat.nev,
-                nevezesiIdo: value.nevezesiIdo ? formatInterval(value.nevezesiIdo) : "nincs",
-                idoeredmeny: value.idoeredmeny ? formatInterval(value.idoeredmeny) : "nincs"
+                nevezesiIdo: value.nevezesiIdo ? formatInterval(value.nevezesiIdo) : "-",
+                idoeredmeny: value.idoeredmeny ? formatInterval(value.idoeredmeny) : "-"
             };
         });
     }, [nevezesek]);
@@ -163,21 +160,19 @@ export function NevezesekList() {
     }, [setSearchParams]);
 
     return !nevezesek || !nevezesek.length ? (
-        <Card className="w-full">
+        <Card>
             <CardBody>
                 <p>{t("versenyszam.no_uszo")}</p>
             </CardBody>
             <CardFooter>
-                <Button color="blue" variant="outlined" onClick={doOpenCreateNevezesDialog}>
+                <Button variant="text" onClick={doOpenCreateNevezesDialog}>
                     {t("actions.versenyszam.add_uszo")}
                 </Button>
             </CardFooter>
         </Card>
     ) : (
-        <Card className="w-full">
-            <CardHeader variant="gradient" color="blue-gray"
-                        className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-4">
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-center gap-4">
                 <Typography variant="h5">
                     {t("versenyszam.nevezesek")}
                 </Typography>
@@ -186,12 +181,12 @@ export function NevezesekList() {
                 <DataTable dataList={displayedNevezesek} excludedProperties={["id"]}>
                     <DataTableDataColumn list={displayedNevezesek} forKey="uszoNev"
                                          header={t("generic_label.uszo")} element={value => (
-                        <Typography variant="small">{value}</Typography>
+                        <Typography variant="small" className="font-bold">{value}</Typography>
                     )}/>
                     <DataTableDataColumn list={displayedNevezesek} forKey="uszoSzuletesiEv"
                                          header={t("generic_label.year_of_birth")}
                                          element={value => (
-                                             <Typography variant="small">{value}</Typography>
+                                             <Chip value={value}/>
                                          )}/>
                     <DataTableDataColumn list={displayedNevezesek} forKey="csapatNev"
                                          header={t("generic_label.csapat")}
@@ -209,7 +204,7 @@ export function NevezesekList() {
                                              <Typography variant="small">{value}</Typography>
                                          )}/>
                     <DataTableActionColumn list={displayedNevezesek} element={entry => (
-                        <IconButton variant="outlined" color="red" onClick={() => {
+                        <IconButton variant="text" color="red" onClick={() => {
                             doDeleteNevezes(entry.id);
                         }} size="sm">
                             <TrashIcon className="h-5"/>
@@ -218,7 +213,7 @@ export function NevezesekList() {
                 </DataTable>
             </CardBody>
             <CardFooter>
-                <Button color="blue" variant="outlined" onClick={doOpenCreateNevezesDialog}>
+                <Button variant="text" onClick={doOpenCreateNevezesDialog}>
                     {t("actions.versenyszam.add_uszo")}
                 </Button>
             </CardFooter>
@@ -285,11 +280,11 @@ function CreateNevezesModal() {
                 <NevezesEditLayout data={editData} onData={setEditData}/>
             </DialogBody>
             <DialogFooter className="grid grid-cols-2 gap-4">
-                <Button color="blue" variant="outlined" fullWidth
+                <Button variant="text" fullWidth
                         onClick={() => setOpen(false)}>
                     {t("generic_label.rather_not")}
                 </Button>
-                <Button color="blue" variant="filled" fullWidth
+                <Button variant="filled" fullWidth
                         onClick={doComplete} disabled={!canComplete}>
                     {t("generic_label.lets_go")}
                 </Button>

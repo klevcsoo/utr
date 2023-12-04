@@ -108,7 +108,7 @@ function ServerLog() {
                     </Typography>
                 ))}
             </div>
-            <Button color="blue" onClick={refreshServerLog} disabled={loadingServerLog}>
+            <Button onClick={refreshServerLog} disabled={loadingServerLog}>
                 {t("actions.generic.refresh")}
             </Button>
         </div>

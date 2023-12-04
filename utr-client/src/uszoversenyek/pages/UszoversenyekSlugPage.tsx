@@ -13,7 +13,6 @@ import {
     Input,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton} from "../../utils/components/buttons";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
@@ -36,7 +35,7 @@ const CREATE_RACE_PARAM_KEY = "race";
 export function UszoversenyekSlugPage() {
     return (
         <Fragment>
-            <div className="w-full flex flex-col gap-12 items-start">
+            <div className="w-full flex flex-col gap-4 items-start">
                 <UszoversenyDetailsForm/>
                 <VersenyszamokList/>
             </div>
@@ -98,38 +97,35 @@ function UszoversenyDetailsForm() {
     }, [datum, helyszin, nev, uszoverseny]);
 
     return (
-        <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
+        <Card>
+            <CardHeader>
                 <Typography variant="h5">
                     {uszoverseny.nev}
                 </Typography>
             </CardHeader>
-            <CardBody>
-                <form className="flex flex-col gap-4">
-                    <Input label={t("uszoverseny.elnevezes")} value={nev} onChange={event => {
-                        setNev(event.currentTarget.value);
-                    }}/>
-                    <Input label={t("generic_label.location")} value={helyszin} onChange={event => {
-                        setHelyszin(event.currentTarget.value);
-                    }}/>
-                    <DateInput value={datum} onValue={setDatum}/>
-                </form>
+            <CardBody className="grid grid-cols-3 gap-2">
+                <Input label={t("uszoverseny.elnevezes")} value={nev} onChange={event => {
+                    setNev(event.currentTarget.value);
+                }}/>
+                <Input label={t("generic_label.location")} value={helyszin} onChange={event => {
+                    setHelyszin(event.currentTarget.value);
+                }}/>
+                <DateInput value={datum} onValue={setDatum} label={t("generic_label.date")}/>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
-                <Button color="blue" disabled={!isDirty} onClick={doCommitChanges}>
+                <Button disabled={!isDirty} onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
                 </Button>
-                <Button variant={uszoverseny.nyitott ? "filled" : "outlined"}
+                <Button variant="text"
                         color={uszoverseny.nyitott ? "red" : "blue-gray"}
                         onClick={doChangeOpenedState}>
                     {uszoverseny.nyitott ?
                         t("actions.uszoverseny.close") :
                         t("actions.uszoverseny.open")}
                 </Button>
-                <DestructiveButton confirmText={t("confirm.generic.delete")}
-                                   onConfirm={doDeleteUszoverseny}>
+                <Button color="red" variant="text" onClick={doDeleteUszoverseny}>
                     {t("actions.uszoverseny.delete")}
-                </DestructiveButton>
+                </Button>
             </CardFooter>
         </Card>
     );
@@ -165,22 +161,21 @@ function VersenyszamokList() {
     }, [deleteVersenyszam]);
 
     return !versenyszamok || !versenyszamok.length ? (
-        <Card className="w-full">
+        <Card>
             <CardBody>
                 <Typography variant="lead" className="text-center">
                     {t("uszoversenyek.no_versenyszam")}
                 </Typography>
             </CardBody>
             <CardFooter className="grid place-content-center">
-                <Button color="blue" variant="outlined" onClick={doOpenNewVersenyszamModal}>
+                <Button variant="text" onClick={doOpenNewVersenyszamModal}>
                     {t("actions.versenyszam.create")}
                 </Button>
             </CardFooter>
         </Card>
     ) : (
-        <Card className="w-full">
-            <CardHeader variant="gradient" color="blue-gray"
-                        className="p-4 mb-4 text-center">
+        <Card>
+            <CardHeader>
                 <Typography variant="h5">
                     {t("generic_label.all_uszoversenyek")}
                 </Typography>
@@ -207,7 +202,7 @@ function VersenyszamokList() {
                                          header={t("generic_label.nem")}
                                          element={value => (
                                              <Chip value={getVersenyszamNemElnevezes(value)}
-                                                   className="w-min" variant="ghost"
+
                                                    color={value === "NEM_FERFI" ?
                                                        "light-blue" : "pink"}/>
                                          )}/>
@@ -215,13 +210,13 @@ function VersenyszamokList() {
                                          header={t("generic_label.uszasnem")}
                                          element={value => (
                                              <Chip value={getUszasnemElnevezes(value)}
-                                                   className="w-min" variant="ghost"
+
                                                    color={SWIMMING_STYLE_COLOURS[value]}/>
                                          )}/>
                     <DataTableActionColumn list={versenyszamok} element={entry => (
                         <Fragment>
                             <Link to={`versenyszamok/${entry.id}`} relative="path">
-                                <Button variant="text" color="blue-gray">
+                                <Button variant="text" color="gray">
                                     {t("actions.generic.edit")}
                                 </Button>
                             </Link>
@@ -235,7 +230,7 @@ function VersenyszamokList() {
                 </DataTable>
             </CardBody>
             <CardFooter>
-                <Button color="blue" variant="outlined" onClick={doOpenNewVersenyszamModal}>
+                <Button variant="text" onClick={doOpenNewVersenyszamModal}>
                     {t("actions.versenyszam.create")}
                 </Button>
             </CardFooter>
@@ -300,9 +295,7 @@ function VersenyszamModal() {
     return (
         <Dialog open={open} handler={setOpen}>
             <Card>
-                <CardHeader variant="gradient" color="blue-gray"
-                            className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-4">
+                <CardHeader className="flex flex-row items-center justify-center gap-4">
                     <PlusIcon className="w-8"/>
                     <Typography variant="h5">
                         {t("actions.versenyszam.create")}
@@ -316,11 +309,11 @@ function VersenyszamModal() {
                                            setUszasnem={setUszasnem}/>
                 </CardBody>
                 <CardFooter className="flex flex-row gap-2">
-                    <Button color="blue" variant="outlined" fullWidth
+                    <Button variant="text" fullWidth
                             onClick={() => setOpen(false)}>
                         {t("generic_label.rather_not")}
                     </Button>
-                    <Button color="blue" variant="filled" fullWidth onClick={doComplete}
+                    <Button variant="filled" fullWidth onClick={doComplete}
                             disabled={!canComplete}>
                         {t("generic_label.lets_go")}
                     </Button>

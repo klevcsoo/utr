@@ -82,7 +82,7 @@ function UserMenu() {
     return (
         <Menu open={open} handler={setOpen}>
             <MenuHandler>
-                <Button variant="text" color="blue-gray"
+                <Button variant="text" color="gray"
                         className="flex flex-row items-center gap-2 p-1 rounded-full">
                     <Avatar src="/user_avatar.png" withBorder className="p-0.5" size="sm"/>
                     <ChevronDownIcon

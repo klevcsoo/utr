@@ -54,10 +54,8 @@ function UsersListCard() {
     }, [setSearchParams]);
 
     return (
-        <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue-gray"
-                        className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-2">
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-center gap-2">
                 <Typography variant="h5">
                     {t("settings.users")}
                 </Typography>
@@ -68,7 +66,7 @@ function UsersListCard() {
                 </CardBody>
             ) : null}
             <CardFooter>
-                <Button color="blue" variant="outlined" onClick={() => doOpenModal()}>
+                <Button variant="text" onClick={() => doOpenModal()}>
                     {t("actions.user.create")}
                 </Button>
             </CardFooter>
@@ -123,7 +121,7 @@ function UsersTable(props: { users: DisplayedUser[] }) {
                                  )}/>
             <DataTableActionColumn list={props.users} element={entry => (
                 <Fragment>
-                    <Button variant="text" color="blue-gray" onClick={() => {
+                    <Button variant="text" color="gray" onClick={() => {
                         doOpenModal(entry.id);
                     }}>
                         {t("actions.generic.edit")}
@@ -156,7 +154,7 @@ function RoleChips(props: { roles: string[] }) {
     return (
         <div className="flex flex-row gap-2 items-center">
             {props.roles.sort().map((value, index) => (
-                <Chip key={index} value={value} variant="ghost"
+                <Chip key={index} value={value}
                       className="w-fit" color={roleColour(value)}/>
             ))}
         </div>
@@ -228,9 +226,7 @@ function UserModal(props: { close(): void }) {
 
     return (
         <Card>
-            <CardHeader variant="gradient" color="blue-gray"
-                        className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-4">
+            <CardHeader className="flex flex-row items-center justify-center gap-4">
                 <Typography variant="h5">
                     {modalTitle}
                 </Typography>
@@ -239,16 +235,16 @@ function UserModal(props: { close(): void }) {
                 <TextInput value={displayName} onValue={setDisplayName}
                            label={t("generic_label.username")}/>
                 <UserRoleSelector user={user}/>
-                <Button color="blue" onClick={doOpenPasswordModal}>
+                <Button onClick={doOpenPasswordModal}>
                     {t("actions.user.change_password")}
                 </Button>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
-                <Button color="blue" variant="outlined" fullWidth
+                <Button variant="text" fullWidth
                         onClick={() => props.close()}>
                     {t("generic_label.rather_not")}
                 </Button>
-                <Button color="blue" variant="filled" fullWidth onClick={doComplete}>
+                <Button variant="filled" fullWidth onClick={doComplete}>
                     {t("generic_label.lets_go")}
                 </Button>
             </CardFooter>
@@ -310,10 +306,10 @@ function UserRoleSelector(props: { user?: DisplayedUser }) {
                 ))}
             </div>
             <div className="grid grid-cols-2 gap-2">
-                <Button variant="outlined" color="blue-gray">
+                <Button variant="text" color="gray">
                     {t("generic_label.revert")}
                 </Button>
-                <Button color="blue-gray">
+                <Button color="gray">
                     {t("settings.user_edit.roles.save")}
                 </Button>
             </div>

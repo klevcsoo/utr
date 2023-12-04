@@ -72,8 +72,8 @@ function CsapatDetailsForm() {
     }, [nev, csapat, varos]);
 
     return (
-        <Card className="w-full mt-6">
-            <CardHeader variant="gradient" color="blue-gray" className="p-4 mb-4 text-center">
+        <Card>
+            <CardHeader>
                 <Typography variant="h5">
                     {csapat.nev}
                 </Typography>
@@ -89,7 +89,7 @@ function CsapatDetailsForm() {
                 </form>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
-                <Button color="blue" disabled={!isDirty} onClick={doCommitChanges}>
+                <Button disabled={!isDirty} onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
                 </Button>
                 <DestructiveButton confirmText={t("confirm.generic.delete")}
@@ -142,7 +142,7 @@ function UszokList() {
     }, [deleteUszo, t]);
 
     return (
-        <Card className="w-full">
+        <Card>
             {!uszok || !uszok.length ? (
                 <CardBody className="grid place-content-center">
                     <Typography>{t("csapat.no_uszok")}</Typography>
@@ -164,7 +164,7 @@ function UszokList() {
                                              )}/>
                         <DataTableActionColumn list={displayedUszok} element={entry => (
                             <Fragment>
-                                <Button variant="text" color="blue-gray" onClick={() => {
+                                <Button variant="text" color="gray" onClick={() => {
                                     doOpenEditUszoModal(entry.id);
                                 }}>
                                     {t("actions.generic.edit")}
@@ -180,7 +180,7 @@ function UszokList() {
                 </CardBody>
             )}
             <CardFooter>
-                <Button color="blue" variant="outlined" onClick={doOpenNewUszoModal}>
+                <Button variant="text" onClick={doOpenNewUszoModal}>
                     {t("actions.uszo.create")}
                 </Button>
             </CardFooter>
@@ -260,9 +260,7 @@ function UszoModal() {
         <Dialog open={open} handler={setOpen}>
             <Card>
 
-                <CardHeader variant="gradient" color="blue-gray"
-                            className="p-4 mb-4 text-center
-                            flex flex-row items-center justify-center gap-4">
+                <CardHeader className="flex flex-row items-center justify-center gap-4">
                     <PlusIcon className="w-8"/>
                     <Typography variant="h5">
                         {modalTitle}
@@ -280,11 +278,11 @@ function UszoModal() {
                     </div>
                 </CardBody>
                 <CardFooter className="flex flex-row gap-2">
-                    <Button color="blue" variant="outlined" fullWidth
+                    <Button variant="text" fullWidth
                             onClick={() => setOpen(false)}>
                         {t("generic_label.rather_not")}
                     </Button>
-                    <Button color="blue" variant="filled" fullWidth onClick={doComplete}
+                    <Button variant="filled" fullWidth onClick={doComplete}
                             disabled={!canComplete}>
                         {t("generic_label.lets_go")}
                     </Button>

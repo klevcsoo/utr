@@ -66,7 +66,7 @@ export function AdminSidebar({expanded, toggleExpanded}: AdminSidebarProps) {
     }, [t]);
 
     return (
-        <Card className="w-full justify-between">
+        <Card className="justify-between">
             <CardBody className="px-0">
                 <div className={`
                 ${expanded ? "px-6" : "px-2"}

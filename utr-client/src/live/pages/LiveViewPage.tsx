@@ -20,12 +20,12 @@ export function LiveViewPage() {
             <p>{t("error.page.no_open_uszoverseny")}</p>
             {user?.roles.includes("admin") ? (
                 <Link to="/admin/uszoversenyek">
-                    <Button color="blue">
+                    <Button>
                         {t("actions.uszoverseny.continue_to_uszoversenyek")}
                     </Button>
                 </Link>
             ) : (
-                <Button color="blue">{t("actions.generic.lets_load_again")}</Button>
+                <Button>{t("actions.generic.lets_load_again")}</Button>
             )}
         </div>
     ) : (
@@ -39,9 +39,9 @@ export function LiveViewPage() {
                 </div>
                 {user?.roles.includes("admin") ? (
                     <div className="flex flex-row gap-2 items-center px-1 text-lg">
-                        <Button color="blue">{t("actions.generic.open")}</Button>
+                        <Button>{t("actions.generic.open")}</Button>
                         <Link to={`/admin/uszoversenyek/${uszoverseny.id}`}>
-                            <Button color="blue" variant="outlined">
+                            <Button variant="text">
                                 {t("actions.generic.edit")}
                             </Button>
                         </Link>
@@ -53,7 +53,7 @@ export function LiveViewPage() {
             </div>
             {user?.roles.includes("admin") ? (
                 <NavLink to="/admin" className="bottom-4 right-4 fixed">
-                    <Button color="blue">{t("generic_label.admin_layout")}</Button>
+                    <Button>{t("generic_label.admin_layout")}</Button>
                 </NavLink>
             ) : null}
         </Fragment>
