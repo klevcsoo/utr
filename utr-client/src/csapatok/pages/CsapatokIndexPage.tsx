@@ -41,7 +41,9 @@ export function CsapatokIndexPage() {
                         <DataTableDataColumn list={csapatok} forKey="nev"
                                              header={t("generic_label.name")}
                                              element={value => (
-                                                 <Typography variant="small">{value}</Typography>
+                                                 <Typography variant="small" className="font-bold">
+                                                     {value}
+                                                 </Typography>
                                              )}/>
                         <DataTableDataColumn list={csapatok} forKey="varos"
                                              header={t("generic_label.city")}
@@ -112,18 +114,18 @@ function NewCsapatDialog() {
     return (
         <Dialog open={open} handler={setOpen}>
             <Card>
-                <CardBody className="flex flex-col gap-2">
-                    <TextInput value={nev} onValue={setNev}
-                               label={t("generic_label.name")}/>
-                    <TextInput value={varos} onValue={setVaros}
-                               label={t("generic_label.city")}/>
-                </CardBody>
                 <CardHeader className="flex flex-row items-center justify-center gap-2">
                     <PlusIcon className="w-8"/>
                     <Typography variant="h5">
                         {t("actions.csapat.create")}
                     </Typography>
                 </CardHeader>
+                <CardBody className="flex flex-col gap-2">
+                    <TextInput value={nev} onValue={setNev}
+                               label={t("generic_label.name")}/>
+                    <TextInput value={varos} onValue={setVaros}
+                               label={t("generic_label.city")}/>
+                </CardBody>
                 <CardFooter className="flex flex-row gap-2">
                     <Button variant="text" fullWidth
                             onClick={() => setOpen(false)}>

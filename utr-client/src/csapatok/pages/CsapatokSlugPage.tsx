@@ -11,7 +11,6 @@ import {
     Input,
     Typography
 } from "@material-tailwind/react";
-import {DestructiveButton} from "../../utils/components/buttons";
 import {DataTable, DataTableDataColumn} from "../../utils/components/data-table";
 import {DataTableActionColumn} from "../../utils/components/data-table/DataTableActionColumn";
 import {PlusIcon} from "@heroicons/react/24/solid";
@@ -78,24 +77,21 @@ function CsapatDetailsForm() {
                     {csapat.nev}
                 </Typography>
             </CardHeader>
-            <CardBody>
-                <form className="flex flex-col gap-4">
-                    <Input label={t("csapat.name")} value={nev} onChange={event => {
-                        setNev(event.currentTarget.value);
-                    }}/>
-                    <Input label={t("csapat.city")} value={varos} onChange={event => {
-                        setVaros(event.currentTarget.value);
-                    }}/>
-                </form>
+            <CardBody className="grid grid-cols-2 gap-2">
+                <Input label={t("csapat.name")} value={nev} onChange={event => {
+                    setNev(event.currentTarget.value);
+                }}/>
+                <Input label={t("csapat.city")} value={varos} onChange={event => {
+                    setVaros(event.currentTarget.value);
+                }}/>
             </CardBody>
             <CardFooter className="flex flex-row gap-2">
                 <Button disabled={!isDirty} onClick={doCommitChanges}>
                     {t("actions.generic.save_changes")}
                 </Button>
-                <DestructiveButton confirmText={t("confirm.generic.delete")}
-                                   onConfirm={doDelete}>
+                <Button onClick={doDelete} variant="text" color="red">
                     {t("actions.csapat.delete")}
-                </DestructiveButton>
+                </Button>
             </CardFooter>
         </Card>
     );
