@@ -1,5 +1,9 @@
 # Úszóverseny Támogató Rendszer
 
+> Ez a repository archiválásra került az **UTRv2** teljes remake miatt. A repo-ban lévő kód használata minden célra engedélyezett.
+
+> A projektnek az a szála, amely a DE-IK Webfejlesztés tárgyhoz beandandó projektként készült, a [`feature/deik-webfejlesztes`](https://github.com/klevcsoo/utr/tree/feature/deik-webfejlesztes) branchen található meg.
+
  - **/utr-api:** Java Spring Boot API szerver ([dokumentáció](utr-api/spec/utr-api-spec.md))
  - **/utr-client:** Typescript React kliens
  - **/utr-system:** Python szkriptek a PI rendszeréhez
