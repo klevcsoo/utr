@@ -1,0 +1,78 @@
+@startuml
+
+top to bottom direction
+skinparam linetype ortho
+
+class auth_role {
+   name: varchar(20)
+   id: integer
+}
+class auth_user {
+   username: text
+   display_name: text
+   password: text
+   id: bigint
+}
+class auth_user_roles {
+   user_id: bigint
+   role_id: integer
+}
+class csapat {
+   nev: text
+   varos: text
+   id: bigint
+}
+class futam {
+   versenyszam_id: bigint
+   id: bigint
+}
+class nevezes {
+   uszo_id: bigint
+   versenyszam_id: bigint
+   megjelent: boolean
+   nevezesi_ido: integer
+   idoeredmeny: integer
+   id: bigint
+}
+class rajtlista {
+   futam_id: bigint
+   nevezes_id: bigint
+}
+class uszasnem {
+   id: varchar(255)
+}
+class uszo {
+   nev: text
+   csapat_id: bigint
+   nem: text
+   szuletesi_ev: smallint
+   id: bigint
+}
+class uszoverseny {
+   nev: text
+   helyszin: text
+   datum: date
+   nyitott: boolean
+   id: bigint
+}
+class versenyszam {
+   verseny_id: bigint
+   hossz: integer
+   uszasnem: text
+   nem: text
+   valto: integer
+   uszasnem_id: varchar(255)
+   id: bigint
+}
+
+auth_user_roles  -[#595959,plain]-^  auth_role       : "role_id:id"
+auth_user_roles  -[#595959,plain]-^  auth_user       : "user_id:id"
+futam            -[#595959,plain]-^  versenyszam     : "versenyszam_id:id"
+nevezes          -[#595959,plain]-^  uszo            : "uszo_id:id"
+nevezes          -[#595959,plain]-^  versenyszam     : "versenyszam_id:id"
+rajtlista        -[#595959,plain]-^  futam           : "futam_id:id"
+rajtlista        -[#595959,plain]-^  nevezes         : "nevezes_id:id"
+uszo             -[#595959,plain]-^  csapat          : "csapat_id:id"
+versenyszam      -[#595959,plain]-^  uszasnem        : "uszasnem_id:id"
+versenyszam      -[#595959,plain]-^  uszoverseny     : "verseny_id:id"
+@enduml
