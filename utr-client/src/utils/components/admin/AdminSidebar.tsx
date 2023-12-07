@@ -92,12 +92,11 @@ export function AdminSidebar({expanded, toggleExpanded}: AdminSidebarProps) {
                     ))}
                 </List>
             </CardBody>
-            <CardFooter>
-                <hr className="mb-5 border-blue-gray-50"/>
-                {expanded ? (
+            {expanded ? (
+                <CardFooter>
                     <LanguageSelector/>
-                ) : null}
-            </CardFooter>
+                </CardFooter>
+            ) : null}
         </Card>
     );
 }
