@@ -1,12 +1,15 @@
 import {Link, NavLink} from "react-router-dom";
-import {Fragment} from "react";
+import {Fragment, useContext} from "react";
 import {Button, Spinner} from "@material-tailwind/react";
 import {useAuthUser} from "../../auth/hooks";
 import {useNyitottVerseny} from "../../uszoversenyek/hooks";
 import {useTranslation} from "../../translations/hooks";
+import {ArrowRightOnRectangleIcon} from "@heroicons/react/24/solid";
+import {AuthContext} from "../../auth/api";
 
 export function LiveViewPage() {
     const t = useTranslation();
+    const {logout} = useContext(AuthContext);
     const [uszoverseny, uszoversenyLoading] = useNyitottVerseny();
     const user = useAuthUser();
 
@@ -15,19 +18,25 @@ export function LiveViewPage() {
             <Spinner/>
         </div>
     ) : !uszoverseny ? (
-        <div className="w-screen h-screen grid place-items-center place-content-center
-        gap-4">
-            <p>{t("error.page.no_open_uszoverseny")}</p>
-            {user?.roles.includes("admin") ? (
-                <Link to="/admin/uszoversenyek">
-                    <Button>
-                        {t("actions.uszoverseny.continue_to_uszoversenyek")}
-                    </Button>
-                </Link>
-            ) : (
-                <Button>{t("actions.generic.lets_load_again")}</Button>
-            )}
-        </div>
+        <Fragment>
+            <Button variant="text" color="red" className="!absolute top-8 right-8
+            flex flex-row items-center gap-2" onClick={logout}>
+                <ArrowRightOnRectangleIcon className="h-6"/>
+                {t("actions.logout")}
+            </Button>
+            <div className="w-screen h-screen grid place-items-center place-content-center gap-4">
+                <p>{t("error.page.no_open_uszoverseny")}</p>
+                {user?.roles.includes("admin") ? (
+                    <Link to="/admin/uszoversenyek">
+                        <Button>
+                            {t("actions.uszoverseny.continue_to_uszoversenyek")}
+                        </Button>
+                    </Link>
+                ) : (
+                    <Button>{t("actions.generic.lets_load_again")}</Button>
+                )}
+            </div>
+        </Fragment>
     ) : (
         <Fragment>
             <div className="p-4 flex flex-col gap-2">

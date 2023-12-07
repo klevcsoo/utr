@@ -38,7 +38,7 @@ export function LoginPage() {
             <div className="w-screen h-screen grid place-content-center">
                 <Card className="w-80">
                     <CardHeader className="grid place-content-center p-1">
-                        <AppLogo className="invert brightness-200" scale={120}/>
+                        <AppLogo scale={120}/>
                     </CardHeader>
                     <CardBody className="flex flex-col items-center gap-2">
                         <TextInput value={username} onValue={setUsername}
