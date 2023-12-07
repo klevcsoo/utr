@@ -28,5 +28,5 @@ export async function editVersenyszam(
 export async function deleteVersenyszam(
     user: AuthUser, id: number
 ) {
-    return apiRequest(user, `/uszok/${id}`, "DELETE");
+    return apiRequest(user, `/versenyszamok/${id}`, "DELETE");
 }
